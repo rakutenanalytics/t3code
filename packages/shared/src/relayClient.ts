@@ -1,3 +1,4 @@
+import { managedPolicy } from "./managedPolicy.ts";
 import * as Cache from "effect/Cache";
 import * as Clock from "effect/Clock";
 import type {
@@ -496,6 +497,11 @@ export const makeCloudflaredRelayClient = Effect.fn("cloudflared.make")(function
   const installUnlocked = Effect.fn("cloudflared.installUnlocked")(function* (
     report: (stage: RelayClientInstallProgressStage) => Effect.Effect<void>,
   ) {
+    if (!managedPolicy.allows("t3Connect"))
+      return yield* new RelayClientInstallError({
+        reason: "download_failed",
+        message: "Disabled by managed policy",
+      });
     yield* report("checking");
     const config = yield* loadCloudflaredConfig;
     if (Option.isSome(config.executableOverride)) {

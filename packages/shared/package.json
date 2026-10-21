@@ -502,6 +502,14 @@
     "./markdownMath": {
       "types": "./src/markdownMath.ts",
       "import": "./src/markdownMath.ts"
+    },
+    "./managedPolicy": {
+      "types": "./src/managedPolicy.ts",
+      "import": "./src/managedPolicy.ts"
+    },
+    "./managedPolicyHttpClient": {
+      "types": "./src/managedPolicyHttpClient.ts",
+      "import": "./src/managedPolicyHttpClient.ts"
     }
   },
   "scripts": {

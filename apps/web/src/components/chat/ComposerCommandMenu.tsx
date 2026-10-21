@@ -1,3 +1,5 @@
+import { ManagedPolicyTooltip } from "../ManagedPolicyDisabledAction";
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import { formatProviderSkillDisplayName } from "@t3tools/shared/inlineSkills";
 import type { ComposerPathSearchTarget } from "@t3tools/client-runtime/state/threads";
 import {
@@ -168,6 +170,20 @@ const ComposerCommandMenuItem = memo(function ComposerCommandMenuItem(props: {
   onHighlight: (itemId: string | null) => void;
   onSelect: (item: ComposerCommandItem) => void;
 }) {
+  const policyDenied =
+    props.item.type === "provider-slash-command" &&
+    props.item.command.name === "feedback" &&
+    (!managedPolicy.allows("providerFeedback") ||
+      props.item.command.disabledReason === "Disabled by managed policy");
+  if (policyDenied)
+    return (
+      <ManagedPolicyTooltip>
+        <CommandItem disabled value={props.item.id}>
+          {props.item.label}
+        </CommandItem>
+      </ManagedPolicyTooltip>
+    );
+
   const skillSourceKind =
     props.item.type === "skill" ? resolveProviderSkillSourceKind(props.item.skill) : null;
   const isSlashSkill =

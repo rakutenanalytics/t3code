@@ -1,3 +1,5 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { ManagedPolicyDisabledAction } from "../ManagedPolicyDisabledAction";
 import { UserButton, useAuth } from "@clerk/react";
 import { LogInIcon } from "lucide-react";
 
@@ -7,6 +9,8 @@ import { T3_CONNECT_ACCOUNT_PAGES } from "./T3ConnectAccountPages";
 import { useT3ConnectAuthPrompt } from "./useT3ConnectAuthPrompt";
 
 export function T3ConnectSidebarSignIn() {
+  if (!managedPolicy.allows("t3Connect"))
+    return <ManagedPolicyDisabledAction>Sign in to T3 Connect</ManagedPolicyDisabledAction>;
   if (!hasCloudPublicConfig()) return null;
 
   return <ConfiguredT3ConnectSidebarSignIn />;

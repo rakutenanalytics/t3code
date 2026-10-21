@@ -3,6 +3,7 @@
  * them to PostHog. Each event carries a uuid, so PostHog can tell a retried
  * copy from a new event.
  */
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import * as HostProcess from "@t3tools/shared/HostProcess";
 import type { ClientOs } from "@t3tools/contracts";
 import * as Clock from "effect/Clock";
@@ -135,6 +136,12 @@ function serverOsFromNodePlatform(platform: string): ClientOs {
 /** @public */
 /** @public Service construction is part of the canonical Effect module API. */
 export const make = Effect.gen(function* () {
+  if (!managedPolicy.allows("productAnalytics"))
+    return AnalyticsService.of({
+      record: () => Effect.void,
+      flush: Effect.void,
+      recordOwners: () => Effect.void,
+    });
   const telemetryConfig = yield* TelemetryEnvConfig;
   const httpClient = yield* HttpClient.HttpClient;
   const serverConfig = yield* ServerConfig.ServerConfig;

@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "enforcement": "review inventory only; no host firewall is implemented",
+  "hosts": [
+    {
+      "host": "auth.openai.com",
+      "purpose": "Selected provider OAuth"
+    },
+    {
+      "host": "api.openai.com",
+      "purpose": "Selected provider models and inference"
+    },
+    {
+      "host": "chatgpt.com",
+      "purpose": "Selected provider account usage"
+    },
+    {
+      "host": "api.anthropic.com",
+      "purpose": "Selected provider OAuth usage and credits"
+    },
+    {
+      "host": "oauth2.googleapis.com",
+      "purpose": "Selected provider OAuth"
+    },
+    {
+      "host": "www.googleapis.com",
+      "purpose": "Selected provider OAuth/account discovery"
+    },
+    {
+      "host": "daily-cloudcode-pa.googleapis.com",
+      "purpose": "Selected provider quota"
+    },
+    {
+      "host": "cloudcode-pa.googleapis.com",
+      "purpose": "Selected provider quota"
+    },
+    {
+      "host": "api2.cursor.sh",
+      "purpose": "Selected provider account usage"
+    },
+    {
+      "host": "cursor.com",
+      "purpose": "Selected provider account usage"
+    },
+    {
+      "host": "cli-chat-proxy.grok.com",
+      "purpose": "Selected provider billing"
+    },
+    {
+      "host": "opencode.ai",
+      "purpose": "Selected provider usage"
+    },
+    {
+      "host": "api.meta.ai",
+      "purpose": "Selected provider release channel"
+    },
+    {
+      "host": "registry.npmjs.org",
+      "purpose": "Provider metadata/install and publication checks"
+    },
+    {
+      "host": "cdn.agentclientprotocol.com",
+      "purpose": "ACP registry and registry-hosted resources"
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "purpose": "Model manifest, pricing and explicit support playbook"
+    },
+    {
+      "host": "api.github.com",
+      "purpose": "Pricing and explicit release/Git hosting workflows"
+    },
+    {
+      "host": "github.com",
+      "purpose": "Explicit Git hosting, provider/tool/runtime downloads"
+    },
+    {
+      "host": "objects.githubusercontent.com",
+      "purpose": "Redirected GitHub release assets"
+    },
+    {
+      "host": "release-assets.githubusercontent.com",
+      "purpose": "Redirected GitHub release assets"
+    },
+    {
+      "host": "open-vsx.org",
+      "purpose": "Explicit online theme search/import"
+    },
+    {
+      "host": "storage.googleapis.com",
+      "purpose": "Pinned headless Chrome download"
+    },
+    {
+      "host": "api.expo.dev",
+      "purpose": "Explicit remote-device service"
+    },
+    {
+      "host": "www.google.com",
+      "purpose": "Explicit search/favicon requests"
+    },
+    {
+      "host": "github.githubassets.com",
+      "purpose": "GitHub themed icons"
+    },
+    {
+      "host": "dl.google.com",
+      "purpose": "Explicit provider installation"
+    }
+  ],
+  "dynamicDestinationsRequireApproval": [
+    "Selected provider SDK/inference hosts",
+    "User-configured provider/proxy/MCP/Git/SSH hosts",
+    "User/agent browser URLs and page resources",
+    "Remote media/theme/ACP registry resources and redirects",
+    "LAN/Tailnet peers and configured STUN/TURN servers",
+    "Device helper package transitive downloads"
+  ],
+  "deniedCapabilities": [
+    "productAnalytics",
+    "t3Connect",
+    "desktopAutoUpdate",
+    "telemetryExport",
+    "providerFeedback"
+  ],
+  "excludedFromM0": [
+    "Mobile Expo OTA/native services",
+    "npx launcher binary distribution",
+    "Build toolchain and dependency supply chain"
+  ]
+}

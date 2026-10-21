@@ -1,3 +1,4 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import { createClerkBridge } from "@clerk/electron";
 import * as NodeURL from "node:url";
 import { storage } from "@clerk/electron/storage";
@@ -67,6 +68,7 @@ export class DesktopClerk extends Context.Service<
 function resolveDesktopClerkFrontendApiHostname(
   publishableKey: string | undefined,
 ): string | undefined {
+  if (!managedPolicy.allows("t3Connect")) return undefined;
   const normalizedKey = publishableKey?.trim();
   if (!normalizedKey) return undefined;
 
@@ -120,6 +122,8 @@ export const make = Effect.gen(function* () {
   yield* electronApp.on("second-instance", (_event: unknown, argv: readonly string[]) => {
     handleSecondInstance(argv);
   });
+
+  if (!managedPolicy.allows("t3Connect")) return DesktopClerk.of({ configure: Effect.void });
 
   yield* Effect.acquireRelease(
     Effect.try({

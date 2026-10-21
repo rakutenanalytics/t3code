@@ -1,3 +1,5 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { enforceManagedCapability } from "@t3tools/shared/managedPolicyHttpClient";
 import {
   AuthRelayReadScope,
   AuthRelayWriteScope,
@@ -421,7 +423,9 @@ const unlinkRelayEnvironment = Effect.fn("cloud.cli.unlink_relay_environment")(f
   const environment = yield* ServerEnvironment.ServerEnvironmentIdentity;
   const environmentId = yield* environment.getEnvironmentId;
   const relayUrl = yield* relayUrlConfig;
-  const httpClient = yield* HttpClient.HttpClient;
+  const httpClient = yield* HttpClient.HttpClient.pipe(
+    Effect.map(enforceManagedCapability("t3Connect")),
+  );
   const response = yield* HttpClientRequest.delete(
     `${relayUrl}/v1/client/environment-links/${encodeURIComponent(environmentId)}`,
   ).pipe(
@@ -528,6 +532,10 @@ const runCloudCommand = Effect.fn("cloud.cli.run_cloud_command")(function* <A, E
     readonly quietLogs?: boolean;
   },
 ) {
+  if (!managedPolicy.allows("t3Connect"))
+    return yield* new CliTokenManager.CloudCliAuthorizationError({
+      cause: "Disabled by managed policy",
+    });
   const logLevel = yield* GlobalFlag.LogLevel;
   const config = yield* resolveCliAuthConfig(flags, logLevel);
   const minimumLogLevel = options?.quietLogs ? "Error" : config.logLevel;

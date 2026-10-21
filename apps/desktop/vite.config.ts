@@ -1,3 +1,4 @@
+import { managedPolicyDefine } from "../../scripts/lib/managed-policy.ts";
 import "vite-plus/test/config";
 import { defaultInclude, defineConfig } from "vite-plus";
 
@@ -13,6 +14,7 @@ const isMainProcessExternal = (id: string) =>
   id === "electron" || id.startsWith("electron/") || isDesktopRuntimeExternalDependency(id);
 const shouldLaunchElectronAfterPack = process.env.T3CODE_DESKTOP_DEV === "1";
 const publicConfigDefine = {
+  ...managedPolicyDefine,
   __T3CODE_BUILD_CLERK_PUBLISHABLE_KEY__: JSON.stringify(
     repoEnv.T3CODE_CLERK_PUBLISHABLE_KEY?.trim() ?? "",
   ),

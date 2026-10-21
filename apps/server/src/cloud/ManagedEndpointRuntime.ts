@@ -1,3 +1,4 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import type { RelayManagedEndpointRuntimeConfig } from "@t3tools/contracts/relay";
 import * as RelayClient from "@t3tools/shared/relayClient";
 import * as Clock from "effect/Clock";
@@ -728,26 +729,28 @@ export const make = Effect.gen(function* () {
     } satisfies CloudManagedEndpointRuntimeStatus;
   });
 
-  const applyConfig = Effect.fn("CloudManagedEndpointRuntime.applyConfig")(
-    (config: RelayManagedEndpointRuntimeConfig | null) =>
-      reconcileSemaphore.withPermits(1)(
-        Effect.gen(function* () {
-          // A real config change starts over with a fresh backoff. Recovery
-          // that hands back the same tunnel and token must keep the delay, or
-          // a crash-looping connector respawns on every recovery round trip.
-          const desired = yield* Ref.get(desiredConfigRef);
-          const unchanged =
-            desired !== null &&
-            config !== null &&
-            runtimeConfigKey(desired) === runtimeConfigKey(config);
-          if (!unchanged) {
-            yield* Ref.set(restartDelayRef, 0);
-          }
-          yield* Ref.set(desiredConfigRef, config);
-          return yield* reconcileConfig(config);
-        }),
-      ),
-  );
+  const applyConfig = Effect.fn("CloudManagedEndpointRuntime.applyConfig")((
+    requestedConfig: RelayManagedEndpointRuntimeConfig | null,
+  ) => {
+    const config = managedPolicy.allows("t3Connect") ? requestedConfig : null;
+    return reconcileSemaphore.withPermits(1)(
+      Effect.gen(function* () {
+        // A real config change starts over with a fresh backoff. Recovery
+        // that hands back the same tunnel and token must keep the delay, or
+        // a crash-looping connector respawns on every recovery round trip.
+        const desired = yield* Ref.get(desiredConfigRef);
+        const unchanged =
+          desired !== null &&
+          config !== null &&
+          runtimeConfigKey(desired) === runtimeConfigKey(config);
+        if (!unchanged) {
+          yield* Ref.set(restartDelayRef, 0);
+        }
+        yield* Ref.set(desiredConfigRef, config);
+        return yield* reconcileConfig(config);
+      }),
+    );
+  });
 
   const readMetrics = <S extends Schema.Decoder<unknown>>(url: string, schema: S) =>
     httpClient.get(url).pipe(

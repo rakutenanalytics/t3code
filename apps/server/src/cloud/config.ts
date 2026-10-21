@@ -1,3 +1,4 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import {
   RelayManagedEndpointOrigin,
   RelayManagedEndpointRuntimeConfig,
@@ -41,7 +42,7 @@ export const decodeConfirmedOrigin = Schema.decodeUnknownOption(
 );
 
 export function isAgentActivityPublishingEnabledValue(value: string | null): boolean {
-  return value === "true";
+  return managedPolicy.allows("t3Connect") && value === "true";
 }
 
 /**
