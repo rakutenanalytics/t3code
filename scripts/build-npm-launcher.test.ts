@@ -192,11 +192,17 @@ it.layer(NodeServices.layer)("build-npm-launcher", (it) => {
           T3CODE_RELEASE_BASE_URL: release.baseUrl,
         };
         const launcher = path.join(packageDir, "bin/t3.mjs");
+        // macOS reports the resolved path for its /var -> /private/var temp symlink.
+        const reportedLauncher = yield* fs.realPath(launcher);
         const first = yield* run(process.execPath, [launcher, "serve", "a b"], {
           cwd: root,
           env,
         });
-        assert.equal(first.stdout.trim(), `stub serve a b launcher=${launcher}`, first.stderr);
+        assert.equal(
+          first.stdout.trim(),
+          `stub serve a b launcher=${reportedLauncher}`,
+          first.stderr,
+        );
         assert.equal(first.exitCode, 7);
         // The same layout the install scripts and `t3 update` use.
         const versionDir = path.join(home, "runtime/versions", VERSION);
