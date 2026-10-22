@@ -37,7 +37,7 @@
     "security/stage-lock-baseline.json": "a4f58fdaeadee938ae71b45ca948fd6d10ad4128d1c6aade6ac1dd2e392becba"
   },
   "lockfileSha256": "bd1eb8e3287279da492668a86cc15a55465d9c5cf74fbde1dc55e0ab9a68feb1",
-  "workspaceSha256": "b0ce3425db6094916e0474ddecf905d2a550d9a9e75a38b5db8bdb8794acc514",
+  "workspaceSha256": "c38a138c68e6c60314caec837ef50a567dfff0ee8834173d4206f0854fc7e19e",
   "packages": {
     "2g@1.0.1": "dd9e2275fbceb46fcb134a1527ba81631029df395a04f585412696c2d6fb88a3",
     "@ai-sdk/provider-utils@4.0.57": "91292c891dae156203129fe67afa901dab73d870d77dc2462f6cba854a0840d2",

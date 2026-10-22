@@ -2,6 +2,12 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-10-22 — exact pnpm package exceptions
+
+- baseline-update: security/dependency-exceptions.json — Records eight exact, fingerprint-bound SAFE tarball reviews for the existing upstream lockfile. Seven missing-provenance exceptions and one young Uniwind release are supported by 08-package-review.md; original reviewer objections and parent resolutions remain in that evidence. No dependency, script or build grant changes.
+- baseline-update: security/dependency-baseline.json — Refreshes only the workspace policy hash for seven exact trust exclusions and uniwind@1.13.0's exact age exclusion. The 4320-minute floor, strict checks, lockfile, package fingerprints, scripts and lifecycle build permissions remain unchanged.
+- baseline-update: security/network-baseline.json — Refreshes pnpm-workspace.yaml's complete-file fingerprint after the reviewed exact policy exceptions. No host, URL, runtime network capability or other source file is added.
+
 ## 2026-10-22 — CI, installer and scanner audit
 
 - baseline-update: security/network-baseline.json — A5 migrates line hashes to complete-file hashes and readable literal-host/URL inventories; scans generated code, fixtures and configuration. Includes the reviewed app-gate commit 00948e6f9; the migration anchor is not a fresh runtime safety approval.
