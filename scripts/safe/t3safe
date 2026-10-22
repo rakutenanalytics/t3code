@@ -36,6 +36,14 @@ case "${1:-help}" in
     status=0
     printf 'Installed version: '; cat "$release_dir/VERSION"
     printf 'Release policy: '; cat "$release_dir/managed-policy.json"
+    prefix=$(cd "$release_dir/../../../.." && pwd)
+    t3_path=$(command -v t3 || true)
+    if [[ -n "$t3_path" ]]; then
+      t3_directory=$(cd -P "$(dirname "$t3_path")" && pwd)
+      if [[ "$t3_directory/" != "$prefix/"* ]]; then
+        printf 'WARNING: t3 on PATH is outside the t3safe prefix: %s (expected under %s)\n' "$t3_path" "$prefix"
+      fi
+    fi
     if [[ -x "$release_dir/t3" ]]; then
       printf 'Effective CLI policy: '
       "$release_dir/t3" managed-policy || status=1

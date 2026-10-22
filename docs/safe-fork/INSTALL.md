@@ -20,7 +20,7 @@ Use `--app-only` for desktop alone or `--version vX.Y.Z-safe.N` to pin a release
 
 ## Install from a DMG
 
-Download the `*-darwin-arm64.dmg` and `SHA256SUMS` from [Releases](https://github.com/rakutenanalytics/t3code/releases). Compare `shasum -a 256 <downloaded.dmg>` with its entry before opening it. Drag the app to Applications. A manual DMG install does not install `t3safe`; use the curl installer for its management commands.
+Download the `*-darwin-arm64.dmg` and `SHA256SUMS` from [Releases](https://github.com/rakutenanalytics/t3code/releases). Compare `shasum -a 256 <downloaded.dmg>` with its entry before opening it. Drag the app to Applications. A manual DMG install does not install `t3safe`; use the curl installer for its management commands. The Settings "install CLI command" button creates a `t3` launcher for the installed app, using the patched build without a download; `t3safe` still needs the curl installer.
 
 These builds have no Apple Developer ID or notarization. Browser downloads can have quarantine metadata. For this reviewed app, remove it with `xattr -dr com.apple.quarantine "/Applications/T3 Code (Beta).app"`, adjusting the path to the actual app name. If macOS still blocks launch, use System Settings → Privacy & Security → Open Anyway when available. Device policy may prohibit an unsigned app. Curl normally does not set download quarantine, and the installer clears it explicitly; launch on every managed Mac is not guaranteed.
 
