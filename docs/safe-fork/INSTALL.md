@@ -4,19 +4,20 @@ Requires macOS on Apple Silicon. Releases and downloads are public; no GitHub lo
 
 ## Install with curl
 
-```sh
-curl -fsSL https://raw.githubusercontent.com/rakutenanalytics/t3code/main/install.sh | bash
-```
-
-The installer resolves the latest safe release, verifies SHA256 checksums, copies the app to `/Applications` when writable or `~/Applications` otherwise, and puts `t3` and `t3safe` in `~/.local/bin`. Add that directory to PATH if needed. It removes `com.apple.quarantine` and uses ad-hoc signing when the existing signature needs repair. Quit the app before updating.
-
-For a CLI-only install:
+Select a reviewed tag from [Releases](https://github.com/rakutenanalytics/t3code/releases), then download its installer and checksums into an empty directory:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/rakutenanalytics/t3code/main/install.sh | bash -s -- --cli-only
+tag=vX.Y.Z-safe.N # replace with the reviewed release tag
+base="https://github.com/rakutenanalytics/t3code/releases/download/$tag"
+curl -fSL --proto '=https' --proto-redir '=https' "$base/install.sh" -o install.sh
+curl -fSL --proto '=https' --proto-redir '=https' "$base/SHA256SUMS" -o SHA256SUMS
+awk '$2 == "install.sh" || $2 == "./install.sh"' SHA256SUMS > INSTALLER-SHA256
+[ "$(wc -l < INSTALLER-SHA256 | tr -d ' ')" = 1 ] && shasum -a 256 --check INSTALLER-SHA256 && bash install.sh --version "$tag"
 ```
 
-Use `--app-only` for desktop alone or `--version vX.Y.Z-safe.N` to pin a release. Inspect the plan with `--dry-run`. `--prefix /path` installs command files and the app below that directory. Repeating an install is supported.
+The installer verifies each asset before extraction, copies the app to `/Applications` when writable or `~/Applications` otherwise, and puts `t3` and `t3safe` in `~/.local/bin`. Add that directory to PATH if needed. It removes quarantine metadata. A failed Developer ID signature is rejected; only absent or ad-hoc signatures may be repaired. Quit the app before updating.
+
+Add `--cli-only` or `--app-only` to select one component. Inspect the plan with `--dry-run`. `--prefix /path` installs command files and the app below that directory; relative prefixes are normalized. Repeating an install is supported. Installing a lower version requires explicit `--allow-downgrade`, even with `--version`.
 
 ## Install from a DMG
 
@@ -34,9 +35,9 @@ t3safe doctor
 t3safe update
 ```
 
-Doctor prints the installed version, release policy, effective CLI policy when installed, and quarantine status. App-only installs report the release policy; they do not introspect a running app. Update reruns the public installer, preserving app-only or CLI-only selection. Use `t3safe update --version vX.Y.Z-safe.N` for a specific version. Use this updater for safe builds; upstream `t3 update`, `npx t3`, SSH provisioning and service bootstrap still follow upstream distribution paths.
+Doctor prints the installed version, release policy, effective CLI policy when installed, and quarantine status. App-only installs report the release policy; they do not introspect a running app. Update resolves the selected release, downloads its installer and SHA256SUMS, verifies the installer before execution, and preserves app-only or CLI-only selection. It never executes the installer from main. Use `t3safe update --version vX.Y.Z-safe.N` for a specific version. Use this updater for safe releases. `npx t3` installs a separate upstream distribution and is outside this installer’s policy boundary.
 
-SHA256 detects a mismatched download. The release and checksums share GitHub trust; they do not provide independent publisher authentication.
+SHA256 detects a mismatched download. The release and checksums share GitHub trust; they do not provide independent publisher authentication. Release builds also publish GitHub provenance: `gh attestation verify <asset> --repo rakutenanalytics/t3code`.
 
 ## Uninstall
 

@@ -1,0 +1,5 @@
+{
+  "justification": "Additional dependency-owned URLs and hosts require explicit per-entry review. Source literals are bound to security/network-baseline.json. CI fails on unknown artifact destinations; do not automatically approve candidate inventories.",
+  "urls": {},
+  "hosts": {}
+}

@@ -33,7 +33,7 @@ try {
   finishScan(
     "baked policy smoke",
     violations,
-    "built executable reports reviewed policy despite environment overrides; no listener/provider launch",
+    "built executable reports reviewed policy; no listener/provider launch; environment flags alone do not prove gate enforcement",
   );
 } finally {
   NodeFS.rmSync(isolatedHome, { recursive: true, force: true });

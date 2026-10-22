@@ -5,9 +5,10 @@ repository=rakutenanalytics/t3code
 version=
 mode=both
 dry_run=false
+allow_downgrade=false
 prefix=
 usage() {
-  printf '%s\n' 'Usage: install.sh [--version vX.Y.Z-safe.N] [--cli-only|--app-only] [--dry-run] [--prefix DIR]'
+  printf '%s\n' 'Usage: install.sh [--version vX.Y.Z-safe.N] [--cli-only|--app-only] [--dry-run] [--prefix DIR] [--allow-downgrade]'
 }
 fail() { printf 't3safe: %s\n' "$*" >&2; exit 1; }
 while [[ $# -gt 0 ]]; do
@@ -17,6 +18,7 @@ while [[ $# -gt 0 ]]; do
     --cli-only) mode=cli; shift ;;
     --app-only) mode=app; shift ;;
     --dry-run) dry_run=true; shift ;;
+    --allow-downgrade) allow_downgrade=true; shift ;;
     --help|-h) usage; exit 0 ;;
     *) usage >&2; fail "Unknown option: $1" ;;
   esac
@@ -33,7 +35,7 @@ if $dry_run; then
   printf 'Resolve %s from public GitHub API: %s\n' "${version:-latest safe release}" "$repository"
   printf 'Download selected assets and SHA256SUMS with curl; verify SHA256 before extraction.\n'
   printf 'Install mode: %s\nManagement command: %s/bin/t3safe\nCLI versions: %s/share/t3safe/versions\nApp directory: %s\n' "$mode" "$install_root" "$install_root" "$app_dir"
-  printf 'Strip com.apple.quarantine; verify signatures, ad-hoc sign if needed; publish symlinks.\n'
+  printf 'Refuse downgrades unless --allow-downgrade; strip quarantine; preserve valid signatures.\n'
   exit 0
 fi
 for command in curl plutil shasum tar ditto hdiutil xattr codesign; do command -v "$command" >/dev/null || fail "Missing command: $command"; done
@@ -50,6 +52,19 @@ if [[ -z "$version" ]]; then
   version=$(plutil -extract tag_name raw -o - "$work/release.json")
   [[ "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-safe\.[0-9]+$ ]] || fail 'Latest release is not a safe release. Select --version explicitly.'
 fi
+installed_receipt="$install_root/bin/t3safe"
+if [[ -e "$installed_receipt" ]]; then
+  installed_version=$("$installed_receipt" version)
+  [[ "$installed_version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-safe\.[0-9]+$ ]] || fail 'Invalid installed VERSION receipt.'
+  if ! $allow_downgrade; then
+    older=$(printf '%s\n%s\n' "$version" "$installed_version" | awk '
+      { tag=$0; gsub(/^v|safe\./, ""); gsub(/-/, "."); split($0, v, ".");
+        if (NR == 1) { for (i=1; i<=4; i++) target[i]=v[i]; next }
+        for (i=1; i<=4; i++) { if (target[i]+0 < v[i]+0) { print "yes"; exit } if (target[i]+0 > v[i]+0) exit }
+      }')
+    [[ "$older" != yes ]] || fail "Refusing downgrade from $installed_version to $version; use --allow-downgrade."
+  fi
+fi
 release_url="https://github.com/$repository/releases/download/$version"
 curl_public "$release_url/SHA256SUMS" -o "$work/SHA256SUMS"
 download_verified() {
@@ -61,8 +76,21 @@ download_verified() {
   actual=${actual%% *}
   [[ "$actual" == "$expected" ]] || fail "Checksum mismatch: $name"
 }
+verify_signature() {
+  local target=$1 details
+  if codesign --verify --deep "$target" 2>/dev/null; then return; fi
+  details=$(codesign -dv "$target" 2>&1 || true)
+  if [[ "$details" != *'Signature=adhoc'* && "$details" != *'code object is not signed at all'* ]]; then
+    fail "Invalid existing signature: $target"
+  fi
+  codesign --force --deep --sign - --preserve-metadata=entitlements,requirements,flags,runtime --timestamp=none "$target"
+  codesign --verify --deep "$target"
+}
 for asset in t3safe managed-policy.json VERSION; do download_verified "$asset"; done
 [[ $(cat "$work/VERSION") == "$version" ]] || fail 'Release VERSION does not match selected tag.'
+mkdir -p "$install_root"
+install_root=$(cd "$install_root" && pwd -P)
+if [[ -n "$prefix" ]]; then app_dir="$install_root/Applications"; fi
 release_dir="$install_root/share/t3safe/versions/$version"
 mkdir -p "$work/payload" "$install_root/bin" "$(dirname "$release_dir")"
 if [[ "$mode" != app ]]; then
@@ -74,8 +102,7 @@ if [[ "$mode" != app ]]; then
   tar -xzf "$work/$archive" -C "$work/payload" --strip-components=1
   [[ -x "$work/payload/t3" ]] || fail 'CLI executable missing.'
   xattr -dr com.apple.quarantine "$work/payload"
-  codesign --verify "$work/payload/t3" 2>/dev/null || codesign --force --sign - --preserve-metadata=entitlements,requirements,flags,runtime --timestamp=none "$work/payload/t3"
-  codesign --verify "$work/payload/t3"
+  verify_signature "$work/payload/t3"
 fi
 if [[ "$mode" != cli ]]; then
   dmg="t3safe-${version#v}-darwin-arm64.dmg"
@@ -88,8 +115,7 @@ if [[ "$mode" != cli ]]; then
   app_name=$(basename "${apps[0]}")
   ditto "${apps[0]}" "$work/installed.app"
   xattr -dr com.apple.quarantine "$work/installed.app"
-  codesign --verify --deep "$work/installed.app" 2>/dev/null || codesign --force --deep --sign - --preserve-metadata=entitlements,requirements,flags,runtime --timestamp=none "$work/installed.app"
-  codesign --verify --deep "$work/installed.app"
+  verify_signature "$work/installed.app"
   mkdir -p "$app_dir"
   if [[ -e "$app_dir/$app_name" ]]; then
     [[ -d "$app_dir/$app_name/Contents" && ! -L "$app_dir/$app_name" ]] || fail "Unexpected app destination: $app_dir/$app_name"

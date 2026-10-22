@@ -43,11 +43,11 @@ jobs:
       version: ${{ steps.plan.outputs.version }}
       commit: ${{ steps.plan.outputs.commit }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: "24.13.1"
       - id: plan
@@ -56,8 +56,10 @@ jobs:
           REQUESTED_TAG: ${{ inputs.tag }}
           REF_TYPE: ${{ github.ref_type }}
           REF_NAME: ${{ github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git merge-base --is-ancestor HEAD origin/main
+          git fetch origin main --tags
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
           upstream_version=$(node -p 'JSON.parse(require("node:fs").readFileSync("security/last-approved-upstream", "utf8")).tag.replace(/^v/, "")')
           [[ "$upstream_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
           tag_prefix="v${upstream_version}-safe."
@@ -86,6 +88,7 @@ jobs:
           if git show-ref --verify --quiet "refs/tags/$release_tag"; then
             test "$(git rev-list -n 1 "$release_tag")" = "$(git rev-parse HEAD)"
           fi
+          node scripts/safe/release-guard.ts "$release_tag"
           echo 'release=true' >> "$GITHUB_OUTPUT"
           echo "tag=$release_tag" >> "$GITHUB_OUTPUT"
           echo "version=${release_tag#v}" >> "$GITHUB_OUTPUT"
@@ -93,9 +96,10 @@ jobs:
       - name: Scan source and dependencies before install
         if: steps.plan.outputs.release == 'true'
         run: |
+          node scripts/safe/workflow-scan.ts
           node scripts/safe/egress-scan.ts
           node scripts/safe/dependency-scan.ts
-      - uses: voidzero-dev/setup-vp@v1
+      - uses: voidzero-dev/setup-vp@250f29ce396baf5e8f24498e17c0dfdebabc26eb # v1
         if: steps.plan.outputs.release == 'true'
         with:
           node-version: "24.13.1"
@@ -104,7 +108,9 @@ jobs:
       - if: steps.plan.outputs.release == 'true'
         run: vp install --frozen-lockfile
       - if: steps.plan.outputs.release == 'true'
-        run: node scripts/safe/policy-verify.ts
+        run: |
+          node scripts/safe/policy-verify.ts
+          node scripts/safe/stage-lock-scan.ts
   build:
     needs: plan
     if: needs.plan.outputs.release == 'true'
@@ -120,17 +126,36 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: write
+      id-token: write
+      attestations: write
     steps:
-      - uses: actions/download-artifact@v8
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ needs.plan.outputs.commit }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "24.13.1"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: t3safe-release
           path: release-safe
+      - name: Attest release artifacts
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
+        with:
+          subject-path: |
+            release-safe/*.dmg
+            release-safe/*.tar.gz
+            release-safe/install.sh
       - name: Publish public release assets
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ needs.plan.outputs.tag }}
           RELEASE_COMMIT: ${{ needs.plan.outputs.commit }}
         run: |
+          git fetch origin main --tags
+          node scripts/safe/release-guard.ts "$RELEASE_TAG"
           cd release-safe
           shasum -a 256 --check SHA256SUMS
           gh release create "$RELEASE_TAG" ./* --repo "$GITHUB_REPOSITORY" \

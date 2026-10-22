@@ -43,3 +43,9 @@ export function finishScan(name: string, violations: string[], summary: string) 
   for (const violation of violations) process.stderr.write(`  ${violation}\n`);
   process.exitCode = 1;
 }
+
+export function fileDigest(file: string) {
+  return NodeCrypto.createHash("sha256")
+    .update(NodeFS.readFileSync(NodePath.resolve(root, file)))
+    .digest("hex");
+}

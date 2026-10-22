@@ -2,6 +2,7 @@ import * as Schema from "effect/Schema";
 import { ManagedCapability } from "@t3tools/contracts";
 import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import { loadBakedManagedPolicy } from "../lib/managed-policy.ts";
+import { bundlePolicyViolations } from "./bundle-policy.ts";
 import { finishScan, jsonFile } from "./repository.ts";
 
 const policy = loadBakedManagedPolicy();
@@ -16,6 +17,12 @@ for (const capability of inventory.deniedCapabilities) {
 }
 if (JSON.stringify(managedPolicy.policy) !== JSON.stringify(policy))
   violations.push("source policy differs from build policy");
+const bundleIndex = process.argv.indexOf("--bundle");
+if (bundleIndex !== -1) {
+  const bundle = process.argv[bundleIndex + 1];
+  if (!bundle) throw new Error("--bundle needs the extracted application directory");
+  violations.push(...bundlePolicyViolations(bundle));
+}
 finishScan(
   "policy",
   violations,

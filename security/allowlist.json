@@ -124,11 +124,14 @@
     "t3Connect",
     "desktopAutoUpdate",
     "telemetryExport",
-    "providerFeedback"
+    "providerFeedback",
+    "upstreamUpdate",
+    "remoteContent",
+    "providerMetadata",
+    "providerTelemetry"
   ],
   "outOfScopeSurfaces": [
     "Mobile Expo OTA/native services",
-    "npx launcher binary distribution",
     "Build toolchain and dependency supply chain"
   ],
   "reviewedSourceHosts": [

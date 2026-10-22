@@ -7,6 +7,7 @@ import {
 import { queryDependencyRegistry, registryReview } from "./dependency-registry.ts";
 import {
   digest,
+  fileDigest,
   finishScan,
   jsonFile,
   repositoryFiles,
@@ -24,6 +25,7 @@ interface PackageManifest {
 interface DependencyBaseline {
   lockfileSha256: string;
   workspaceSha256: string;
+  supplyChainFiles: Record<string, string>;
   packages: Record<string, string>;
   manifests: Record<string, PackageManifest>;
 }
@@ -57,7 +59,18 @@ for (const file of repositoryFiles().filter(
     optionalDependencies: manifest.optionalDependencies ?? {},
   };
 }
+const supplyChainFiles: Record<string, string> = {};
+for (const file of repositoryFiles()) {
+  if (
+    /(?:^|\/)(?:\.npmrc|\.pnpmfile\.[cm]?js|Cargo.lock)$/.test(file) ||
+    file === "security/stage-lock-baseline.json" ||
+    file.startsWith("patches/") ||
+    /^apps\/mobile\/deps\/.*\.tgz$/.test(file)
+  )
+    supplyChainFiles[file] = fileDigest(file);
+}
 const current: DependencyBaseline = {
+  supplyChainFiles,
   lockfileSha256: digest(lockfile),
   workspaceSha256: digest(workspace),
   packages,
@@ -169,6 +182,15 @@ process.stdout.write(
 );
 
 const violations: string[] = [];
+for (const match of workspace.matchAll(/^  ["']?([^"'\n]+?)["']?: true\s*$/gm)) {
+  const build = match[1]!;
+  if (!Object.hasOwn(packages, build))
+    violations.push(`allowBuilds grant must name an exact locked package version: ${build}`);
+}
+if (JSON.stringify(supplyChainFiles) !== JSON.stringify(baseline.supplyChainFiles ?? {}))
+  violations.push(
+    "supply-chain inputs changed: review patches, hooks, vendored archives and all Cargo.lock files",
+  );
 for (const [file, manifest] of Object.entries(manifests)) {
   if (JSON.stringify(manifest) !== JSON.stringify(baseline.manifests[file]))
     violations.push(
@@ -188,7 +210,11 @@ if (current.workspaceSha256 !== baseline.workspaceSha256)
   );
 if (reviews.length > 0)
   violations.push(`${reviews.length} dependency review(s) unresolved; see ${reportPath}`);
-if (write && reviews.length === 0) {
+if (
+  write &&
+  reviews.length === 0 &&
+  !violations.some((violation) => violation.startsWith("allowBuilds"))
+) {
   writeBaseline(baselinePath, current);
   process.stdout.write("Wrote dependency baseline. Inspect its diff before committing.\n");
 } else {

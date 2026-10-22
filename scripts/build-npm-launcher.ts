@@ -26,6 +26,7 @@ import * as HostProcess from "@t3tools/shared/HostProcess";
 import { fromJsonStringPretty } from "@t3tools/shared/schemaJson";
 import serverPackageJson from "../apps/server/package.json" with { type: "json" };
 
+import { loadBakedManagedPolicy } from "./lib/managed-policy.ts";
 import { windowsSystemTar } from "./build-cli-archive.ts";
 
 export const NPM_LAUNCHER_PACKAGE_NAME = "t3";
@@ -46,6 +47,7 @@ export function npmLauncherPackageManifest(version: string) {
   return {
     name: NPM_LAUNCHER_PACKAGE_NAME,
     version,
+    t3codeManagedPolicy: loadBakedManagedPolicy() ?? { allow: [] },
     description:
       "T3 Code CLI. Downloads the self-contained executable for this platform from the GitHub Release.",
     license: serverPackageJson.license,

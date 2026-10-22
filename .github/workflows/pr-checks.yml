@@ -12,28 +12,35 @@ jobs:
     runs-on: macos-14
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
           fetch-depth: 0
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: "24.13.1"
       - name: Scan source and dependencies before install
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
+          node scripts/safe/workflow-scan.ts "$BASE_SHA"
           node scripts/safe/egress-scan.ts
           node scripts/safe/dependency-scan.ts
-      - uses: voidzero-dev/setup-vp@v1
+      - uses: voidzero-dev/setup-vp@250f29ce396baf5e8f24498e17c0dfdebabc26eb # v1
         with:
           node-version: "24.13.1"
           run-install: false
           cache: false
       - run: vp install --frozen-lockfile
-      - run: node scripts/safe/policy-verify.ts
+      - run: |
+          node scripts/safe/policy-verify.ts
+          node scripts/safe/stage-lock-scan.ts
       - name: Run focused managed policy tests
         run: |
           vp test run scripts/safe/managed-policy.test.ts apps/server/src/telemetry/ManagedGates.test.ts apps/desktop/src/updates/ManagedUpdates.test.ts
           vp test run scripts/safe/dependency-comparison.test.ts
+          vp test run scripts/build-npm-launcher.test.ts
+          vp test run scripts/build-desktop-artifact.test.ts -t "installs production dependencies with the reviewed frozen lockfile"
       - name: Install test browser and verify disabled action
         run: |
           node apps/web/node_modules/playwright/cli.js install --only-shell chromium
@@ -63,11 +70,11 @@ jobs:
     timeout-minutes: 10
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
           fetch-depth: 0
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: "24.13.1"
       - name: Check registry metadata against the PR base
@@ -80,7 +87,7 @@ jobs:
           node scripts/safe/dependency-scan.ts --online --baseline "$RUNNER_TEMP/dependency-base.json"
       - name: Upload dependency review report
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: dependency-review
           path: security/young-or-unknown.json

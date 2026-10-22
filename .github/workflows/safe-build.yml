@@ -18,24 +18,27 @@ jobs:
       T3CODE_DISABLE_AUTO_UPDATE: "true"
       T3CODE_MOBILE_UPDATES_ENABLED: "0"
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: "24.13.1"
       - name: Verify runner and dependency baseline before install
         run: |
           test "$(uname -m)" = arm64
+          node scripts/safe/workflow-scan.ts
           node scripts/safe/egress-scan.ts
           node scripts/safe/dependency-scan.ts
-      - uses: voidzero-dev/setup-vp@v1
+      - uses: voidzero-dev/setup-vp@250f29ce396baf5e8f24498e17c0dfdebabc26eb # v1
         with:
           node-version: "24.13.1"
           run-install: false
           cache: false
       - run: vp install --frozen-lockfile
-      - run: node scripts/safe/policy-verify.ts
+      - run: |
+          node scripts/safe/policy-verify.ts
+          node scripts/safe/stage-lock-scan.ts
       - name: Build desktop DMG
         run: |
           node scripts/build-desktop-artifact.ts --platform mac --target dmg --arch arm64 \
@@ -43,7 +46,9 @@ jobs:
           dmg=(release-safe/*.dmg)
           test "${#dmg[@]}" -eq 1
           mv "${dmg[0]}" "release-safe/t3safe-${SAFE_VERSION}-darwin-arm64.dmg"
-      - uses: actions/setup-node@v6
+      - name: Inspect policy and endpoints inside the built DMG
+        run: node scripts/safe/desktop-smoke.ts "release-safe/t3safe-${SAFE_VERSION}-darwin-arm64.dmg"
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: "26.8.2"
       - name: Build standalone CLI and resource monitor
@@ -65,6 +70,8 @@ jobs:
           tar -xzf "release-safe/t3safe-${SAFE_VERSION}-darwin-arm64.tar.gz" -C "$RUNNER_TEMP/safe-smoke"
           executable="$RUNNER_TEMP/safe-smoke/t3-${SAFE_VERSION}-darwin-arm64/t3"
           node scripts/safe/egress-smoke.ts "$executable"
+          node scripts/safe/artifact-scan.ts apps/server/dist-exe
+          node scripts/safe/artifact-scan.ts "$RUNNER_TEMP/safe-smoke"
       - name: Package management command, policy and checksums
         run: |
           cp scripts/safe/t3safe release-safe/t3safe
@@ -74,7 +81,7 @@ jobs:
           rm -f release-safe/*.zip release-safe/*.blockmap release-safe/*.yml release-safe/*.yaml
           cd release-safe
           shasum -a 256 ./*.dmg ./*.tar.gz t3safe managed-policy.json VERSION install.sh > SHA256SUMS
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: t3safe-release
           path: release-safe/

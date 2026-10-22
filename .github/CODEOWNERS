@@ -1,0 +1,13 @@
+# TODO(admin): replace OWNER with a write-enabled user or @rakutenanalytics/team.
+# The repository owner is an Organization, not a CODEOWNERS user/team.
+# Activate these patterns after selecting the security reviewers; see MAINTAINING.md.
+# /.github/** OWNER
+# /scripts/safe/** OWNER
+# /scripts/lib/managed-policy.ts OWNER
+# /scripts/lib/locked-stage-dependencies.ts OWNER
+# /scripts/build-desktop-artifact.ts OWNER
+# /security/** OWNER
+# /install.sh OWNER
+# /packages/*/src/managedPolicy*.ts OWNER
+# /apps/**/managed* OWNER
+# /.agents/skills/t3safe-sync/** OWNER

@@ -37,10 +37,14 @@ describe("managed capability policy", () => {
       ["remoteAccess.network", true],
       ["telemetryExport", false],
       ["providerFeedback", false],
+      ["upstreamUpdate", false],
+      ["remoteContent", false],
+      ["providerMetadata", false],
+      ["providerTelemetry", false],
     ]);
   });
 
-  it("should allow every capability when no policy file exists", () => {
+  it("should preserve the raw helper's permissive null contract when the build loader returns null", () => {
     const missingFile = isolatedPolicyFile();
 
     const policy = createManagedPolicy({ policy: loadBakedManagedPolicy(missingFile) });

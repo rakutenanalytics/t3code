@@ -16,10 +16,34 @@ case "${1:-help}" in
     ;;
   update)
     shift
-    installer=$(mktemp "${TMPDIR:-/tmp}/t3safe-update.XXXXXX")
-    trap 'rm -f "$installer"' EXIT
-    curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
-      https://raw.githubusercontent.com/rakutenanalytics/t3code/main/install.sh -o "$installer"
+    version=
+    forwarded=()
+    while [[ $# -gt 0 ]]; do
+      if [[ "$1" == --version ]]; then
+        [[ $# -ge 2 ]] || fail '--version needs a tag'
+        version=$2
+        shift 2
+      else
+        forwarded+=("$1")
+        shift
+      fi
+    done
+    work=$(mktemp -d "${TMPDIR:-/tmp}/t3safe-update.XXXXXX")
+    trap 'rm -rf "$work"' EXIT
+    curl_public() { curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' "$@"; }
+    if [[ -z "$version" ]]; then
+      curl_public https://api.github.com/repos/rakutenanalytics/t3code/releases/latest -o "$work/release.json"
+      version=$(plutil -extract tag_name raw -o - "$work/release.json")
+    fi
+    [[ "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-safe\.[0-9]+$ ]] || fail 'Expected vX.Y.Z-safe.N.'
+    release_url="https://github.com/rakutenanalytics/t3code/releases/download/$version"
+    installer="$work/install.sh"
+    curl_public "$release_url/SHA256SUMS" -o "$work/SHA256SUMS"
+    curl_public "$release_url/install.sh" -o "$installer"
+    expected=$(awk '$2 == "install.sh" || $2 == "./install.sh" { print $1 }' "$work/SHA256SUMS")
+    [[ "$expected" =~ ^[a-fA-F0-9]{64}$ ]] || fail 'Missing or duplicate installer checksum.'
+    actual=$(shasum -a 256 "$installer")
+    [[ "${actual%% *}" == "$expected" ]] || fail 'Installer checksum mismatch.'
     prefix=$(cd "$release_dir/../../../.." && pwd)
     mode=--cli-only
     if [[ -f "$release_dir/APP_PATH" ]]; then
@@ -30,11 +54,12 @@ case "${1:-help}" in
     # A normal install keeps the app in /Applications or ~/Applications.
     if [[ "$prefix" == "$HOME/.local" ]]; then args=(); fi
     if [[ -n "$mode" ]]; then args+=("$mode"); fi
-    bash "$installer" "${args[@]}" "$@"
+    bash "$installer" --version "$version" "${args[@]}" "${forwarded[@]}"
     ;;
   doctor)
     status=0
     printf 'Installed version: '; cat "$release_dir/VERSION"
+    printf 'Verify release provenance: gh attestation verify <asset> --repo rakutenanalytics/t3code\n'
     printf 'Release policy: '; cat "$release_dir/managed-policy.json"
     prefix=$(cd "$release_dir/../../../.." && pwd)
     t3_path=$(command -v t3 || true)

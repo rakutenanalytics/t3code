@@ -42,6 +42,10 @@ import {
 } from "./lib/cli-external-packages.ts";
 import { loadRepoEnv } from "./lib/public-config.ts";
 import { selectDesktopRuntimeExternalDependencies } from "./lib/desktop-external-packages.ts";
+import {
+  createLockedStageFiles,
+  assertStagedDependencyVersions,
+} from "./lib/locked-stage-dependencies.ts";
 import { resolveCatalogDependencies } from "./lib/resolve-catalog.ts";
 
 import * as NodeRuntime from "@effect/platform-node/NodeRuntime";
@@ -118,7 +122,6 @@ const decodeReleasePackageManifest = Schema.decodeEffect(
   Schema.fromJsonString(Schema.Record(Schema.String, Schema.Unknown)),
 );
 const decodeWorkspaceConfig = Schema.decodeEffect(fromYaml(WorkspaceConfig));
-const encodeStageWorkspaceConfig = Schema.encodeEffect(fromYaml(StageWorkspaceConfig));
 
 export const readWorkspaceConfig = Effect.fn("readWorkspaceConfig")(function* () {
   const fs = yield* FileSystem.FileSystem;
@@ -979,7 +982,7 @@ interface StagePackageJson {
   };
 }
 
-export const STAGE_INSTALL_ARGS = ["install", "--prod"] as const;
+export const STAGE_INSTALL_ARGS = ["install", "--prod", "--frozen-lockfile"] as const;
 export const DESKTOP_ELECTRON_LANGUAGES = ["en-US"] as const;
 export const DESKTOP_FILE_EXCLUSIONS = [
   // Cursor finds platform assets by walking up from argv[1]. Keep them outside
@@ -3192,12 +3195,31 @@ export const stageWindowsServerSidecar = Effect.fn("stageWindowsServerSidecar")(
     // symlink/junction layout, so install a physical, hoisted node_modules.
     nodeLinker: "hoisted" as const,
   };
-  const sidecarWorkspaceConfigString = yield* encodeStageWorkspaceConfig(sidecarWorkspaceConfig);
+  const reviewedSidecarLockfile = yield* fs.readFileString(
+    path.join(input.repoRoot, "pnpm-lock.yaml"),
+  );
+  const reviewedSidecarWorkspace = yield* fs.readFileString(
+    path.join(input.repoRoot, "pnpm-workspace.yaml"),
+  );
+  const sidecarLockedFiles = yield* Effect.try(() =>
+    createLockedStageFiles({
+      lockfile: reviewedSidecarLockfile,
+      workspace: reviewedSidecarWorkspace,
+      dependencies: sidecarDependencies,
+      supportedArchitectures: sidecarWorkspaceConfig.supportedArchitectures,
+      nodeLinker: "hoisted",
+    }),
+  );
+  yield* fs.writeFileString(
+    path.join(serverStageDir, "pnpm-lock.yaml"),
+    sidecarLockedFiles.lockfile,
+  );
+  const sidecarWorkspaceConfigString = sidecarLockedFiles.workspace;
   yield* fs.writeFileString(
     path.join(serverStageDir, "pnpm-workspace.yaml"),
     sidecarWorkspaceConfigString,
   );
-  if (Object.keys(sidecarPatchedDependencies).length > 0) {
+  if (Object.keys(input.patchedDependencies).length > 0) {
     yield* fs.copy(path.join(input.repoRoot, "patches"), path.join(serverStageDir, "patches"));
   }
 
@@ -3208,8 +3230,10 @@ export const stageWindowsServerSidecar = Effect.fn("stageWindowsServerSidecar")(
       cwd: serverStageDir,
       shell: installCommand.shell,
     }),
-    { label: "vp install --prod (server sidecar)", verbose: input.verbose },
+    { label: "vp install --prod --frozen-lockfile (server sidecar)", verbose: input.verbose },
   );
+
+  yield* Effect.try(() => assertStagedDependencyVersions(serverStageDir, reviewedSidecarLockfile));
 
   yield* Effect.log("[desktop-artifact] Packing server.asar...");
   yield* fs.makeDirectory(path.dirname(input.asarPath), { recursive: true });
@@ -3920,13 +3944,27 @@ const buildDesktopArtifactUnlocked = Effect.fn("buildDesktopArtifactUnlocked")(f
     patchedDependencies: stagePatchedDependencies,
     overrides: resolvedOverrides,
   });
-  const stageWorkspaceConfigString = yield* encodeStageWorkspaceConfig(stageWorkspaceConfig);
+  const reviewedStageLockfile = yield* fs.readFileString(path.join(repoRoot, "pnpm-lock.yaml"));
+  const reviewedStageWorkspace = yield* fs.readFileString(
+    path.join(repoRoot, "pnpm-workspace.yaml"),
+  );
+  const stageLockedFiles = yield* Effect.try(() =>
+    createLockedStageFiles({
+      lockfile: reviewedStageLockfile,
+      workspace: reviewedStageWorkspace,
+      dependencies: stageDependencies,
+      devDependencies: stagePackageJson.devDependencies,
+      supportedArchitectures: stageWorkspaceConfig.supportedArchitectures,
+    }),
+  );
+  yield* fs.writeFileString(path.join(stageAppDir, "pnpm-lock.yaml"), stageLockedFiles.lockfile);
+  const stageWorkspaceConfigString = stageLockedFiles.workspace;
   yield* fs.writeFileString(
     path.join(stageAppDir, "pnpm-workspace.yaml"),
     stageWorkspaceConfigString,
   );
 
-  if (Object.keys(stagePatchedDependencies).length > 0) {
+  if (Object.keys(workspacePatchedDependencies).length > 0) {
     yield* fs.copy(path.join(repoRoot, "patches"), path.join(stageAppDir, "patches"));
   }
 
@@ -3937,8 +3975,9 @@ const buildDesktopArtifactUnlocked = Effect.fn("buildDesktopArtifactUnlocked")(f
       cwd: stageAppDir,
       shell: installCommand.shell,
     }),
-    { label: "vp install --prod", verbose: options.verbose },
+    { label: "vp install --prod --frozen-lockfile", verbose: options.verbose },
   );
+  yield* Effect.try(() => assertStagedDependencyVersions(stageAppDir, reviewedStageLockfile));
   yield* stageClerkPasskeyNativeBinaries(stageAppDir, options.platform, options.arch);
   yield* stageKeyringNativeBinaries(stageAppDir, options.platform, options.arch);
 
