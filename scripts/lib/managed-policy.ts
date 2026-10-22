@@ -4,8 +4,9 @@ import * as Schema from "effect/Schema";
 
 import { ManagedPolicy } from "@t3tools/contracts";
 
-export function loadBakedManagedPolicy() {
-  const policyFile = new URL("../../security/managed-policy.json", import.meta.url);
+export function loadBakedManagedPolicy(
+  policyFile = new URL("../../security/managed-policy.json", import.meta.url),
+) {
   if (!NodeFS.existsSync(policyFile)) return null;
   const json = NodeFS.readFileSync(policyFile, "utf8");
   return decodeManagedPolicy(json);
