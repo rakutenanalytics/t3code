@@ -47,6 +47,9 @@ jobs:
         with:
           node-version: "26.8.2"
       - name: Build standalone CLI and resource monitor
+        env:
+          # Node single-executable builds need >= 25.7; vp otherwise runs its own pinned Node.
+          VP_NODE_VERSION: "26.8.2"
         run: |
           node scripts/update-release-package-versions.ts "$SAFE_VERSION"
           node apps/server/scripts/cli.ts build-exe --target darwin-arm64 --verbose
