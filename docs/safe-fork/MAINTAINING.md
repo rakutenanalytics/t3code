@@ -1,6 +1,6 @@
 # Maintain the safe fork
 
-Start a fresh thread in the fork and run `/t3safe-sync`. The [skill](../../.claude/skills/t3safe-sync/SKILL.md) owns the merge-based update procedure and two approval pauses: before pushing/opening a PR, then before merging/tagging a public release. Every repository-scoped gh command needs an explicit `--repo`; fork PR creation otherwise targets upstream. Main receives updates through reviewed PRs.
+Start a fresh thread in the fork and run `/t3safe-sync`, or `/t3safe-sync --issue <number>` for an `upstream-sync` issue. The [skill](../../.agents/skills/t3safe-sync/SKILL.md) owns the merge-based update procedure and pauses for approval before pushing/opening a PR. The agent hands the green PR to the maintainer; merging it approves the automatic public release. Every repository-scoped gh command needs an explicit `--repo`; fork PR creation otherwise targets upstream. Main receives updates through reviewed PRs.
 
 ## Checks and baselines
 
@@ -26,12 +26,18 @@ After resolving every finding, use `node scripts/safe/egress-scan.ts --write-bas
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | `pr-checks.yml`      | PRs to main; scanners before dependency installation, policy tests, scoped typechecks/lint/format, shell checks and browser presentation |
 | `safe-build.yml`     | Reusable macos-14 ARM64 DMG + CLI build; no publishing, no secrets; artifact smoke and checksums                                         |
-| `release.yml`        | `vX.Y.Z-safe.N` tags on main; separate publisher with contents write, using only GITHUB_TOKEN                                            |
-| `upstream-watch.yml` | Daily stable-release comparison; one issue updated using issues write, without updating code                                             |
+| `release.yml`        | Main changes affecting shipped files; policy verification, next safe tag, build and public release using only GITHUB_TOKEN               |
+| `upstream-watch.yml` | Daily stable-release comparison; one open `upstream-sync` issue for the latest tag, with agent instructions                              |
 
 The artifact smoke runs the built CLI's read-only `managed-policy` command with enablement overrides and an isolated temporary home. It checks baked policy without opening a listener or launching providers. Together with focused no-op/endpoint tests and static scans, this is the deterministic substitute for startup egress capture. It does not log attempted runtime hosts. Real server startup would also require controlled provider discovery, settings and dependency-owned network instrumentation; native processes, redirects and SDK traffic would still need host-level observation. Do not claim zero egress from this smoke.
 
-Tag only after the second approval and green PR checks. Release assets are public: a DMG, standalone CLI tarball, t3safe, managed-policy.json, VERSION, install.sh and SHA256SUMS. Installation uses plain curl. No Apple account, upstream secrets, npm publishing, mobile distribution or deployment runs. Verify checksums and installer dry-run in a temporary directory after publication. Require the `policy` and artifact build checks in main branch protection before accepting updates; repository settings are a separate maintainer operation.
+The maintainer merges the reviewed PR only when all required checks are green. That merge is release approval; the sync skill never merges for the user. The release workflow reruns egress/dependency scans and policy verification before building, reads the upstream version from `security/last-approved-upstream`, and chooses `v<upstream-version>-safe.<N>` with N one above the highest existing suffix, starting at 0. Runs share one concurrency group. After a successful build it creates the tag at the merged commit and publishes; automatic runs skip a commit that already has a safe tag.
+
+For a failed release, investigate first. Maintainers can retry using `workflow_dispatch` on the merged commit with an optional safe tag, or push a safe tag pointing to a commit on main. An explicit existing tag must point to the selected commit. Both fallbacks run the same policy checks and build. Routine releases need no tag push or second approval.
+
+The watcher issue records the upstream tag, the comparison against the reviewed anchor and the last-approved version. Pick it up with `/t3safe-sync --issue <number>` and include `Closes #N` in the sync PR body. Repeated watcher runs update the open issue for that tag; a newer tag supersedes stale open issues.
+
+Release assets are public: a DMG, standalone CLI tarball, t3safe, managed-policy.json, VERSION, install.sh and SHA256SUMS. Installation uses plain curl. No Apple account, upstream secrets, npm publishing, mobile distribution or deployment runs. Verify checksums and installer dry-run in a temporary directory after publication. Require the `policy` and artifact build checks in main branch protection before accepting updates; repository settings are a separate maintainer operation.
 
 All inherited workflow files were removed, including the old release.yml replaced by the safe publisher:
 

@@ -66,16 +66,18 @@
       "4b1777793e21d0d3c4e1bef37f166ad64a4e87fa80f614de47ce50f2411844cb": 1
     },
     ".github/workflows/release.yml": {
+      "3545d78b5a031a31462114fc28093d12465b6caa1407f9c01ccfc5405a50344a": 1,
+      "970338da843b65467a7ef43393216985b44e222870ea891a1f256acd5e1bdec6": 1,
       "63a4b4e5db480e8152384f472597140e3cc05ce63f3efbd5e4a8251378740247": 1,
       "0ded19d39d0e90462ddd613de893d8a150142ed04069832b3f913b69ed6285f1": 1,
-      "353191ccc0ce496577bcfe479b2492c4ed23cc9ec924d70be98652fae21bccff": 1,
-      "5b4ef3856ea602bf18e5693033898f2c4dbdc14813a694c3932bbb5f8c92df61": 1
+      "353191ccc0ce496577bcfe479b2492c4ed23cc9ec924d70be98652fae21bccff": 1
     },
     ".github/workflows/safe-build.yml": {
       "9604606640712b78d5354ee8f96d892d00e95a5f1e1253bcb0bd19ec6da0f877": 1
     },
     ".github/workflows/upstream-watch.yml": {
-      "63a4b4e5db480e8152384f472597140e3cc05ce63f3efbd5e4a8251378740247": 1
+      "63a4b4e5db480e8152384f472597140e3cc05ce63f3efbd5e4a8251378740247": 1,
+      "f436931822a66a9e19225ad11d25bf4f0aa5454a8e7b909720e197c5cc78fa08": 1
     },
     "apps/desktop/gnome-extension/metadata.json": {
       "55e9a5613ab86002cc719ca48dfb40afee18c4dead05fdc9a8ae8e86f2fff9f4": 1

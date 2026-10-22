@@ -40,6 +40,8 @@ Compiled builds embed [managed-policy.json](managed-policy.json) through the [bu
 
 Safe fork release installation uses the root [install.sh](../install.sh) and [t3safe](../scripts/safe/t3safe), with public fork release/checksum downloads. Upstream npx, `t3 update`, service and SSH bootstrap remain separate known distribution paths; they are scanned and retained with that limitation, not redirected to safe artifacts. Mobile Expo OTA remains excluded from distribution.
 
+Merging a reviewed PR approves automatic public tag/release publication on GitHub. The upstream watcher writes public sync issues with compare links on GitHub; it does not change source code or approve releases.
+
 CI adds literal host checks and reviewed source-statement fingerprints, plus a lockfile/manifest/build-permission baseline. File-specific literal annotations include gated hosts, documentation/schema links, optional tooling and synthetic examples. Hashes identify illustrative addresses without duplicating private-looking sample names. New statements still require diff review, even for an approved host.
 
 This inventory covers runtime paths, not every transitive install/build endpoint. Build toolchain downloads and dependency lifecycle scripts need a separate supply-chain baseline. Redirects and SDK-owned endpoints must be reviewed before treating the host inventory as enforceable network policy.

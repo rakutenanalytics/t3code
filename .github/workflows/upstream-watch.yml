@@ -18,29 +18,57 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
+      - name: Ensure the upstream-sync label exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh label create upstream-sync --repo "$GITHUB_REPOSITORY" --description 'Upstream release ready for agent sync review' --color 1d76db || true
       - uses: actions/github-script@v8
         with:
           script: |
             const fs = require('node:fs');
             const approved = JSON.parse(fs.readFileSync('security/last-approved-upstream', 'utf8'));
             const { data: latest } = await github.rest.repos.getLatestRelease({ owner: 'pingdotgg', repo: 't3code' });
+            if (!/^v\d+\.\d+\.\d+$/.test(latest.tag_name)) {
+              throw new Error(`Expected a stable upstream tag, received ${latest.tag_name}`);
+            }
             const marker = '<!-- t3safe-upstream-watch -->';
-            const issues = await github.paginate(github.rest.issues.listForRepo, { ...context.repo, state: 'all', creator: 'github-actions[bot]', per_page: 100 });
-            const matches = issues.filter(issue => !issue.pull_request && issue.body?.includes(marker));
+            const issues = await github.paginate(github.rest.issues.listForRepo, { ...context.repo, state: 'open', per_page: 100 });
+            const matches = issues.filter(issue => !issue.pull_request && (
+              issue.labels.some(label => label.name === 'upstream-sync') || issue.body?.includes(marker)
+            ));
             if (approved.tag === latest.tag_name) {
-              for (const issue of matches.filter(issue => issue.state === 'open')) {
-                await github.rest.issues.update({ ...context.repo, issue_number: issue.number, state: 'closed' });
+              for (const issue of matches) {
+                await github.rest.issues.update({ ...context.repo, issue_number: issue.number, state: 'closed', state_reason: 'completed' });
               }
               return;
             }
-            const title = `Upstream update available: ${latest.tag_name}`;
-            const body = `${marker}\n\nUpstream: ${latest.html_url}\n\nLast reviewed: ${approved.tag ?? approved.sha}. Run /t3safe-sync in a fresh thread on the fork. A release notification does not approve the update.`;
-            const issue = matches[0];
-            if (issue) {
-              await github.rest.issues.update({ ...context.repo, issue_number: issue.number, title, body, state: 'open' });
-            } else {
-              await github.rest.issues.create({ ...context.repo, title, body });
+            const title = `upstream ${latest.tag_name} available`;
+            const compareUrl = `https://github.com/pingdotgg/t3code/compare/${approved.sha}...${latest.tag_name}`;
+            let issue = matches.find(issue => issue.title === title || issue.title === `Upstream update available: ${latest.tag_name}`);
+            if (!issue) {
+              const created = await github.rest.issues.create({ ...context.repo, title, labels: ['upstream-sync'] });
+              issue = created.data;
             }
-            for (const duplicate of matches.slice(1).filter(issue => issue.state === 'open')) {
-              await github.rest.issues.update({ ...context.repo, issue_number: duplicate.number, state: 'closed' });
+            const body = [
+              marker,
+              '',
+              `Upstream tag: \`${latest.tag_name}\``,
+              `Upstream release: ${latest.html_url}`,
+              `Last-approved version: ${approved.tag} (reviewed source: ${approved.sha})`,
+              `Compare: ${compareUrl}`,
+              '',
+              '## Agent instructions',
+              '',
+              `Run the t3safe-sync skill with \`--issue ${issue.number}\` in a fresh thread on the fork.`,
+              'Review and patch the upstream changes, run the focused checks, and pause for approval before pushing or opening the sync PR.',
+              `Include \`Closes #${issue.number}\` in the sync PR body so the maintainer closes this issue by merging the PR.`,
+              'Never merge for the user or merge with a red required check. The maintainer merging the PR approves the automatic safe release.',
+            ].join('\n');
+            const labels = issue.labels.map(label => label.name);
+            if (!labels.includes('upstream-sync')) labels.push('upstream-sync');
+            await github.rest.issues.update({ ...context.repo, issue_number: issue.number, title, body, labels });
+            for (const stale of matches) {
+              if (stale.number === issue.number) continue;
+              await github.rest.issues.createComment({ ...context.repo, issue_number: stale.number, body: `Superseded by #${issue.number} for upstream ${latest.tag_name}.` });
+              await github.rest.issues.update({ ...context.repo, issue_number: stale.number, state: 'closed', state_reason: 'not_planned' });
             }

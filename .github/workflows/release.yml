@@ -1,41 +1,123 @@
 name: Publish safe release
 on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Safe tag to publish or retry; omit to choose the next tag"
+        required: false
+        type: string
   push:
+    branches: [main]
     tags: ["v*-safe.*"]
+    paths:
+      - "security/**"
+      - "apps/**"
+      - "packages/**"
+      - "scripts/**"
+      - "native/**"
+      - "assets/**"
+      - "packaging/**"
+      - "patches/**"
+      - "install.sh"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "tsconfig*.json"
+      - "vite.config.ts"
+      - "third-party-licenses.config.json"
+      - ".github/workflows/safe-build.yml"
+      - ".github/workflows/release.yml"
 permissions:
   contents: read
 concurrency:
-  group: safe-release-${{ github.ref }}
+  group: safe-release
   cancel-in-progress: false
 jobs:
-  preflight:
+  plan:
     if: github.repository == 'rakutenanalytics/t3code'
     runs-on: macos-14
+    timeout-minutes: 25
     outputs:
-      version: ${{ steps.version.outputs.version }}
+      release: ${{ steps.plan.outputs.release }}
+      tag: ${{ steps.plan.outputs.tag }}
+      version: ${{ steps.plan.outputs.version }}
+      commit: ${{ steps.plan.outputs.commit }}
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           persist-credentials: false
-      - id: version
-        name: Require a safe tag on main
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24.13.1"
+      - id: plan
+        name: Choose a safe tag for the reviewed main commit
         env:
-          RELEASE_TAG: ${{ github.ref_name }}
+          REQUESTED_TAG: ${{ inputs.tag }}
+          REF_TYPE: ${{ github.ref_type }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-safe\.[0-9]+$ ]]
           git merge-base --is-ancestor HEAD origin/main
-          echo "version=${RELEASE_TAG#v}" >> "$GITHUB_OUTPUT"
+          upstream_version=$(node -p 'JSON.parse(require("node:fs").readFileSync("security/last-approved-upstream", "utf8")).tag.replace(/^v/, "")')
+          [[ "$upstream_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          tag_prefix="v${upstream_version}-safe."
+          release_tag="$REQUESTED_TAG"
+          if [[ "$REF_TYPE" == tag ]]; then release_tag="$REF_NAME"; fi
+
+          # Explicit tags allow retrying publication after a failed tag-triggered run.
+          if [[ -z "$release_tag" ]]; then
+            if git tag --points-at HEAD | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+-safe\.[0-9]+$'; then
+              echo 'release=false' >> "$GITHUB_OUTPUT"
+              echo 'This commit already has a safe tag; skipping release.' >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            next=0
+            while IFS= read -r existing_tag; do
+              suffix=${existing_tag#"$tag_prefix"}
+              if [[ "$suffix" =~ ^[0-9]+$ ]] && (( 10#$suffix >= next )); then
+                next=$((10#$suffix + 1))
+              fi
+            done < <(git tag --list "${tag_prefix}*")
+            release_tag="${tag_prefix}${next}"
+          fi
+
+          [[ "$release_tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-safe\.[0-9]+$ ]]
+          [[ "$release_tag" == "$tag_prefix"* ]]
+          if git show-ref --verify --quiet "refs/tags/$release_tag"; then
+            test "$(git rev-list -n 1 "$release_tag")" = "$(git rev-parse HEAD)"
+          fi
+          echo 'release=true' >> "$GITHUB_OUTPUT"
+          echo "tag=$release_tag" >> "$GITHUB_OUTPUT"
+          echo "version=${release_tag#v}" >> "$GITHUB_OUTPUT"
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Scan source and dependencies before install
+        if: steps.plan.outputs.release == 'true'
+        run: |
+          node scripts/safe/egress-scan.ts
+          node scripts/safe/dependency-scan.ts
+      - uses: voidzero-dev/setup-vp@v1
+        if: steps.plan.outputs.release == 'true'
+        with:
+          node-version: "24.13.1"
+          run-install: false
+          cache: false
+      - if: steps.plan.outputs.release == 'true'
+        run: vp install --frozen-lockfile
+      - if: steps.plan.outputs.release == 'true'
+        run: node scripts/safe/policy-verify.ts
   build:
-    needs: preflight
+    needs: plan
+    if: needs.plan.outputs.release == 'true'
     uses: ./.github/workflows/safe-build.yml
     with:
-      version: ${{ needs.preflight.outputs.version }}
+      version: ${{ needs.plan.outputs.version }}
     permissions:
       contents: read
   publish:
-    needs: [preflight, build]
+    needs: [plan, build]
+    if: needs.plan.outputs.release == 'true'
     runs-on: macos-14
+    timeout-minutes: 10
     permissions:
       contents: write
     steps:
@@ -46,10 +128,11 @@ jobs:
       - name: Publish public release assets
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ github.ref_name }}
+          RELEASE_TAG: ${{ needs.plan.outputs.tag }}
+          RELEASE_COMMIT: ${{ needs.plan.outputs.commit }}
         run: |
           cd release-safe
           shasum -a 256 --check SHA256SUMS
-          gh release create "$RELEASE_TAG" ./* --repo rakutenanalytics/t3code \
-            --verify-tag --latest --title "T3 Code $RELEASE_TAG" \
+          gh release create "$RELEASE_TAG" ./* --repo "$GITHUB_REPOSITORY" \
+            --target "$RELEASE_COMMIT" --latest --title "T3 Code $RELEASE_TAG" \
             --notes 'Managed macOS Apple Silicon build. Unsigned/ad-hoc signed. See docs/safe-fork/INSTALL.md for installation and policy limits.'

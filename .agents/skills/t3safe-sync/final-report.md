@@ -8,8 +8,8 @@
 - Baseline changes and removed exceptions:
 - Local checks with commands/results:
 - CI run/artifacts and checksum evidence:
-- Pause 1 approval and published commands:
-- Pause 2 approval and merge/tag commands:
+- Publication approval and published commands:
+- Maintainer handoff; merge SHA and automatic release run, or pending:
 - PR URL, safe release tag/URL:
 - Temporary-directory installer dry-run and asset checksum results:
 - Checks not run; remaining risks/blockers:
