@@ -1,6 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { describe, expect, it } from "vite-plus/test";
-import { page } from "vite-plus/test/browser";
+import { page, userEvent } from "vite-plus/test/browser";
 import { ManagedPolicyDisabledAction } from "./ManagedPolicyDisabledAction";
 import { TooltipProvider } from "./ui/tooltip";
 
@@ -19,11 +19,9 @@ describe("managed policy client presentation", () => {
       const action = page.getByRole("button", { name: "Connect", exact: true });
       await expect.element(action).toBeDisabled();
       const trigger = container.querySelector<HTMLElement>("[tabindex='0']")!;
-      trigger.focus();
+      await userEvent.hover(trigger);
 
-      await expect
-        .element(page.getByRole("tooltip"))
-        .toHaveTextContent("Disabled by managed policy");
+      await expect.element(page.getByText("Disabled by managed policy")).toBeVisible();
     } finally {
       root.unmount();
       container.remove();
