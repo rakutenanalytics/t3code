@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_path=${BASH_SOURCE[0]}
+while [[ -L "$script_path" ]]; do
+  script_directory=$(cd -P "$(dirname "$script_path")" && pwd)
+  target=$(readlink "$script_path")
+  if [[ "$target" = /* ]]; then script_path=$target; else script_path="$script_directory/$target"; fi
+done
+release_dir=$(cd -P "$(dirname "$script_path")" && pwd)
+fail() { printf 't3safe: %s\n' "$*" >&2; exit 1; }
+case "${1:-help}" in
+  version)
+    [[ -f "$release_dir/VERSION" ]] || fail 'No installed VERSION receipt.'
+    cat "$release_dir/VERSION"
+    ;;
+  update)
+    shift
+    installer=$(mktemp "${TMPDIR:-/tmp}/t3safe-update.XXXXXX")
+    trap 'rm -f "$installer"' EXIT
+    curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
+      https://raw.githubusercontent.com/rakutenanalytics/t3code/main/install.sh -o "$installer"
+    prefix=$(cd "$release_dir/../../../.." && pwd)
+    mode=--cli-only
+    if [[ -f "$release_dir/APP_PATH" ]]; then
+      mode=--app-only
+      if [[ -x "$release_dir/t3" ]]; then mode=; fi
+    fi
+    args=(--prefix "$prefix")
+    # A normal install keeps the app in /Applications or ~/Applications.
+    if [[ "$prefix" == "$HOME/.local" ]]; then args=(); fi
+    if [[ -n "$mode" ]]; then args+=("$mode"); fi
+    bash "$installer" "${args[@]}" "$@"
+    ;;
+  doctor)
+    status=0
+    printf 'Installed version: '; cat "$release_dir/VERSION"
+    printf 'Release policy: '; cat "$release_dir/managed-policy.json"
+    if [[ -x "$release_dir/t3" ]]; then
+      printf 'Effective CLI policy: '
+      "$release_dir/t3" managed-policy || status=1
+    else
+      printf 'App-only install: effective policy is embedded at build time; release policy shown above.\n'
+    fi
+    paths=("$release_dir")
+    if [[ -f "$release_dir/APP_PATH" ]]; then paths+=("$(cat "$release_dir/APP_PATH")"); fi
+    for path in "${paths[@]}"; do
+      if [[ ! -e "$path" ]]; then printf 'MISSING: %s\n' "$path"; status=1; continue; fi
+      attributes=$(xattr -lr "$path") || status=1
+      if [[ "$attributes" == *com.apple.quarantine* ]]; then
+        printf 'QUARANTINED: %s\n' "$path"; status=1
+      else
+        printf 'No quarantine: %s\n' "$path"
+      fi
+    done
+    exit "$status"
+    ;;
+  help|--help|-h) printf '%s\n' 'Usage: t3safe update [installer options] | version | doctor' ;;
+  *) fail "Unknown command: $1" ;;
+esac

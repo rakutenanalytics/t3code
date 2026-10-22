@@ -17,7 +17,10 @@ if (
   // Guard sockets before either dispatch path can load outbound-capable modules.
   const { ignoreMacosTypeOfServiceEinval } = await import("./outboundHttp.ts");
   ignoreMacosTypeOfServiceEinval();
-  if (command === "acp-mcp-bridge" || command === "acp-mcp-call") {
+  if (command === "managed-policy") {
+    const { managedPolicy } = await import("@t3tools/shared/managedPolicy");
+    process.stdout.write(`${JSON.stringify(managedPolicy.policy)}\n`);
+  } else if (command === "acp-mcp-bridge" || command === "acp-mcp-call") {
     const { runAcpMcpCliFastPath } = await import("./mcp/AcpMcpStdioBridge.ts");
     await runAcpMcpCliFastPath(command, process.argv.slice(3));
   } else {
