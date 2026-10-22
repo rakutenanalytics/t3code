@@ -154,53 +154,59 @@ describe("BrowserSession", () => {
     }).pipe(Effect.provide(layer)),
   );
 
-  it.effect("grants clipboard-sanitized-write through both the request and check handlers", () =>
-    Effect.gen(function* () {
-      const browserSessions = yield* BrowserSession.BrowserSession;
-      const partition = yield* browserSessions.getPartition("scope-a");
-      yield* browserSessions.getSession("scope-a");
+  it.effect(
+    "should allow clipboard-sanitized-write and fullscreen while denying clipboard-read, geolocation and sensitive permissions in both handlers",
+    () =>
+      Effect.gen(function* () {
+        const browserSessions = yield* BrowserSession.BrowserSession;
+        const partition = yield* browserSessions.getPartition("scope-a");
+        yield* browserSessions.getSession("scope-a");
 
-      const browserSession = sessions.get(partition);
-      assert.isDefined(browserSession);
+        const browserSession = sessions.get(partition);
+        assert.isDefined(browserSession);
 
-      const requestHandler = browserSession.setPermissionRequestHandler.mock.calls[0]?.[0];
-      const checkHandler = browserSession.setPermissionCheckHandler.mock.calls[0]?.[0];
-      assert.isFunction(requestHandler);
-      assert.isFunction(checkHandler);
+        const requestHandler = browserSession.setPermissionRequestHandler.mock.calls[0]?.[0];
+        const checkHandler = browserSession.setPermissionCheckHandler.mock.calls[0]?.[0];
+        assert.isFunction(requestHandler);
+        assert.isFunction(checkHandler);
 
-      const requestAllows = (permission: string): boolean => {
-        let granted: boolean | undefined;
-        requestHandler(null, permission, (value: boolean) => {
-          granted = value;
-        });
-        assert.isDefined(granted);
-        return granted;
-      };
+        const requestAllows = (permission: string): boolean => {
+          let granted: boolean | undefined;
+          requestHandler(null, permission, (value: boolean) => {
+            granted = value;
+          });
+          assert.isDefined(granted);
+          return granted;
+        };
 
-      for (const permission of [
-        "clipboard-read",
-        "clipboard-sanitized-write",
-        "geolocation",
-        "fullscreen",
-      ]) {
-        assert.isTrue(requestAllows(permission), `request handler should allow ${permission}`);
-        assert.isTrue(
-          checkHandler(null, permission) as boolean,
-          `check handler should allow ${permission}`,
-        );
-      }
+        for (const permission of ["clipboard-sanitized-write", "fullscreen"]) {
+          assert.isTrue(requestAllows(permission), `request handler should allow ${permission}`);
+          assert.isTrue(
+            checkHandler(null, permission) as boolean,
+            `check handler should allow ${permission}`,
+          );
+        }
 
-      // `clipboard-write` is not a real Electron permission — the async write API
-      // uses `clipboard-sanitized-write` — so the stale name must not be granted,
-      // and unrelated permissions stay denied.
-      for (const permission of ["clipboard-write", "notifications", "midi"]) {
-        assert.isFalse(requestAllows(permission), `request handler should deny ${permission}`);
-        assert.isFalse(
-          checkHandler(null, permission) as boolean,
-          `check handler should deny ${permission}`,
-        );
-      }
-    }).pipe(Effect.provide(layer)),
+        // `clipboard-write` is not a real Electron permission — the async write API
+        // uses `clipboard-sanitized-write` — so the stale name must not be granted,
+        // and unrelated permissions stay denied.
+        for (const permission of [
+          "clipboard-read",
+          "geolocation",
+          "media",
+          "display-capture",
+          "local-fonts",
+          "clipboard-write",
+          "notifications",
+          "midi",
+        ]) {
+          assert.isFalse(requestAllows(permission), `request handler should deny ${permission}`);
+          assert.isFalse(
+            checkHandler(null, permission) as boolean,
+            `check handler should deny ${permission}`,
+          );
+        }
+      }).pipe(Effect.provide(layer)),
   );
 
   it.effect("opens custom-scheme links externally only after the user confirms", () =>

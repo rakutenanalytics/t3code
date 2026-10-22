@@ -1,3 +1,6 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { afterEach, beforeEach, vi } from "vite-plus/test";
+
 import { assert, describe, it } from "@effect/vitest";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { ProviderDriverKind } from "@t3tools/contracts";
@@ -11,6 +14,11 @@ import { HttpClient, HttpClientResponse } from "effect/http";
 import * as ServerConfig from "../config.ts";
 import * as ServerSettings from "../serverSettings.ts";
 import * as ModelManifest from "./ModelManifest.ts";
+
+beforeEach(() => {
+  vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
+});
+afterEach(() => vi.restoreAllMocks());
 
 describe("resolveProviderCatalog", () => {
   it("resolves generic model presentation through a reusable profile", () => {
@@ -501,3 +509,38 @@ it.effect("caches valid compatibility policies and keeps them after a malformed 
     ),
   );
 });
+
+it.effect(
+  "should return the bundled catalog for refresh and forceRefresh without requesting upstream metadata when providerMetadata is denied",
+  () => {
+    vi.mocked(managedPolicy.allows).mockReturnValue(false);
+    const requests: string[] = [];
+    const transport = HttpClient.make((request) => {
+      requests.push(request.url);
+      return Effect.die("upstream metadata request escaped managed policy");
+    });
+
+    return Effect.gen(function* () {
+      const manifest = yield* ModelManifest.make;
+      const current = yield* manifest.current;
+      const refreshed = yield* manifest.refresh;
+      const forced = yield* manifest.forceRefresh;
+      yield* manifest.refreshInBackground;
+
+      assert.deepStrictEqual(
+        [current, refreshed, forced],
+        Array(3).fill(ModelManifest.BUNDLED_MODEL_MANIFEST),
+      );
+      assert.deepStrictEqual(requests, []);
+    }).pipe(
+      Effect.provideService(HttpClient.HttpClient, transport),
+      Effect.provide(
+        layerService({
+          prefix: "managed-model-manifest",
+          response: () => Response.json(REMOTE_MANIFEST),
+        }),
+      ),
+      Effect.scoped,
+    );
+  },
+);

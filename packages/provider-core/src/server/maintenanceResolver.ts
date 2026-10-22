@@ -1,3 +1,5 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { enforceManagedCapability } from "@t3tools/shared/managedPolicyHttpClient";
 export type {
   ProviderMaintenanceCapabilities,
   ProviderMaintenanceCommandAction,
@@ -848,7 +850,7 @@ export function createProviderVersionAdvisory(input: {
 }
 
 const fetchNpmLatestVersion = Effect.fn("fetchNpmLatestVersion")(function* (packageName: string) {
-  const client = yield* HttpClient.HttpClient;
+  const client = enforceManagedCapability("providerMetadata")(yield* HttpClient.HttpClient);
   const request = HttpClientRequest.get(
     `https://registry.npmjs.org/${encodeURIComponent(packageName)}/latest`,
   ).pipe(HttpClientRequest.setHeader("accept", "application/json"));
@@ -889,6 +891,8 @@ export function latestProviderVersionCacheKeys(
 export const resolveLatestProviderVersion = Effect.fn("resolveLatestProviderVersion")(function* (
   maintenanceCapabilities: ProviderMaintenanceCapabilities,
 ) {
+  if (!managedPolicy.allows("providerMetadata"))
+    return maintenanceCapabilities.latestVersion ?? null;
   const latestVersions = yield* ProviderLatestVersions.ProviderLatestVersions;
   const installerKey = installerLatestVersionKey(maintenanceCapabilities);
   if (installerKey && maintenanceCapabilities.lookupLatestVersion) {

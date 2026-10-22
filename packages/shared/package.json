@@ -3,6 +3,14 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./remoteContent": {
+      "types": "./src/remoteContent.ts",
+      "import": "./src/remoteContent.ts"
+    },
+    "./providerEnvironment": {
+      "types": "./src/providerEnvironment.ts",
+      "import": "./src/providerEnvironment.ts"
+    },
     "./changedFileKind": {
       "types": "./src/changedFileKind.ts",
       "import": "./src/changedFileKind.ts"

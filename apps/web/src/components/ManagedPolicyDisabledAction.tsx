@@ -3,9 +3,15 @@ import type { ReactNode } from "react";
 import { Button } from "./ui/button";
 import { Tooltip, TooltipPopup, TooltipTrigger } from "./ui/tooltip";
 
-export function ManagedPolicyDisabledAction({ children }: { readonly children: ReactNode }) {
+export function ManagedPolicyDisabledAction({
+  children,
+  reason,
+}: {
+  readonly children: ReactNode;
+  readonly reason?: string;
+}) {
   return (
-    <ManagedPolicyTooltip>
+    <ManagedPolicyTooltip reason={reason}>
       <Button variant="outline" size="sm" disabled>
         {children}
       </Button>
@@ -13,11 +19,17 @@ export function ManagedPolicyDisabledAction({ children }: { readonly children: R
   );
 }
 
-export function ManagedPolicyTooltip({ children }: { readonly children: ReactNode }) {
+export function ManagedPolicyTooltip({
+  children,
+  reason = "Disabled by managed policy",
+}: {
+  readonly children: ReactNode;
+  readonly reason?: string | undefined;
+}) {
   return (
     <Tooltip>
       <TooltipTrigger render={<span tabIndex={0} />}>{children}</TooltipTrigger>
-      <TooltipPopup>Disabled by managed policy</TooltipPopup>
+      <TooltipPopup>{reason}</TooltipPopup>
     </Tooltip>
   );
 }

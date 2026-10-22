@@ -1,3 +1,4 @@
+import { createManagedProviderEnvironment } from "@t3tools/shared/providerEnvironment";
 import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import * as DateTime from "effect/DateTime";
 import * as Duration from "effect/Duration";
@@ -451,7 +452,7 @@ export const codexAppServerEnvironment = (
   environment: NodeJS.ProcessEnv | undefined,
 ): NodeJS.ProcessEnv => ({
   CODEX_INTERNAL_ORIGINATOR_OVERRIDE: CODEX_CLIENT_NAME,
-  ...environment,
+  ...createManagedProviderEnvironment(environment ?? process.env),
 });
 
 export function buildCodexInitializeParams(): CodexSchema.V1InitializeParams {

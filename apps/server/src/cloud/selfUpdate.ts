@@ -1,3 +1,4 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import {
   ServerSelfUpdateError,
   type ServerSelfUpdateCapability,
@@ -196,6 +197,11 @@ export const make = Effect.fn("cloud.server_self_update.make")(function* () {
   const update: ServerSelfUpdate["Service"]["update"] = Effect.fn(
     "cloud.server_self_update.update",
   )(function* (input, reportProgress = () => Effect.void, onHandoffAccepted = () => Effect.void) {
+    if (!managedPolicy.allows("upstreamUpdate")) {
+      return yield* failWith(
+        "Upstream updates are disabled by managed policy. Use `t3safe update`.",
+      );
+    }
     if (capability === "desktop-managed") {
       if (desktopAppUpdate.available) {
         return yield* desktopAppUpdate.run(reportProgress);

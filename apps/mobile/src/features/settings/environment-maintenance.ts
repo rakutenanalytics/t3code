@@ -1,3 +1,4 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import {
   AuthEnvironmentMaintainScope,
   sessionGrantsScope,
@@ -26,6 +27,7 @@ export function supportsEnvironmentUpdate(
   capabilities: Pick<ExecutionEnvironmentCapabilities, "serverSelfUpdate" | "desktopAppUpdate">,
 ) {
   return (
+    managedPolicy.allows("upstreamUpdate") &&
     capabilities.serverSelfUpdate !== undefined &&
     (capabilities.serverSelfUpdate !== "desktop-managed" || capabilities.desktopAppUpdate === true)
   );
@@ -60,6 +62,9 @@ async function fetchReleases(url: string, accept: string, signal: AbortSignal) {
 }
 
 export async function findEnvironmentUpdate(currentVersion: string, signal: AbortSignal) {
+  if (!managedPolicy.allows("upstreamUpdate")) {
+    throw new Error("Upstream updates are disabled by managed policy. Use `t3safe update`.");
+  }
   const channel = cliReleaseChannelOf(currentVersion);
   // Public release pages avoid the anonymous API quota shared by devices on the same network.
   const response = await fetchReleases(

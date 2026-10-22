@@ -1,3 +1,6 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { allowsManagedCapability } from "@t3tools/contracts";
+import { ManagedPolicyDisabledAction } from "./ManagedPolicyDisabledAction";
 import { useAtomValue } from "@effect/atom-react";
 import {
   AuthEnvironmentMaintainScope,
@@ -84,6 +87,15 @@ export function useServerUpdate() {
     { quiet = false }: { readonly quiet?: boolean } = {},
   ): Promise<ServerUpdateOutcome> => {
     const { environmentId, serverLabel, selfUpdate, targetVersion } = target;
+    const policy = appAtomRegistry.get(
+      serverEnvironment.configValueAtom(environmentId),
+    )?.managedPolicy;
+    if (
+      !managedPolicy.allows("upstreamUpdate") ||
+      !allowsManagedCapability(policy, "upstreamUpdate")
+    ) {
+      return { status: "skipped" };
+    }
     if (
       !canUpdateServer(appAtomRegistry.get(environmentSession.sessionStateAtom(environmentId))) ||
       pendingUpdateEnvironmentIds.has(environmentId)
@@ -164,6 +176,13 @@ export function ServerUpdatesAction({
     pending.current = false;
     setIsPending(false);
   };
+  if (!managedPolicy.allows("upstreamUpdate")) {
+    return (
+      <ManagedPolicyDisabledAction reason="Disabled by managed policy. Use t3safe update.">
+        {label}
+      </ManagedPolicyDisabledAction>
+    );
+  }
   return (
     <Button
       size={size}
@@ -234,6 +253,10 @@ export function ServerUpdateAction({
   const unsupportedDesktopUpdate = isDesktopAppUpdate && !desktopAppUpdate;
   const sessionStateAtom = environmentSession.sessionStateAtom(environmentId);
   const canUpdate = canUpdateServer(useAtomValue(sessionStateAtom));
+  const serverConfig = useAtomValue(serverEnvironment.configValueAtom(environmentId));
+  const policyDisabled =
+    !managedPolicy.allows("upstreamUpdate") ||
+    !allowsManagedCapability(serverConfig?.managedPolicy, "upstreamUpdate");
   const continueThreadsAfterServerUpdate = useEnvironmentSettings(
     environmentId,
     (settings) => settings.continueThreadsAfterServerUpdate,
@@ -263,6 +286,7 @@ export function ServerUpdateAction({
 
   const handleUpdate = async () => {
     if (
+      policyDisabled ||
       unsupportedDesktopUpdate ||
       !canUpdateServer(appAtomRegistry.get(sessionStateAtom)) ||
       pendingUpdateEnvironmentIds.has(environmentId)
@@ -303,7 +327,17 @@ export function ServerUpdateAction({
     manualCommand !== null
       ? () => copyToClipboard(manualCommand, { command: manualCommand })
       : () => void handleUpdate();
-  const disabled = unsupportedDesktopUpdate || (manualCommand === null && !canUpdate);
+  const disabled =
+    policyDisabled || unsupportedDesktopUpdate || (manualCommand === null && !canUpdate);
+
+  if (policyDisabled) {
+    if (render) return render({ label: "Use t3safe update", disabled: true, onClick: () => {} });
+    return (
+      <ManagedPolicyDisabledAction reason="Disabled by managed policy. Use t3safe update.">
+        {label}
+      </ManagedPolicyDisabledAction>
+    );
+  }
 
   if (render) return render({ label: actionLabel, disabled, onClick });
 
@@ -368,7 +402,8 @@ export function OutdatedServerUpdateAction({
 }) {
   const update = useAtomCommand(updateOutdatedServer, { reportFailure: false });
   const handleUpdate = async () => {
-    if (pendingUpdateEnvironmentIds.has(environmentId)) return;
+    if (!managedPolicy.allows("upstreamUpdate") || pendingUpdateEnvironmentIds.has(environmentId))
+      return;
     pendingUpdateEnvironmentIds.add(environmentId);
     const result = await update({
       environmentId,
@@ -391,6 +426,13 @@ export function OutdatedServerUpdateAction({
       description: `Reconnected on t3@${result.value.targetVersion}.`,
     });
   };
+  if (!managedPolicy.allows("upstreamUpdate")) {
+    return (
+      <ManagedPolicyDisabledAction reason="Disabled by managed policy. Use t3safe update.">
+        {label}
+      </ManagedPolicyDisabledAction>
+    );
+  }
   return (
     <Button size="xs" variant="outline" onClick={() => void handleUpdate()}>
       {label}

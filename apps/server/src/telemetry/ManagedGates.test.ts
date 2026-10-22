@@ -1,3 +1,4 @@
+import { resolveNewestVersion } from "../cli/update.ts";
 import { describe, expect, it, vi, afterEach } from "@effect/vitest";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import * as ServerConfig from "../config.ts";
@@ -79,3 +80,23 @@ describe("managed gates", () => {
     }).pipe(Effect.provide(ConfigProvider.layer(environment)));
   });
 });
+
+it.effect(
+  "should reject upstream release lookup with t3safe update guidance and zero HTTP requests when upstreamUpdate is denied",
+  () => {
+    const requests: string[] = [];
+    const transport = HttpClient.make((request) => {
+      requests.push(request.url);
+      return Effect.die("upstream release lookup escaped managed policy");
+    });
+
+    return Effect.gen(function* () {
+      const failure = yield* resolveNewestVersion("stable").pipe(Effect.flip);
+
+      expect(failure.message).toBe(
+        "Upstream updates are disabled by managed policy. Use `t3safe update`.",
+      );
+      expect(requests).toEqual([]);
+    }).pipe(Effect.provideService(HttpClient.HttpClient, transport));
+  },
+);

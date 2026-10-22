@@ -1,3 +1,4 @@
+import { enforceManagedCapability } from "@t3tools/shared/managedPolicyHttpClient";
 import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import type {
   EnvironmentId,
@@ -193,7 +194,11 @@ function sanitizeRelayAgentActivityState(
 }
 
 function relayEnvironmentClient(token: string) {
-  return HttpClient.mapRequest(HttpClientRequest.setHeader("authorization", `Bearer ${token}`));
+  return (client: HttpClient.HttpClient) =>
+    client.pipe(
+      enforceManagedCapability("t3Connect"),
+      HttpClient.mapRequest(HttpClientRequest.setHeader("authorization", `Bearer ${token}`)),
+    );
 }
 
 function deliveryStats(

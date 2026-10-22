@@ -7,6 +7,10 @@ export const ManagedCapability = Schema.Literals([
   "remoteAccess.network",
   "telemetryExport",
   "providerFeedback",
+  "upstreamUpdate",
+  "remoteContent",
+  "providerMetadata",
+  "providerTelemetry",
 ]);
 export type ManagedCapability = typeof ManagedCapability.Type;
 

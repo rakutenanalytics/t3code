@@ -1,3 +1,4 @@
+import { allowsRemoteContentUrl } from "@t3tools/shared/remoteContent";
 import { ExternalLinkIcon, PaperclipIcon } from "lucide-react";
 import { markdownImageSourceFragment } from "@t3tools/client-runtime/markdown-images";
 import { githubMediaFetchUrl } from "@t3tools/shared/githubMedia";
@@ -88,6 +89,9 @@ export function PullRequestMarkdown({
               githubMedia
             />
           );
+        }
+        if (!allowsRemoteContentUrl(segment.url)) {
+          return <span key={segment.id}>Remote media (disabled by managed policy)</span>;
         }
         const githubMediaUrl = segment.media === "video" ? githubMediaFetchUrl(segment.url) : null;
         if (githubMediaUrl !== null) {

@@ -1,6 +1,14 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { afterEach, beforeEach, vi } from "vite-plus/test";
+
 import { describe, expect, it } from "vite-plus/test";
 
 import { classifyMarkdownImageSource, markdownImageSourceFragment } from "./markdownImages.js";
+
+beforeEach(() => {
+  vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
+});
+afterEach(() => vi.restoreAllMocks());
 
 describe("classifyMarkdownImageSource", () => {
   it.each([
@@ -68,4 +76,29 @@ describe("markdownImageSourceFragment", () => {
   ])("extracts %s as %s", (source, fragment) => {
     expect(markdownImageSourceFragment(source)).toBe(fragment);
   });
+});
+
+it("should block https and protocol-relative images while keeping data, blob, loopback and workspace images under managed policy", () => {
+  vi.mocked(managedPolicy.allows).mockReturnValue(false);
+
+  const sources = [
+    "https://attacker.example/image.png?secret=abc",
+    "//attacker.example/image.png",
+    "https://127.0.0.1.attacker.example/image.png",
+    "data:image/png;base64,AAAA",
+    "blob:https://app.t3.codes/image-id",
+    "http://127.0.0.1:3773/image.png",
+    "images/result.png",
+  ];
+  const results = sources.map((source) => classifyMarkdownImageSource(source, "/workspace"));
+
+  expect(results.map((result) => result._tag)).toEqual([
+    "Blocked",
+    "Blocked",
+    "Blocked",
+    "Direct",
+    "Direct",
+    "Direct",
+    "WorkspaceFile",
+  ]);
 });

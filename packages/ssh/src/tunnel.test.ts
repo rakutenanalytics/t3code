@@ -1,3 +1,6 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { beforeEach, afterEach, vi } from "vite-plus/test";
+
 import * as NodeNet from "node:net";
 
 import { assert, describe, it } from "@effect/vitest";
@@ -23,6 +26,11 @@ import { ChildProcess, ChildProcessSpawner } from "effect/process";
 import * as SshAuth from "./auth.ts";
 import { SshCommandError } from "./errors.ts";
 import * as SshTunnel from "./tunnel.ts";
+
+beforeEach(() => {
+  vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
+});
+afterEach(() => vi.restoreAllMocks());
 
 const TEST_NODE_ENGINE_RANGE = "^22.16 || ^23.11 || >=24.10";
 

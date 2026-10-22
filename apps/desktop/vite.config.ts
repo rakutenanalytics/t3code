@@ -107,10 +107,10 @@ export default defineConfig({
       define: publicConfigDefine,
       entry: ["src/preload.ts"],
       deps: {
-        // Sandboxed Electron preloads cannot reliably resolve package imports
-        // from inside the packaged ASAR. Bundle Clerk's preload bridge into the
-        // preload artifact instead of leaving a runtime require() behind.
-        alwaysBundle: (id) => id === "@clerk/electron" || id.startsWith("@clerk/electron/"),
+        // Sandboxed preloads cannot resolve arbitrary packages from the ASAR, so
+        // the Clerk bridge and its managed-policy dependencies must be bundled.
+        alwaysBundle: (id) =>
+          !id.startsWith("node:") && id !== "electron" && !id.startsWith("electron/"),
       },
     },
     {

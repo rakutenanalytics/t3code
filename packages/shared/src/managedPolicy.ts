@@ -23,13 +23,13 @@ export function createManagedPolicy(source: ManagedPolicySource) {
 
 function createSourceManagedPolicy(): ManagedPolicySource {
   if (typeof process === "undefined" || typeof process.getBuiltinModule !== "function") {
-    return { policy: null };
+    return { policy: { allow: [] } };
   }
 
   // Browser/mobile consumers share this module, so filesystem access must stay behind Node's API.
   const fs = process.getBuiltinModule("node:fs");
   const policyFile = new URL("../../../security/managed-policy.json", import.meta.url);
-  if (!fs.existsSync(policyFile)) return { policy: null };
+  if (!fs.existsSync(policyFile)) return { policy: { allow: [] } };
 
   const json = fs.readFileSync(policyFile, "utf8");
   const decodePolicy = Schema.decodeSync(Schema.fromJsonString(ManagedPolicy));
@@ -37,9 +37,8 @@ function createSourceManagedPolicy(): ManagedPolicySource {
   return { policy };
 }
 
-// A baked null explicitly selects unmanaged behavior, even inside a managed source checkout.
 const source: ManagedPolicySource =
   typeof __T3CODE_MANAGED_POLICY__ === "undefined"
     ? createSourceManagedPolicy()
-    : { policy: __T3CODE_MANAGED_POLICY__ };
+    : { policy: __T3CODE_MANAGED_POLICY__ ?? { allow: [] } };
 export const managedPolicy = createManagedPolicy(source);

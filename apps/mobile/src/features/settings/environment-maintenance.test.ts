@@ -1,6 +1,7 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import { AuthOrchestrationOperateScope, ServerProvider } from "@t3tools/contracts";
 import * as Schema from "effect/Schema";
-import { afterEach, describe, expect, it, vi } from "vite-plus/test";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
 import {
   canMaintainEnvironment,
@@ -30,7 +31,13 @@ const provider = Schema.decodeUnknownSync(ServerProvider)({
   },
 });
 
-afterEach(() => vi.unstubAllGlobals());
+beforeEach(() => {
+  vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
+});
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
 
 describe("environment maintenance access", () => {
   it("requires a connected authenticated session with operate permission", () => {

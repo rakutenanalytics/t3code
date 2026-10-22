@@ -1,3 +1,4 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
@@ -85,12 +86,26 @@ export function makeDesktopContentSecurityPolicy(input: DesktopProtocolRegistrat
   // GLTFLoader fetches embedded textures through blob URLs after parsing the model.
   const connectSources = ["'self'", "blob:", "http:", "https:", "ws:", "wss:"];
 
+  const mediaSources = ["'self'", `${input.scheme}:`, "blob:", "data:"];
+  if (managedPolicy.allows("remoteContent")) {
+    mediaSources.push("http:", "https:");
+  } else {
+    mediaSources.push(
+      "http://localhost:*",
+      "https://localhost:*",
+      "http://127.0.0.1:*",
+      "https://127.0.0.1:*",
+      "http://[::1]:*",
+      "https://[::1]:*",
+    );
+  }
+
   return [
     "default-src 'self'",
     `script-src ${scriptSources.join(" ")}`,
     `connect-src ${connectSources.join(" ")}`,
-    `img-src 'self' ${input.scheme}: blob: data: http: https:`,
-    `media-src 'self' ${input.scheme}: blob: http: https:`,
+    `img-src ${mediaSources.join(" ")}`,
+    `media-src ${mediaSources.join(" ")}`,
     "style-src 'self' 'unsafe-inline'",
     `font-src 'self' ${input.scheme}: data:`,
     "worker-src 'self' blob:",

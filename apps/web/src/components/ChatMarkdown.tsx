@@ -1,3 +1,4 @@
+import { allowsRemoteContentUrl } from "@t3tools/shared/remoteContent";
 import { formatFilePathForClipboard } from "@t3tools/client-runtime/media-actions";
 import { MarkdownFindContext, findRevealRef } from "./chat/markdownFindContext";
 import {
@@ -3309,6 +3310,9 @@ const CHAT_MARKDOWN_COMPONENTS = {
     const copyMarkdown = markdownImageCopy(altText, srcString, authoredTitle);
     const { className, style: _style, width, height, ...imageProps } = props;
     const authoredSizeStyle = authoredImageSizeStyle(width, height);
+    if (/^(?:https?:|\/\/)/i.test(classifiedSrc) && !allowsRemoteContentUrl(classifiedSrc)) {
+      return <span>{altText || "Remote media"} (disabled by managed policy)</span>;
+    }
     const imageSource = classifyMarkdownImageSource(classifiedSrc, imageBaseDir ?? cwd);
     const kind = mediaKindFromPath(classifiedSrc) ?? "image";
     const directUri = imageSource._tag === "Direct" ? imageSource.uri : null;

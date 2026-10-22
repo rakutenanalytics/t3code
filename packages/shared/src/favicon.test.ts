@@ -1,6 +1,13 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { beforeEach, afterEach, vi } from "vite-plus/test";
 import { describe, expect, it } from "@effect/vitest";
 
 import { faviconUrlForOrigin, toolActivityFaviconUrl } from "./favicon.ts";
+
+beforeEach(() => {
+  vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
+});
+afterEach(() => vi.restoreAllMocks());
 
 describe("faviconUrlForOrigin", () => {
   it.each([

@@ -1,3 +1,5 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { enforceManagedCapability } from "@t3tools/shared/managedPolicyHttpClient";
 import {
   ModelCapabilities,
   TrimmedNonEmptyString,
@@ -186,11 +188,12 @@ const BundledOnlyModelManifest: ModelManifest["Service"] = {
 const layerBundledOnly = Layer.succeed(ModelManifest, BundledOnlyModelManifest);
 
 export const make = Effect.gen(function* () {
+  if (!managedPolicy.allows("providerMetadata")) return BundledOnlyModelManifest;
   const fileSystem = yield* FileSystem.FileSystem;
   const path = yield* Path.Path;
   const config = yield* ServerConfig;
   const settingsService = yield* ServerSettings.ServerSettingsService;
-  const httpClient = yield* HttpClient.HttpClient;
+  const httpClient = enforceManagedCapability("providerMetadata")(yield* HttpClient.HttpClient);
   const serviceScope = yield* Effect.scope;
 
   const cachePath = path.join(config.stateDir, "model-manifest.json");
