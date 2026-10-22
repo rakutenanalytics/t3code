@@ -17,10 +17,24 @@ export function bundlePolicyViolations(bundleRoot: string) {
       violations.push(`bundle missing: ${relative}`);
       continue;
     }
-    if (!containsBakedPolicy(NodeFS.readFileSync(file, "utf8"), expected.allow))
+    if (
+      relative !== "apps/server/dist/bin.mjs" &&
+      !containsBakedPolicy(NodeFS.readFileSync(file, "utf8"), expected.allow)
+    )
       violations.push(`${relative}: reviewed policy literal is missing`);
   }
-  const clientRoot = NodePath.join(bundleRoot, "apps/server/dist/client");
+  const serverRoot = NodePath.join(bundleRoot, "apps/server/dist");
+  // The server has multiple entries; tsdown moves their shared policy into a sibling chunk.
+  const serverFiles = textFiles(serverRoot).filter(
+    (file) => NodePath.dirname(file) === serverRoot && /\.[cm]?js$/.test(file),
+  );
+  if (
+    !serverFiles.some((file) =>
+      containsBakedPolicy(NodeFS.readFileSync(file, "utf8"), expected.allow),
+    )
+  )
+    violations.push("server: reviewed policy literal is missing");
+  const clientRoot = NodePath.join(serverRoot, "client");
   const webFiles = textFiles(clientRoot).filter((file) => /\.[cm]?js$/.test(file));
   if (
     !webFiles.some((file) => containsBakedPolicy(NodeFS.readFileSync(file, "utf8"), expected.allow))
@@ -45,7 +59,9 @@ export function textFiles(directory: string) {
 function containsBakedPolicy(text: string, allow: string[]) {
   for (const match of text.matchAll(/\{\s*(?:allow|"allow"|'allow')\s*:\s*(\[[^\]]*\])/g)) {
     try {
-      if (JSON.stringify(JSON.parse(match[1]!)) === JSON.stringify(allow)) return true;
+      // Vite emits static backtick strings. Normalize only capability literals, never evaluate code.
+      const arrayLiteral = match[1]!.replace(/(['`])([\w.]+)\1/g, '"$2"');
+      if (JSON.stringify(JSON.parse(arrayLiteral)) === JSON.stringify(allow)) return true;
     } catch {
       continue;
     }

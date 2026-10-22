@@ -2,6 +2,10 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-10-22 — formatted baseline output and packaged policy verification
+
+- baseline-update: security/network-baseline.json — Formats the generated inventory with the repository formatter and refreshes whole-file fingerprints for the baseline writer, dependency report writer, desktop smoke command and formatter regression fixture. The packaged-policy fix accepts the emitted server chunk and static web backtick strings; negative fixtures still reject missing policies. No host, URL or capability grants added.
+
 ## 2026-10-22 — exact pnpm package exceptions
 
 - baseline-update: security/dependency-exceptions.json — Records eight exact, fingerprint-bound SAFE tarball reviews for the existing upstream lockfile. Seven missing-provenance exceptions and one young Uniwind release are supported by 08-package-review.md; original reviewer objections and parent resolutions remain in that evidence. No dependency, script or build grant changes.

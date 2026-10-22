@@ -1,11 +1,11 @@
 // @effect-diagnostics nodeBuiltinImport:off - Read-only DMG extraction uses a temporary mount and never launches Electron.
-import * as NodeChildProcess from "node:child_process";
 import * as NodeFS from "node:fs";
 import * as NodeOS from "node:os";
 import * as NodePath from "node:path";
 import { extractAll } from "@electron/asar";
 import { assertStagedDependencyVersions } from "../lib/locked-stage-dependencies.ts";
-import { finishScan, root, sourceText } from "./repository.ts";
+import { finishScan, sourceText } from "./repository.ts";
+import { runDesktopSmokeCommand } from "./desktop-smoke-command.ts";
 
 const dmg = process.argv[2];
 if (!dmg) throw new Error("Usage: node scripts/safe/desktop-smoke.ts <built.dmg>");
@@ -14,7 +14,7 @@ const mount = NodePath.join(work, "mount");
 NodeFS.mkdirSync(mount);
 let mounted = false;
 try {
-  command("hdiutil", [
+  runDesktopSmokeCommand("hdiutil", [
     "attach",
     NodePath.resolve(dmg),
     "-readonly",
@@ -30,8 +30,12 @@ try {
   const extracted = NodePath.join(work, "bundle");
   extractAll(NodePath.join(resources, "app.asar"), extracted);
   assertStagedDependencyVersions(extracted, sourceText("pnpm-lock.yaml"));
-  command(process.execPath, ["scripts/safe/policy-verify.ts", "--bundle", extracted]);
-  command(process.execPath, ["scripts/safe/artifact-scan.ts", extracted]);
+  runDesktopSmokeCommand(process.execPath, [
+    "scripts/safe/policy-verify.ts",
+    "--bundle",
+    extracted,
+  ]);
+  runDesktopSmokeCommand(process.execPath, ["scripts/safe/artifact-scan.ts", extracted]);
   const violations: string[] = [];
   const updateFeed = NodePath.join(resources, "app-update.yml");
   if (NodeFS.existsSync(updateFeed)) {
@@ -48,10 +52,6 @@ try {
     "actual asar policy and dependency versions verified; app never launched",
   );
 } finally {
-  if (mounted) command("hdiutil", ["detach", mount, "-quiet"]);
+  if (mounted) runDesktopSmokeCommand("hdiutil", ["detach", mount, "-quiet"]);
   NodeFS.rmSync(work, { recursive: true, force: true });
-}
-
-function command(executable: string, args: string[]) {
-  NodeChildProcess.execFileSync(executable, args, { cwd: root, stdio: "inherit" });
 }

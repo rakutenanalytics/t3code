@@ -13,6 +13,7 @@ import {
   repositoryFiles,
   sourceText,
   writeBaseline,
+  writeJsonFile,
 } from "./repository.ts";
 
 interface PackageManifest {
@@ -172,7 +173,8 @@ for (const change of changes) {
   reviews.push(review);
   for (const reason of reasons) process.stdout.write(`  review: ${reason}\n`);
 }
-writeBaseline(reportPath, {
+// Reports also run before installation, when the baseline formatter is unavailable.
+writeJsonFile(reportPath, {
   mode: online ? "online" : "offline",
   minimumAgeMinutes,
   packages: reviews,

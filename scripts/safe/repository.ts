@@ -31,6 +31,19 @@ export function jsonFile<TValue>(file: string): TValue {
 }
 
 export function writeBaseline(file: string, value: unknown) {
+  writeJsonFile(file, value);
+  const formatter = NodePath.join(root, "node_modules/vite-plus/bin/vp");
+  NodeChildProcess.execFileSync(
+    process.execPath,
+    [formatter, "fmt", NodePath.resolve(root, file)],
+    {
+      cwd: root,
+      stdio: "inherit",
+    },
+  );
+}
+
+export function writeJsonFile(file: string, value: unknown) {
   NodeFS.writeFileSync(NodePath.resolve(root, file), `${JSON.stringify(value, null, 2)}\n`);
 }
 
