@@ -1,4 +1,3 @@
-import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { describe, expect, it } from "vite-plus/test";
 import { page } from "vite-plus/test/browser";
@@ -11,24 +10,22 @@ describe("managed policy client presentation", () => {
     document.body.append(container);
     const root = createRoot(container);
     try {
-      await act(() =>
-        root.render(
-          <TooltipProvider>
-            <ManagedPolicyDisabledAction>Connect</ManagedPolicyDisabledAction>
-          </TooltipProvider>,
-        ),
+      root.render(
+        <TooltipProvider>
+          <ManagedPolicyDisabledAction>Connect</ManagedPolicyDisabledAction>
+        </TooltipProvider>,
       );
 
       const action = page.getByRole("button", { name: "Connect", exact: true });
       await expect.element(action).toBeDisabled();
       const trigger = container.querySelector<HTMLElement>("[tabindex='0']")!;
-      await act(() => trigger.focus());
+      trigger.focus();
 
       await expect
         .element(page.getByRole("tooltip"))
         .toHaveTextContent("Disabled by managed policy");
     } finally {
-      await act(() => root.unmount());
+      root.unmount();
       container.remove();
     }
   });
