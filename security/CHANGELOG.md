@@ -17,3 +17,4 @@ Each change to a security file requires a new entry naming that exact path and t
 - baseline-update: security/managed-policy.json — Existing default-denied capability policy permitting only remoteAccess.network; this worker does not modify policy.
 - baseline-update: security/threat-model.md — Updates absent/null runtime-policy semantics and four new denied capabilities from app commit 00948e6f9 while retaining native-provider limits.
 - baseline-update: security/network-baseline.json — Refreshes the pnpm-workspace.yaml fingerprint after lowering minimumReleaseAge from 10080 to 4320 minutes; no other file or host changed.
+- baseline-update: security/dependency-baseline.json — Updates the pnpm-workspace.yaml hash only, after lowering minimumReleaseAge from 10080 to 4320 minutes; no lockfile, script or build-permission change.
