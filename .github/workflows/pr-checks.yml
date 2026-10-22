@@ -1,0 +1,65 @@
+name: Safe fork PR checks
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: safe-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  policy:
+    runs-on: macos-14
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24.13.1"
+      - name: Scan source and dependencies before install
+        run: |
+          node scripts/safe/egress-scan.ts
+          node scripts/safe/dependency-scan.ts
+      - uses: voidzero-dev/setup-vp@v1
+        with:
+          node-version: "24.13.1"
+          run-install: false
+          cache: false
+      - run: vp install --frozen-lockfile
+      - run: node scripts/safe/policy-verify.ts
+      - name: Run focused managed policy tests
+        run: |
+          vp test run scripts/safe/managed-policy.test.ts apps/server/src/telemetry/ManagedGates.test.ts apps/desktop/src/updates/ManagedUpdates.test.ts
+      - name: Install test browser and verify disabled action
+        run: |
+          node apps/web/node_modules/playwright/cli.js install --only-shell chromium
+          cd apps/web
+          vp test run src/components/ManagedPolicyDisabledAction.browser.test.tsx --project browser
+      - name: Typecheck managed packages and consumers
+        run: |
+          vp exec --filter @t3tools/contracts -- tsc-rs --noEmit
+          vp exec --filter @t3tools/shared -- tsc-rs --noEmit
+          vp exec --filter @t3tools/client-runtime -- tsc-rs --noEmit
+          vp exec --filter t3 -- tsc-rs --noEmit
+          vp exec --filter @t3tools/desktop -- tsc-rs --noEmit
+          vp exec --filter @t3tools/web -- tsc-rs --noEmit
+          vp exec --filter @t3tools/scripts -- tsc-rs --noEmit
+      - name: Lint and format touched files
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: node scripts/safe/touched-checks.ts "$BASE_SHA"
+      - name: Check installer shell
+        run: |
+          brew install shellcheck
+          bash -n install.sh scripts/safe/t3safe
+          shellcheck install.sh scripts/safe/t3safe
+          bash install.sh --dry-run --version v0.1.0-safe.0 --prefix "$RUNNER_TEMP/t3safe-install"
+  artifacts:
+    uses: ./.github/workflows/safe-build.yml
+    with:
+      version: 0.1.0-safe.0
+    permissions:
+      contents: read

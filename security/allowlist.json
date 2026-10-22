@@ -105,6 +105,10 @@
     {
       "host": "dl.google.com",
       "purpose": "Explicit provider installation"
+    },
+    {
+      "host": "127.0.0.1",
+      "purpose": "Loopback-only local listeners and tooling; no external destination approval."
     }
   ],
   "dynamicDestinationsRequireApproval": [
@@ -126,5 +130,707 @@
     "Mobile Expo OTA/native services",
     "npx launcher binary distribution",
     "Build toolchain and dependency supply chain"
+  ],
+  "reviewedSourceHosts": [
+    {
+      "file": ".github/actions/setup-apt-mirrors/action.yml",
+      "host": "archive.ubuntu.com",
+      "justification": "Retained upstream helper; no fork workflow invokes it. Review before enabling deployment or external publishing."
+    },
+    {
+      "file": ".github/actions/setup-apt-mirrors/action.yml",
+      "host": "mirror.math.princeton.edu",
+      "justification": "Retained upstream helper; no fork workflow invokes it. Review before enabling deployment or external publishing."
+    },
+    {
+      "file": ".github/actions/setup-apt-mirrors/action.yml",
+      "host": "mirrors.edge.kernel.org",
+      "justification": "Retained upstream helper; no fork workflow invokes it. Review before enabling deployment or external publishing."
+    },
+    {
+      "file": ".github/scripts/mirror-play-apk.cjs",
+      "host": "androidpublisher.googleapis.com",
+      "justification": "Retained upstream helper; no fork workflow invokes it. Review before enabling deployment or external publishing."
+    },
+    {
+      "file": "apps/desktop/src/electron/ElectronProtocol.ts",
+      "host": "challenges.cloudflare.com",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "apps/desktop/src/preview/PasskeyBridge.ts",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/desktop/src/preview/PickPreload.ts",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/desktop/src/preview/RecordingCursor.ts",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/marketing/astro.config.mjs",
+      "host": "t3.codes",
+      "justification": "Upstream marketing/hosted web configuration; deployments removed from fork workflows."
+    },
+    {
+      "file": "apps/marketing/src/lib/site.ts",
+      "host": "apps.apple.com",
+      "justification": "Upstream marketing/hosted web configuration; deployments removed from fork workflows."
+    },
+    {
+      "file": "apps/marketing/src/lib/site.ts",
+      "host": "play.google.com",
+      "justification": "Upstream marketing/hosted web configuration; deployments removed from fork workflows."
+    },
+    {
+      "file": "apps/marketing/src/lib/tweets.ts",
+      "host": "x.com",
+      "justification": "Upstream marketing/hosted web configuration; deployments removed from fork workflows."
+    },
+    {
+      "file": "apps/marketing/vercel.ts",
+      "host": "app.t3.codes",
+      "justification": "Hosted OAuth handoff; t3Connect gates local cloud linking. Retained upstream constant."
+    },
+    {
+      "file": "apps/mobile/app.config.ts",
+      "host": "api.axiom.co",
+      "justification": "Upstream mobile auth, tracing or Expo OTA configuration; mobile distribution excluded. Gate/repoint before shipping mobile."
+    },
+    {
+      "file": "apps/mobile/app.config.ts",
+      "host": "u.expo.dev",
+      "justification": "Upstream mobile auth, tracing or Expo OTA configuration; mobile distribution excluded. Gate/repoint before shipping mobile."
+    },
+    {
+      "file": "apps/mobile/modules/t3-terminal/scripts/build-libghostty-android.sh",
+      "host": "ziglang.org",
+      "justification": "Upstream cross-platform build/toolchain download or timestamp service; no runtime export grant. Review build downloads separately."
+    },
+    {
+      "file": "apps/mobile/modules/t3-terminal/scripts/build-libghostty-ios16.sh",
+      "host": "ziglang.org",
+      "justification": "Upstream cross-platform build/toolchain download or timestamp service; no runtime export grant. Review build downloads separately."
+    },
+    {
+      "file": "apps/mobile/plugins/withAndroidModernAlertDialog.cjs",
+      "host": "schemas.android.com",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/mobile/plugins/withAndroidModernPopupMenu.cjs",
+      "host": "schemas.android.com",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/mobile/scripts/sync-pierre-file-icons.mjs",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/mobile/src/features/settings/lib/legal-document-url.ts",
+      "host": "t3.codes",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "apps/mobile/src/features/showcase/showcaseEnvironmentRows.ts",
+      "hostSha256": "3220ad933a7f8571acfd37b69b66307ff74a5cf552ac8c5165fa59ef32f77486",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/mobile/src/features/showcase/showcaseEnvironmentRows.ts",
+      "hostSha256": "4138eeb8ab5fa8870659ecd1b02bd7c345d26b97c72b37987505c3f9a9adda33",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/mobile/src/features/showcase/showcaseEnvironmentRows.ts",
+      "hostSha256": "6c5404ecca790b53f01e034e0a0735fe8225b602440e385622751695e7581657",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/mobile/src/features/showcase/showcaseEnvironmentRows.ts",
+      "hostSha256": "d1e21bec854bc6aeae0f04ac327d532ff0aee88d0d8a616efa60befad58244d9",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/mobile/src/features/showcase/showcaseEnvironmentRows.ts",
+      "hostSha256": "f78e76b5d91f2bf6f2084a345ac7903ed4b10b9d60b0cfc486219058b53584ba",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/mobile/src/lib/runtime.ts",
+      "hostSha256": "af109477e64de1a9d476b619706516e4643d77d70e49ea9d3176dda366143891",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/server/scripts/acp-mock-agent.ts",
+      "hostSha256": "a379a6f6eeafb9a55e378c118034e2751e682fab9f2d30ab13d2125586ce1947",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/server/scripts/acp-mock-agent.ts",
+      "host": "t3.codes",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "apps/server/src/cli/pair.ts",
+      "host": "login.tailscale.com",
+      "justification": "Selected provider, Git hosting or Tailscale authentication/account action; approve enabled account endpoints separately."
+    },
+    {
+      "file": "apps/server/src/cloud/ConnectReachability.ts",
+      "host": "region1.v2.argotunnel.com",
+      "justification": "Connect reachability probe; transport denied by t3Connect."
+    },
+    {
+      "file": "apps/server/src/cloud/ConnectReachability.ts",
+      "host": "region2.v2.argotunnel.com",
+      "justification": "Connect reachability probe; transport denied by t3Connect."
+    },
+    {
+      "file": "apps/server/src/cloud/bootService.ts",
+      "host": "www.apple.com",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/server/src/htmlRender/headlessChrome.ts",
+      "hostSha256": "39a0d21e817594ef5f24e64abb242f636b4ee1b845f7697eabb8582cd1864bc6",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/server/src/mcp/toolkits/preview/tools.ts",
+      "host": "t3.chat",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "apps/server/src/orchestration-v2/PullRequestSyncReactor.ts",
+      "host": "ghe.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "apps/server/src/preview/PreviewBrowser.ts",
+      "host": "googlechromelabs.github.io",
+      "justification": "Optional headless Chrome metadata/download; browser tooling remains outside capability gates."
+    },
+    {
+      "file": "apps/server/src/project/ManagedProjectFolders.ts",
+      "host": "t3.codes",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "apps/server/src/project/ManagedProjectFolders.ts",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/server/src/provider/antigravityAuthSupport.ts",
+      "hostSha256": "26789e2036611e84aec65045a8506248a895e47fa7dfea50e4ad10c855cbf2b9",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/server/src/provider/antigravityAuthSupport.ts",
+      "host": "accounts.google.com",
+      "justification": "Selected provider, Git hosting or Tailscale authentication/account action; approve enabled account endpoints separately."
+    },
+    {
+      "file": "apps/server/src/provider/antigravityCallback.ts",
+      "host": "accounts.google.com",
+      "justification": "Selected provider, Git hosting or Tailscale authentication/account action; approve enabled account endpoints separately."
+    },
+    {
+      "file": "apps/server/src/pullRequest/PullRequestService.ts",
+      "host": "bitbucket.org",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "apps/server/src/pullRequest/PullRequestService.ts",
+      "host": "codeberg.org",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "apps/server/src/sourceControl/SourceControlDiscovery.ts",
+      "host": "git-scm.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "apps/server/src/telemetry/AnalyticsService.ts",
+      "host": "ingest.t3.codes",
+      "justification": "Product analytics ingest; construction and delivery denied by productAnalytics."
+    },
+    {
+      "file": "apps/web/components.json",
+      "host": "coss.com",
+      "justification": "Development component registry; not runtime analytics."
+    },
+    {
+      "file": "apps/web/components.json",
+      "host": "spell.sh",
+      "justification": "Development component registry; not runtime analytics."
+    },
+    {
+      "file": "apps/web/components.json",
+      "host": "ui.shadcn.com",
+      "justification": "Development component registry; not runtime analytics."
+    },
+    {
+      "file": "apps/web/scripts/build-libghostty-wasm.sh",
+      "host": "ziglang.org",
+      "justification": "Upstream cross-platform build/toolchain download or timestamp service; no runtime export grant. Review build downloads separately."
+    },
+    {
+      "file": "apps/web/src/branding.ts",
+      "host": "t3.codes",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "apps/web/src/components/EnvironmentMachineIcon.tsx",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/web/src/components/Sidebar.motion.ts",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/web/src/components/SidebarStageBackdrop.tsx",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/web/src/components/T3Wordmark.tsx",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/web/src/components/chat/MermaidDiagram.tsx",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/web/src/components/device/models/sources.json",
+      "host": "www.apple.com",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/web/src/components/settings/AcpSessionManagementSection.tsx",
+      "hostSha256": "d0c43d3885064d9aeb470214a914a43baec40e1d66dbd46375136b6ac15d2e63",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/web/src/components/settings/AddUsageLimitSourceDialog.tsx",
+      "hostSha256": "1ada3f9d504e40f196221600fa1057e3fecc6590f3b741a5e98e8d172260b723",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/web/src/components/settings/AddUsageLimitSourceDialog.tsx",
+      "hostSha256": "8ee61e34d2dc7c7bb17f65d6f80af1cb20fc40279cf62096e1cacaefdfca9153",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/web/src/components/settings/AddUsageLimitSourceDialog.tsx",
+      "hostSha256": "bbc6331e53e88f04ae79828409234b754866f0788d713126446e786c8fcd305e",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/web/src/components/settings/IntegrationsSettings.tsx",
+      "hostSha256": "a379a6f6eeafb9a55e378c118034e2751e682fab9f2d30ab13d2125586ce1947",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/web/src/components/settings/MobileAppSettingsRow.tsx",
+      "host": "apps.apple.com",
+      "justification": "Explicit mobile store link; no mobile distribution from this fork."
+    },
+    {
+      "file": "apps/web/src/components/settings/MobileAppSettingsRow.tsx",
+      "host": "play.google.com",
+      "justification": "Explicit mobile store link; no mobile distribution from this fork."
+    },
+    {
+      "file": "apps/web/src/components/settings/SettingsFontPreviews.tsx",
+      "hostSha256": "f440a732cc54e779639fbf19d215a88f1217707f240e01f02b547bbeedeee466",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/web/src/components/settings/ThemeSearchSection.tsx",
+      "host": "gitlab.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "apps/web/src/components/settings/themeInspector.ts",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/web/src/components/ui/checkbox.tsx",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/web/src/components/ui/menu.tsx",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/web/src/components/ui/qr-code.tsx",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/web/src/contextMenuFallback.ts",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/web/src/legalLinks.ts",
+      "host": "t3.codes",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "apps/web/src/lib/runtime.ts",
+      "hostSha256": "af109477e64de1a9d476b619706516e4643d77d70e49ea9d3176dda366143891",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "apps/web/src/onboarding/providerReadiness.logic.ts",
+      "host": "claude.ai",
+      "justification": "Selected provider, Git hosting or Tailscale authentication/account action; approve enabled account endpoints separately."
+    },
+    {
+      "file": "apps/web/src/pierre-icons.ts",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "apps/web/vercel.ts",
+      "host": "app.t3.codes",
+      "justification": "Hosted OAuth handoff; t3Connect gates local cloud linking. Retained upstream constant."
+    },
+    {
+      "file": "apps/web/vercel.ts",
+      "host": "latest.app.t3.codes",
+      "justification": "Upstream marketing/hosted web configuration; deployments removed from fork workflows."
+    },
+    {
+      "file": "apps/web/vercel.ts",
+      "host": "nightly.app.t3.codes",
+      "justification": "Upstream marketing/hosted web configuration; deployments removed from fork workflows."
+    },
+    {
+      "file": "packages/client-runtime/src/remotePerformance.bench.ts",
+      "hostSha256": "88f633179a6c17bd57c25dd979a26c71fe4d49bc768423edf266996604dd9790",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "packages/contracts/src/pullRequest.ts",
+      "host": "cli.github.com",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "packages/contracts/src/pullRequest.ts",
+      "host": "codeberg.org",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/contracts/src/pullRequest.ts",
+      "host": "gitea.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/contracts/src/pullRequest.ts",
+      "host": "gitlab.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/contracts/src/t3ProjectFile.ts",
+      "host": "t3.codes",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "packages/provider-core/src/server/handoffBudget.ts",
+      "host": "developers.openai.com",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "packages/provider-core/src/server/handoffBudget.ts",
+      "host": "platform.claude.com",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "packages/provider-grok/src/server/usageLimits.ts",
+      "host": "accounts.x.ai",
+      "justification": "Selected provider, Git hosting or Tailscale authentication/account action; approve enabled account endpoints separately."
+    },
+    {
+      "file": "packages/provider-grok/src/server/usageLimits.ts",
+      "host": "auth.x.ai",
+      "justification": "Selected provider, Git hosting or Tailscale authentication/account action; approve enabled account endpoints separately."
+    },
+    {
+      "file": "packages/shared/src/changeRequestUrl.ts",
+      "host": "bitbucket.org",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/shared/src/connectAuth.ts",
+      "host": "app.t3.codes",
+      "justification": "Hosted OAuth handoff; t3Connect gates local cloud linking. Retained upstream constant."
+    },
+    {
+      "file": "packages/shared/src/filePreview.ts",
+      "hostSha256": "a7f27faba7afdbfcaff05b9205c4e4c943e878644c5d295584c064b3e6a56fb3",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "packages/shared/src/git.ts",
+      "host": "ssh.dev.azure.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/shared/src/git.ts",
+      "host": "vs-ssh.visualstudio.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/shared/src/githubMedia.ts",
+      "host": "media.githubusercontent.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/shared/src/githubMedia.ts",
+      "host": "www.github.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/shared/src/preview.ts",
+      "host": "duckduckgo.com",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "packages/shared/src/preview.ts",
+      "host": "kagi.com",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "packages/shared/src/preview.ts",
+      "host": "search.brave.com",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "packages/shared/src/preview.ts",
+      "host": "www.bing.com",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "packages/shared/src/preview.ts",
+      "host": "www.ecosia.org",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "packages/shared/src/projectFavicon.ts",
+      "hostSha256": "c4069cebf12499c07d58a8dc1872a0f471ddfab2d08af89c9fef3699fe9ba6f6",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "packages/shared/src/promptLinks.ts",
+      "hostSha256": "4ec690cf0eb599f3e053a5bb54ca94ba4bde42ca90a5f620a5d5386e7f9a24e6",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "packages/shared/src/providerAuthReturnUrl.ts",
+      "host": "app.t3.codes",
+      "justification": "Hosted OAuth handoff; t3Connect gates local cloud linking. Retained upstream constant."
+    },
+    {
+      "file": "packages/shared/src/qrCode.ts",
+      "host": "www.nayuki.io",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "packages/shared/src/sourceControl.ts",
+      "host": "bitbucket.org",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/shared/src/sourceControl.ts",
+      "host": "codeberg.org",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/shared/src/sourceControl.ts",
+      "host": "dev.azure.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/shared/src/sourceControl.ts",
+      "host": "git.cafe",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/shared/src/sourceControl.ts",
+      "host": "gitlab.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/shared/src/sourceControl.ts",
+      "host": "ssh.dev.azure.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/shared/src/t3ProjectFile.ts",
+      "host": "json-schema.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "packages/source-control-azure-devops/src/client/definition.ts",
+      "host": "dev.azure.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/source-control-azure-devops/src/server/AzureDevOpsSourceControlProvider.ts",
+      "host": "dev.azure.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/source-control-azure-devops/src/server/azureDevOpsPullRequests.ts",
+      "host": "dev.azure.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/source-control-bitbucket/src/client/definition.ts",
+      "host": "bitbucket.org",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/source-control-bitbucket/src/server/BitbucketApi.ts",
+      "host": "api.bitbucket.org",
+      "justification": "Selected provider, Git hosting or Tailscale authentication/account action; approve enabled account endpoints separately."
+    },
+    {
+      "file": "packages/source-control-bitbucket/src/server/BitbucketApi.ts",
+      "host": "bitbucket.org",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/source-control-forgejo/src/server/ForgejoSourceControlProvider.ts",
+      "host": "codeberg.org",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/source-control-forgejo/src/server/ForgejoSourceControlProvider.ts",
+      "host": "gitea.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/source-control-github/graphql.config.ts",
+      "host": "docs.github.com",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "packages/source-control-github/src/server/GitHubSourceControlProvider.ts",
+      "host": "cli.github.com",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "packages/source-control-gitlab/src/client/definition.ts",
+      "host": "gitlab.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "packages/source-control-gitlab/src/server/GitLabSourceControlProvider.ts",
+      "host": "gitlab.com",
+      "justification": "Explicit Git hosting, media or source-control URL recognition; selected hosting remains outside feature gates."
+    },
+    {
+      "file": "pnpm-lock.yaml",
+      "host": "www.npmjs.com",
+      "justification": "Dependency deprecation/documentation metadata in the reviewed lockfile; dependency scan separately checks integrity and download changes."
+    },
+    {
+      "file": "scripts/build-cli-archive.ts",
+      "host": "timestamp.acs.microsoft.com",
+      "justification": "Upstream cross-platform build/toolchain download or timestamp service; no runtime export grant. Review build downloads separately."
+    },
+    {
+      "file": "scripts/build-desktop-artifact.ts",
+      "host": "rustup.rs",
+      "justification": "Upstream cross-platform build/toolchain download or timestamp service; no runtime export grant. Review build downloads separately."
+    },
+    {
+      "file": "scripts/build-desktop-artifact.ts",
+      "host": "t3.codes",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "scripts/build-desktop-artifact.ts",
+      "host": "timestamp.acs.microsoft.com",
+      "justification": "Upstream cross-platform build/toolchain download or timestamp service; no runtime export grant. Review build downloads separately."
+    },
+    {
+      "file": "scripts/build-desktop-artifact.ts",
+      "host": "www.apple.com",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "scripts/dev-runner.ts",
+      "host": "fetch.spec.whatwg.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "scripts/export-android-icons.ts",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "scripts/install.ps1",
+      "host": "t3.codes",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "scripts/install.sh",
+      "host": "t3.codes",
+      "justification": "Explicit browser/search/help/legal or challenge-page navigation; browser destination filtering is outside this policy."
+    },
+    {
+      "file": "scripts/mobile-showcase-environment.ts",
+      "hostSha256": "f440a732cc54e779639fbf19d215a88f1217707f240e01f02b547bbeedeee466",
+      "justification": "Upstream illustrative UI/fixture or synthetic local address; not an approval for a live remote destination."
+    },
+    {
+      "file": "scripts/mobile-showcase-environment.ts",
+      "host": "www.w3.org",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "scripts/mobile-showcase.ts",
+      "host": "www.apple.com",
+      "justification": "Public specification, schema, documentation or help link; not an automatic diagnostic destination."
+    },
+    {
+      "file": "t3.json",
+      "host": "t3.codes",
+      "justification": "Upstream project-file JSON schema URL for editor tooling; not a runtime diagnostic destination."
+    },
+    {
+      "file": "third-party-licenses.config.json",
+      "host": "freesound.org",
+      "justification": "Attribution and license source metadata for explicit license-generation tooling; no runtime telemetry grant."
+    },
+    {
+      "file": "third-party-licenses.config.json",
+      "host": "rsms.me",
+      "justification": "Attribution and license source metadata for explicit license-generation tooling; no runtime telemetry grant."
+    },
+    {
+      "file": "third-party-licenses.config.json",
+      "host": "sindresorhus.com",
+      "justification": "Attribution and license source metadata for explicit license-generation tooling; no runtime telemetry grant."
+    }
   ]
 }

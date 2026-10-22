@@ -1,0 +1,46 @@
+name: Watch upstream releases
+on:
+  schedule:
+    - cron: "17 7 * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: safe-upstream-watch
+  cancel-in-progress: false
+jobs:
+  watch:
+    if: github.repository == 'rakutenanalytics/t3code'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('node:fs');
+            const approved = JSON.parse(fs.readFileSync('security/last-approved-upstream', 'utf8'));
+            const { data: latest } = await github.rest.repos.getLatestRelease({ owner: 'pingdotgg', repo: 't3code' });
+            const marker = '<!-- t3safe-upstream-watch -->';
+            const issues = await github.paginate(github.rest.issues.listForRepo, { ...context.repo, state: 'all', creator: 'github-actions[bot]', per_page: 100 });
+            const matches = issues.filter(issue => !issue.pull_request && issue.body?.includes(marker));
+            if (approved.tag === latest.tag_name) {
+              for (const issue of matches.filter(issue => issue.state === 'open')) {
+                await github.rest.issues.update({ ...context.repo, issue_number: issue.number, state: 'closed' });
+              }
+              return;
+            }
+            const title = `Upstream update available: ${latest.tag_name}`;
+            const body = `${marker}\n\nUpstream: ${latest.html_url}\n\nLast reviewed: ${approved.tag ?? approved.sha}. Run /t3safe-sync in a fresh thread on the fork. A release notification does not approve the update.`;
+            const issue = matches[0];
+            if (issue) {
+              await github.rest.issues.update({ ...context.repo, issue_number: issue.number, title, body, state: 'open' });
+            } else {
+              await github.rest.issues.create({ ...context.repo, title, body });
+            }
+            for (const duplicate of matches.slice(1).filter(issue => issue.state === 'open')) {
+              await github.rest.issues.update({ ...context.repo, issue_number: duplicate.number, state: 'closed' });
+            }
