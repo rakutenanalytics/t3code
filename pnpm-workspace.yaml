@@ -6,7 +6,7 @@ packages:
   - scripts
 
 # pnpm 11 verifies age and trust even for frozen lockfiles. Do not bypass with trustLockfile.
-minimumReleaseAge: 10080
+minimumReleaseAge: 4320
 minimumReleaseAgeExclude: []
 minimumReleaseAgeStrict: true
 minimumReleaseAgeIgnoreMissingTime: false
