@@ -33,6 +33,7 @@ jobs:
       - name: Run focused managed policy tests
         run: |
           vp test run scripts/safe/managed-policy.test.ts apps/server/src/telemetry/ManagedGates.test.ts apps/desktop/src/updates/ManagedUpdates.test.ts
+          vp test run scripts/safe/dependency-comparison.test.ts
       - name: Install test browser and verify disabled action
         run: |
           node apps/web/node_modules/playwright/cli.js install --only-shell chromium
@@ -57,6 +58,39 @@ jobs:
           bash -n install.sh scripts/safe/t3safe
           shellcheck install.sh scripts/safe/t3safe
           bash install.sh --dry-run --version v0.1.0-safe.0 --prefix "$RUNNER_TEMP/t3safe-install"
+  dependency-online:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24.13.1"
+      - name: Check registry metadata against the PR base
+        id: scan
+        continue-on-error: true
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          git show "$BASE_SHA:security/dependency-baseline.json" > "$RUNNER_TEMP/dependency-base.json"
+          node scripts/safe/dependency-scan.ts --online --baseline "$RUNNER_TEMP/dependency-base.json"
+      - name: Upload dependency review report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: dependency-review
+          path: security/young-or-unknown.json
+          if-no-files-found: warn
+      - name: Record advisory scan failure
+        if: always() && steps.scan.outcome != 'success'
+        run: |
+          echo '::warning::Online dependency scan needs review. Registry failures remain unknown; inspect the dependency-review artifact and sync review verdicts.'
+          echo 'Online dependency scan did not pass. Review the job log and dependency-review artifact; this advisory job does not authorize publication.' >> "$GITHUB_STEP_SUMMARY"
+          exit 1
   artifacts:
     uses: ./.github/workflows/safe-build.yml
     with:

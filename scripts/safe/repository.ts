@@ -19,7 +19,7 @@ export function repositoryFiles() {
 }
 
 export function sourceText(file: string) {
-  return NodeFS.readFileSync(NodePath.join(root, file), "utf8");
+  return NodeFS.readFileSync(NodePath.resolve(root, file), "utf8");
 }
 
 export function digest(text: string) {
@@ -31,7 +31,7 @@ export function jsonFile<TValue>(file: string): TValue {
 }
 
 export function writeBaseline(file: string, value: unknown) {
-  NodeFS.writeFileSync(NodePath.join(root, file), `${JSON.stringify(value, null, 2)}\n`);
+  NodeFS.writeFileSync(NodePath.resolve(root, file), `${JSON.stringify(value, null, 2)}\n`);
 }
 
 export function finishScan(name: string, violations: string[], summary: string) {

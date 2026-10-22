@@ -8,7 +8,7 @@ description: Sync an upstream T3 Code release or upstream-sync issue into the sa
 Run on the maintainer's laptop, in a fresh thread on `rakutenanalytics/t3code`. Read repository AGENTS.md, `security/threat-model.md`, `security/egress-inventory.md`, and `docs/safe-fork/MAINTAINING.md` first.
 
 ```text
-issue or stable tag → preflight → merge tag → hunt new egress → repatch → checks
+issue or stable tag → preflight → merge tag → egress + package reviews → checks
                                                                          ↓
                                   PAUSE: approve draft PR + remote commands
                                                                          ↓
@@ -47,11 +47,23 @@ Review `git diff <previous-sha> <target-sha>` for newly introduced upstream beha
 
 Run a full audit every fifth sync and on every upstream major version change. Use `syncCount + 1`, not elapsed time. Re-inventory all runtime/build networking and dependency scripts using the threat model, reset baselines after review, and record why the audit was due.
 
+Before installing dependencies or refreshing the dependency baseline, run:
+
+```sh
+node scripts/safe/dependency-scan.ts --online
+```
+
+An exit of 1 means baseline drift or unresolved review, not permission to skip the scan. Registry failures stay unknown. Preserve `security/young-or-unknown.json` outside the repository before rerunning; each scan replaces it. For EACH entry in its `packages` array, spawn one bounded read-only subagent using [dependency-review-brief.md](dependency-review-brief.md). Discover an allowed inexpensive model through `model-picker`; run at most two package reviewers concurrently, with one package and an eight-minute budget per task. Cancel a reviewer at its deadline and keep that package unresolved. Reviewers may download tarballs and write scratch files only in fresh empty directories outside the repository. They never install dependencies or run package scripts. If delegation or registry access is unavailable, leave the package unresolved and stop before publication.
+
+The parent validates each SAFE / SUSPICIOUS / BLOCK verdict and its evidence. No push while any BLOCK, SUSPICIOUS, incomplete or missing verdict is unresolved. Age alone never proves safety. For accepted SAFE reviews, add an exact package approval to `security/dependency-exceptions.json` with `package` as `name@version`, `resolutionSha256` from the report, a substantive `reason` linking the evidence, and the review `date` as YYYY-MM-DD. Never blanket-approve the report. The fingerprint binds approval to the locked package block; a changed resolution needs another review. Record each verdict and evidence in the draft PR body, including approvals carried forward. These local approvals do not grant publication permission.
+
+The seven-day pnpm age floor has no default exemptions. If a reviewed young version is required now, a maintainer may approve a matching exact `minimumReleaseAgeExclude` entry with the package review; never restore wildcard exemptions or use `--trust-lockfile`. The JSON approval alone clears scanner review, not pnpm's independent install policy. Preserve exact-version `allowBuilds` grants and explicit denials. New lifecycle builds need separate review before changing permissions. Refresh the dependency baseline only after package verdicts and policy changes are accepted, then rerun the online scan. Keep the original report and verdicts for the PR even when the refreshed scan has no changes.
+
 After review and patching:
 
 ```sh
 node scripts/safe/egress-scan.ts
-node scripts/safe/dependency-scan.ts
+node scripts/safe/dependency-scan.ts --online
 node scripts/safe/policy-verify.ts
 vp test run scripts/safe/managed-policy.test.ts apps/server/src/telemetry/ManagedGates.test.ts apps/desktop/src/updates/ManagedUpdates.test.ts
 node scripts/safe/touched-checks.ts origin/main
@@ -63,7 +75,7 @@ Update `last-approved-upstream` with target tag, peeled SHA and incremented sync
 
 ## 3. PAUSE: approve publication
 
-Show the draft PR title/body and exact planned remote-write commands. The body states upstream tag/SHA, new egress findings and decisions, validation, full-audit status and remaining gaps. When starting from an issue, include `Closes #N` with its actual number. End it with model and harness. Wait for explicit user approval before ANY push or gh write. Explain this pause is required by this skill and the public-fork rule in AGENTS.md.
+Show the draft PR title/body and exact planned remote-write commands. The body states upstream tag/SHA, new egress findings and decisions, validation, full-audit status and remaining gaps. Include every dependency review as package/version, previous version, age or unknown, dependency path, verdict, evidence and approved exception reason/date. Report online CI failures explicitly; its advisory status never resolves a package review. When starting from an issue, include `Closes #N` with its actual number. End it with model and harness. Wait for explicit user approval before ANY push or gh write. Explain this pause is required by this skill and the public-fork rule in AGENTS.md.
 
 After approval, push only `sync/<tag>` to the fork and create the PR:
 

@@ -44,4 +44,6 @@ Merging a reviewed PR approves automatic public tag/release publication on GitHu
 
 CI adds literal host checks and reviewed source-statement fingerprints, plus a lockfile/manifest/build-permission baseline. File-specific literal annotations include gated hosts, documentation/schema links, optional tooling and synthetic examples. Hashes identify illustrative addresses without duplicating private-looking sample names. New statements still require diff review, even for an approved host.
 
-This inventory covers runtime paths, not every transitive install/build endpoint. Build toolchain downloads and dependency lifecycle scripts need a separate supply-chain baseline. Redirects and SDK-owned endpoints must be reviewed before treating the host inventory as enforceable network policy.
+The dependency audit adds unauthenticated metadata reads from `registry.npmjs.org` only with `dependency-scan.ts --online`, including the PR advisory job. It rejects redirects and times out each request. Package changes require separate tarball reviews and fingerprint-bound approvals; see [maintenance](../docs/safe-fork/MAINTAINING.md). Offline scanning makes no registry requests. This grants no runtime network capability.
+
+This inventory covers runtime paths, not every transitive install/build endpoint. Build toolchain downloads and dependency lifecycle destinations still need review. Redirects and SDK-owned endpoints must be reviewed before treating the host inventory as enforceable network policy.
