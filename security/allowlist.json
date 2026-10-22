@@ -126,7 +126,7 @@
     "telemetryExport",
     "providerFeedback"
   ],
-  "excludedFromM0": [
+  "outOfScopeSurfaces": [
     "Mobile Expo OTA/native services",
     "npx launcher binary distribution",
     "Build toolchain and dependency supply chain"
