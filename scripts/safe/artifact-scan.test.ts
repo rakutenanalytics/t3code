@@ -8,8 +8,11 @@ import {
   collectArtifactHosts,
   reviewArtifactHosts,
   formatArtifactHostReview,
+  type ArtifactHostBaseline,
 } from "./artifact-host-review.ts";
-import { root } from "./repository.ts";
+import { jsonFile, root } from "./repository.ts";
+
+const { telemetryDomains } = jsonFile<ArtifactHostBaseline>("security/artifact-hosts.json");
 
 describe("artifact host review", () => {
   it("should group multiple URLs and literal hosts into one categorized host with a sample file", () => {
@@ -28,18 +31,41 @@ describe("artifact host review", () => {
     ]);
   });
 
-  it("should fail for a new host and pass after that host is reviewed", () => {
-    const hosts = collectArtifactHosts([{ file: "vendor.js", text: '"https://example.com/api"' }]);
+  it("should pass for trusted provider hosts without individual baseline entries", () => {
+    const hosts = collectArtifactHosts(
+      [
+        {
+          file: "provider.js",
+          text: '"https://api.anthropic.com"; "https://api.openai.com"; "https://custom-provider.company.net"; "https://docs.statsig.com"; "https://docs.sentry.io"',
+        },
+      ],
+      telemetryDomains,
+    );
 
-    const unreviewed = reviewArtifactHosts(hosts, []);
-    const reviewed = reviewArtifactHosts(hosts, [
-      { host: "example.com", category: "unexpected/other" },
+    const review = reviewArtifactHosts(hosts, [], [], telemetryDomains);
+
+    expect(review.passed).toBe(true);
+    expect(review.forbiddenHosts).toEqual([]);
+  });
+
+  it("should fail for telemetry hosts from the baseline denylist", () => {
+    const hosts = collectArtifactHosts(
+      [
+        {
+          file: "vendor.js",
+          text: '"https://api.statsigcdn.com/v1"; endpoint: "events.statsigapi.net"',
+        },
+      ],
+      telemetryDomains,
+    );
+
+    const review = reviewArtifactHosts(hosts, [], [], telemetryDomains);
+
+    expect(review.passed).toBe(false);
+    expect(review.forbiddenHosts.map((entry) => entry.host)).toEqual([
+      "api.statsigcdn.com",
+      "events.statsigapi.net",
     ]);
-
-    expect(unreviewed.newHosts.map((entry) => entry.host)).toEqual(["example.com"]);
-    expect(unreviewed.passed).toBe(false);
-    expect(reviewed.newHosts).toEqual([]);
-    expect(reviewed.passed).toBe(true);
   });
 
   it("should fail for a forbidden host even when that host is reviewed", () => {
@@ -51,9 +77,9 @@ describe("artifact host review", () => {
     ]);
     const baseline = hosts.map(({ host, category }) => ({ host, category }));
 
-    const review = reviewArtifactHosts(hosts, baseline);
+    const review = reviewArtifactHosts(hosts, baseline, [], telemetryDomains);
 
-    expect(review.newHosts).toEqual([]);
+    expect(review.unreviewedHosts).toEqual([]);
     expect(review.forbiddenHosts.map((entry) => entry.host)).toEqual([
       "ingest.t3.codes",
       "relay.t3.codes",
@@ -84,18 +110,27 @@ describe("artifact host review", () => {
     expect(output).not.toContain("b.example.com");
   });
 
-  it("should accept a forbidden literal when its host, file and fingerprint match the gated ledger", () => {
-    const hosts = collectArtifactHosts([{ file: "main.js", text: '"https://app.t3.codes"' }]);
+  it("should accept a matching gated fingerprint after unrelated content and chunk filename changes", () => {
+    const hosts = collectArtifactHosts([
+      { file: "main-abcdefgh.js", text: '"https://app.t3.codes";' + " ".repeat(100) },
+    ]);
     const ledger = [{ host: "app.t3.codes", ...hosts[0]!.literals[0]!, note: "t3Connect denied" }];
 
-    const review = reviewArtifactHosts(hosts, [], ledger);
+    const rebuilt = collectArtifactHosts([
+      {
+        file: "main-12345678.js",
+        text: '"https://app.t3.codes";' + " ".repeat(100) + 'console.log("unrelated")',
+      },
+    ]);
+
+    const review = reviewArtifactHosts(rebuilt, [], ledger);
 
     expect(review.passed).toBe(true);
     expect(review.forbiddenHosts.map((entry) => entry.host)).toEqual(["app.t3.codes"]);
     expect(review.unapprovedForbiddenLiterals).toEqual([]);
   });
 
-  it("should fail when a gated literal's file content changes its fingerprint", () => {
+  it("should fail when a gated literal's nearby call site changes its fingerprint", () => {
     const original = collectArtifactHosts([{ file: "main.js", text: '"https://app.t3.codes"' }]);
     const ledger = [
       { host: "app.t3.codes", ...original[0]!.literals[0]!, note: "t3Connect denied" },
@@ -127,38 +162,30 @@ describe("artifact host review", () => {
     ]);
   });
 
-  it("should exit 0 in report-only mode and record new hosts and forbidden literals that normally exit 1", () => {
+  it("should exit 0 for an unknown host and write it into unreviewedHosts", () => {
     const work = NodeFS.mkdtempSync(NodePath.join(NodeOS.tmpdir(), "artifact-report-"));
     const bundle = NodePath.join(work, "bundle");
     const report = NodePath.join(work, "host-report.json");
     NodeFS.mkdirSync(bundle);
     NodeFS.writeFileSync(
       NodePath.join(bundle, "main.js"),
-      '"https://new.example.com"; "https://ingest.t3.codes"',
+      '"https://new.customer-service.net"; "https://café.customer-service.net"',
     );
 
     try {
-      const strict = NodeChildProcess.spawnSync(
+      const scan = NodeChildProcess.spawnSync(
         process.execPath,
-        ["scripts/safe/artifact-scan.ts", bundle],
-        { cwd: root, encoding: "utf8" },
-      );
-      const reportOnly = NodeChildProcess.spawnSync(
-        process.execPath,
-        ["scripts/safe/artifact-scan.ts", bundle, "--report-only", "--report", report],
+        ["scripts/safe/artifact-scan.ts", bundle, "--report", report],
         { cwd: root, encoding: "utf8" },
       );
 
-      expect(strict.status).toBe(1);
-      expect(reportOnly.status).toBe(0);
-      expect(reportOnly.stdout).toContain("REPORT ONLY");
-      expect(reportOnly.stdout).toContain("NEW new.example.com");
-      expect(reportOnly.stdout).toContain("FORBIDDEN ingest.t3.codes");
+      expect(scan.status).toBe(0);
+      expect(scan.stdout).toContain("NEW new.customer-service.net");
       const recorded = JSON.parse(NodeFS.readFileSync(report, "utf8"));
-      expect(recorded.passed).toBe(false);
-      expect(recorded.newHosts).toMatchObject([{ host: "new.example.com" }]);
-      expect(recorded.unapprovedForbiddenLiterals).toMatchObject([
-        { host: "ingest.t3.codes", file: "main.js" },
+      expect(recorded.passed).toBe(true);
+      expect(recorded.unreviewedHosts.map((entry: { host: string }) => entry.host)).toEqual([
+        "new.customer-service.net",
+        "xn--caf-dma.customer-service.net",
       ]);
     } finally {
       NodeFS.rmSync(work, { recursive: true, force: true });

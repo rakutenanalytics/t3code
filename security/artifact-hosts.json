@@ -1,5 +1,1128 @@
 {
-  "justification": "Additional dependency-owned hosts require explicit per-entry review. Forbidden literals require --accept-gated-literals, a policy-verify pass and a gating review note. Each ledger entry binds one host to an exact relative file path and whole-file SHA-256; content or hashed chunk filename changes require renewed review. Never approve entries from an unrepresentative bundle.",
-  "hosts": [],
+  "justification": "Only T3-owned domains and the explicit telemetryDomains denylist fail. All other hosts are trusted by default; seenHosts supports informational diffs, never grants. Ledger keys bind host + artifact-relative filePattern with normalized 8-character chunk suffix + SHA-256 of the literal plus 80 characters on each side of each occurrence; the literal is host text, or the full URL for normalized encoded hosts, with the same suffix normalization. Adjacent call-site changes require renewed review; unrelated file edits do not. Acceptance requires a source review note and packaged policy verification.",
+  "seenHosts": [
+    {
+      "host": ".",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "[2001:db8::1]",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "[ffff::]",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "*.example.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "0.0.0.0",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "1.1.1.1",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "127.0.0.1",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "192.168.1.24",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "262.ecma-international.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "accounts.google.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "accounts.x.ai",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "agent-plugins.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "agentclientprotocol.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "ajv.js.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "aka.ms",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "andreubotella.github.io",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "api.",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "api.acme.ghe.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "api.anthropic.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "api.bitbucket.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "api.cursor.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "api.example.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "api.expo.dev",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "api.github.com",
+      "category": "docs/source/license"
+    },
+    {
+      "host": "api.meta.ai",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "api.openai.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "api2.cursor.sh",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "app.example.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "app.invalid",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "apps.apple.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "auth.openai.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "auth.x.ai",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "babel.dev",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "base-ui.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "base64.guru",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "beacon.claude-ai.staging.ant.dev",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "bellard.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "bippy.dev",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "bitbucket.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "blog.stevenlevithan.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "blueoakcouncil.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "brilliant.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "bucket.test",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "bugs.chromium.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "bugzilla.mozilla.org",
+      "category": "docs/source/license"
+    },
+    {
+      "host": "caniuse.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "cdn.agentclientprotocol.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "cdn.playwright.dev",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "challenges.cloudflare.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "chatgpt.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "chevrotain.io",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "chromewebstore.google.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "chromium-review.googlesource.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "claude-staging.fedstart.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "claude.ai",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "claude.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "claude.fedstart.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "clerk.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "cli-chat-proxy.grok.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "cli.github.com",
+      "category": "docs/source/license"
+    },
+    {
+      "host": "cloud.google.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "cloudcode-pa.googleapis.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "cloudflare-dns.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "cms.example.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "code.claude.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "code.haverbeke.berlin",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "codeberg.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "connectrpc.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "core-js.io",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "creativecommons.org",
+      "category": "docs/source/license"
+    },
+    {
+      "host": "csrc.nist.gov",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "cursor.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "d3js.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "daily-cloudcode-pa.googleapis.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "daringfireball.net",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "dashboard.clerk.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "datatracker.ietf.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "day.js.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "daypicker.dev",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "db.internal",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "dbus.freedesktop.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "dev.azure.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "developer.mozilla.org",
+      "category": "docs/source/license"
+    },
+    {
+      "host": "developers.google.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "dl.dropboxusercontent.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "dl.google.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "docs.anthropic.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "docs.expo.dev",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "docs.github.com",
+      "category": "docs/source/license"
+    },
+    {
+      "host": "docs.python.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "docs.statsig.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "dom.spec.whatwg.org",
+      "category": "schema/namespace"
+    },
+    {
+      "host": "dotenvx.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "duckduckgo.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "ecma-international.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "edgeupdates.microsoft.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "eemeli.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "effect.website",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "en.wikipedia.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "encoding.spec.whatwg.org",
+      "category": "schema/namespace"
+    },
+    {
+      "host": "eprint.iacr.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "es-toolkit.dev",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "evilmartians.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "example.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "example.com&amp;).",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "example.invalid",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "example.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "feross.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "fetch.spec.whatwg.org",
+      "category": "schema/namespace"
+    },
+    {
+      "host": "floating-ui.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "freesound.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "fsf.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "gist.github.com",
+      "category": "docs/source/license"
+    },
+    {
+      "host": "git-scm.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "git.cafe",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "gitea.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "github.com",
+      "category": "docs/source/license"
+    },
+    {
+      "host": "github.example.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "github.githubassets.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "gitlab.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "grok.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "hdl.handle.net",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "hooks.example.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "host",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "html.spec.whatwg.org",
+      "category": "schema/namespace"
+    },
+    {
+      "host": "httpwg.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "hub.example.ts.net",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "iconify.design",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "in-memory",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "infra.spec.whatwg.org",
+      "category": "schema/namespace"
+    },
+    {
+      "host": "isbot.js.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "issues.chromium.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "jimmy.warting.se",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "joda-time.sourceforge.net",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "jquery.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "js.cytoscape.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "js.foundation",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "json-schema.org",
+      "category": "schema/namespace"
+    },
+    {
+      "host": "kael.me",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "kagi.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "katex.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "kossnocorp.mit-license.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "langium.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "letsencrypt.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "linkify.js.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "localhost",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "lodash",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "lodash.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "login.tailscale.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "luca.ntop.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "lucide.dev",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "marked.js.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "mathiasbynens.be",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "mcp-proxy.anthropic.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "media.invalid",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "mimesniff.spec.whatwg.org",
+      "category": "schema/namespace"
+    },
+    {
+      "host": "mozilla.org",
+      "category": "docs/source/license"
+    },
+    {
+      "host": "msdn.microsoft.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "mths.be",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "myproxy",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "napi.rs",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "nfriedly.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "nodejs.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "not.evil.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "npm.example.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "nvlpubs.nist.gov",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "oauth2.googleapis.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "open-vsx.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "opencode.ai",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "openjsf.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "opensource.org",
+      "category": "docs/source/license"
+    },
+    {
+      "host": "parse5.js.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "paulmillr.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "platform.claude.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "platform.openai.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "play.google.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "playwright",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "playwright.bloburl",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "playwright.dev",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "playwright.download.prss.microsoft.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "preactjs.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "prod.example.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "prosemirror.net",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "ptht05hbb1ssoooe.public.blob.vercel-storage.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "pw-",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "react-grab.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "react.dev",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "reactjs.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "registry.npmjs.org",
+      "category": "package-metadata"
+    },
+    {
+      "host": "relay.invalid",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "remark.js.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "remote-content.invalid",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "research.kudelskisecurity.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "reviews.example.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "rolldown.rs",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "roughjs.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "rsms.me",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "s3-",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "s3.amazonaws.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "search.brave.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "semver.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "sindresorhus.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "source.chromium.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "spec.commonmark.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "spec.openapis.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "stackoverflow.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "standardschema.dev",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "storage.googleapis.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "streams.spec.whatwg.org",
+      "category": "schema/namespace"
+    },
+    {
+      "host": "stripe.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "stuk.github.io",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "support.microsoft.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "swc.rs",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "t3-page.localhost",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "t3.chat",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "t3.codes).",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "t3.invalid",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "tailwindcss.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "tanstack.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "tc39.es",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "thekevinscott.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "threejs.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "tiptap.dev",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "tools.ietf.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "trace.playwright.dev",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "underscorejs.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "undici.nodejs.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "unifiedjs.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "unlicense.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "url.spec.whatwg.org",
+      "category": "schema/namespace"
+    },
+    {
+      "host": "user",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "w3c.github.io",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "web.mit.edu",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "webidl.spec.whatwg.org",
+      "category": "schema/namespace"
+    },
+    {
+      "host": "websockets.spec.whatwg.org",
+      "category": "schema/namespace"
+    },
+    {
+      "host": "whatpr.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "wicg.github.io",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.apache.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.apple.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.bing.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.cl.cam.ac.uk",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.cnri.reston.va.us",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.cursor.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.cwi.nl",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.dropbox.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.ecma-international.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.ecosia.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.electron.build",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.freedesktop.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.google.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.googleapis.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.growingwiththeweb.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.iana.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.ibm.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.ietf.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.jsonrpc.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.morphicons.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.npmjs.com",
+      "category": "package-metadata"
+    },
+    {
+      "host": "www.opensource.org",
+      "category": "docs/source/license"
+    },
+    {
+      "host": "www.python.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.pythonlabs.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.rfc-editor.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.safaribooksonline.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.secg.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.typescriptlang.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.unicode.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "www.w3.org",
+      "category": "schema/namespace"
+    },
+    {
+      "host": "www.w3ctech.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "x.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "xa11y.dev",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "xhr.spec.whatwg.org",
+      "category": "schema/namespace"
+    },
+    {
+      "host": "your-server",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "zod.dev",
+      "category": "unexpected/other"
+    }
+  ],
+  "telemetryDomains": [
+    "api.statsigcdn.com",
+    "statsigapi.net",
+    "featureassets.org",
+    "prodregistryv2.org",
+    "sentry.io",
+    "sentry.dev",
+    "segment.io",
+    "segment.com",
+    "posthog.com",
+    "datadoghq.com",
+    "datadoghq.eu",
+    "mixpanel.com",
+    "amplitude.com",
+    "bugsnag.com",
+    "api.honeycomb.io",
+    "otlp.nr-data.net",
+    "google-analytics.com",
+    "analytics.google.com",
+    "google-analytics.l.google.com",
+    "browser-intake-datadoghq.com",
+    "browser-intake-datadoghq.eu",
+    "api.eu1.honeycomb.io",
+    "rollbar.com",
+    "axiom.co"
+  ],
   "gatedLiterals": []
 }

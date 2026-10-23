@@ -1,10 +1,14 @@
 import { digest } from "./repository.ts";
 import { literalNetworkUrls } from "./egress-detection.ts";
 
-export function collectArtifactHosts(files: Iterable<{ file: string; text: string }>) {
-  const hostFiles = new Map<string, Map<string, string>>();
+export function collectArtifactHosts(
+  files: Iterable<{ file: string; text: string }>,
+  telemetryDomains: string[] = [],
+) {
+  const hostFiles = new Map<string, Map<string, ArtifactLiteral>>();
   for (const { file, text } of files) {
     const hosts = new Set<string>();
+    const encodedHostUrls = new Map<string, Set<string>>();
     for (const match of text.matchAll(/(?:https?|wss?):\/\/([a-zA-Z0-9.-]+)(?=[:/\s'"`?#)]|$)/g)) {
       hosts.add(match[1]!.toLowerCase());
     }
@@ -17,20 +21,43 @@ export function collectArtifactHosts(files: Iterable<{ file: string; text: strin
     // Denied domains also fail as bare constants, regardless of the surrounding property's name.
     for (const match of text.matchAll(/["'`]([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+\.?)["'`]/g)) {
       const host = match[1]!.toLowerCase();
-      if (isForbiddenArtifactHost(host)) hosts.add(host);
+      if (isBlockedArtifactHost(host, telemetryDomains)) hosts.add(host);
     }
     for (const url of literalNetworkUrls(text)) {
       try {
-        hosts.add(new URL(url).hostname);
+        const host = new URL(url).hostname;
+        hosts.add(host);
+        // URL normalizes encoded hosts; fingerprints must retain the actual bundle spelling.
+        // https://url.spec.whatwg.org/#concept-host-parser
+        if (!url.toLowerCase().includes(host.toLowerCase())) {
+          const spellings = encodedHostUrls.get(host) ?? new Set<string>();
+          spellings.add(url);
+          encodedHostUrls.set(host, spellings);
+        }
       } catch {
         // Bundled strings can contain incomplete URL templates; the authority match retains their host.
       }
     }
-    const sha256 = digest(text);
     for (const host of hosts) {
-      const paths = hostFiles.get(host) ?? new Map<string, string>();
-      paths.set(file, sha256);
-      hostFiles.set(host, paths);
+      const literals = hostFiles.get(host) ?? new Map<string, ArtifactLiteral>();
+      const spellings = [host, ...(encodedHostUrls.get(host) ?? [])];
+      const escapedSpellings = spellings.map((spelling) =>
+        spelling.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+      );
+      const hostPattern = escapedSpellings.join("|");
+      for (const match of text.matchAll(
+        new RegExp(`(?<![a-z0-9.-])(?:${hostPattern})(?![a-z0-9.-])`, "gi"),
+      )) {
+        const context = text.slice(
+          Math.max(0, match.index - 80),
+          match.index + match[0].length + 80,
+        );
+        const contextSha256 = digest(normalizeChunkNames(context));
+        const filePattern = normalizeChunkNames(file);
+        const literal = { file, filePattern, contextSha256 };
+        literals.set(`${file}:${contextSha256}`, literal);
+      }
+      hostFiles.set(host, literals);
     }
   }
   const inventory: ArtifactHost[] = [];
@@ -38,9 +65,9 @@ export function collectArtifactHosts(files: Iterable<{ file: string; text: strin
     inventory.push({
       host,
       category: categorizeArtifactHost(host),
-      sampleFile: paths.keys().next().value!,
-      fileCount: paths.size,
-      literals: [...paths].map(([file, sha256]) => ({ file, sha256 })),
+      sampleFile: paths.values().next().value!.file,
+      fileCount: new Set([...paths.values()].map((literal) => literal.file)).size,
+      literals: [...paths.values()],
     });
   }
   return inventory.sort((left, right) => left.host.localeCompare(right.host));
@@ -50,38 +77,42 @@ export function reviewArtifactHosts(
   hosts: ArtifactHost[],
   baseline: ReviewedArtifactHost[],
   gatedLiterals: GatedArtifactLiteral[] = [],
+  telemetryDomains: string[] = [],
 ) {
   const reviewedHosts = new Set(baseline.map((entry) => entry.host));
-  const forbiddenHosts = hosts.filter((entry) => isForbiddenArtifactHost(entry.host));
+  const forbiddenHosts = hosts.filter((entry) =>
+    isBlockedArtifactHost(entry.host, telemetryDomains),
+  );
   const unapprovedForbiddenLiterals: GatedArtifactLiteral[] = [];
   for (const entry of forbiddenHosts) {
     for (const literal of entry.literals) {
       const accepted = gatedLiterals.some(
         (gated) =>
           gated.host === entry.host &&
-          gated.file === literal.file &&
-          gated.sha256 === literal.sha256 &&
+          gated.filePattern === literal.filePattern &&
+          gated.contextSha256 === literal.contextSha256 &&
           gated.note.trim().length > 0,
       );
       if (!accepted) unapprovedForbiddenLiterals.push({ host: entry.host, ...literal, note: "" });
     }
   }
-  // Forbidden hosts use only the file-bound ledger, never the ordinary host baseline.
-  const newHosts = hosts.filter(
-    (entry) => !isForbiddenArtifactHost(entry.host) && !reviewedHosts.has(entry.host),
+  // Seen hosts are informational; only the context-bound ledger can approve denied literals.
+  const unreviewedHosts = hosts.filter(
+    (entry) =>
+      !isBlockedArtifactHost(entry.host, telemetryDomains) && !reviewedHosts.has(entry.host),
   );
-  const passed = newHosts.length === 0 && unapprovedForbiddenLiterals.length === 0;
-  return { newHosts, forbiddenHosts, unapprovedForbiddenLiterals, passed };
+  const passed = unapprovedForbiddenLiterals.length === 0;
+  return { unreviewedHosts, forbiddenHosts, unapprovedForbiddenLiterals, passed };
 }
 
 export function formatArtifactHostReview(
   hosts: ArtifactHost[],
   review: ReturnType<typeof reviewArtifactHosts>,
-  limit = 100,
+  limit = 20,
 ) {
   const status = review.passed ? "PASS" : "FAIL";
   const lines = [
-    `${status} artifact hosts: ${hosts.length} unique hosts; ${review.newHosts.length} NEW; ${review.forbiddenHosts.length} forbidden; ${review.unapprovedForbiddenLiterals.length} unapproved literals`,
+    `${status} artifact hosts: ${hosts.length} unique hosts; ${review.unreviewedHosts.length} NEW; ${review.forbiddenHosts.length} forbidden; ${review.unapprovedForbiddenLiterals.length} unapproved literals`,
   ];
   const categoryCounts = new Map<ArtifactHostCategory, number>();
   for (const { category } of hosts) {
@@ -96,20 +127,20 @@ export function formatArtifactHostReview(
     lines.push(`  ${review.forbiddenHosts.length - limit} additional FORBIDDEN host(s) omitted`);
   }
   for (const entry of review.unapprovedForbiddenLiterals.slice(0, limit)) {
-    lines.push(`  UNAPPROVED ${entry.host}: ${entry.file} sha256=${entry.sha256}`);
+    lines.push(`  UNAPPROVED ${entry.host}: ${entry.file} contextSha256=${entry.contextSha256}`);
   }
   if (review.unapprovedForbiddenLiterals.length > limit) {
     lines.push(
       `  ${review.unapprovedForbiddenLiterals.length - limit} additional UNAPPROVED literal(s) omitted`,
     );
   }
-  for (const entry of review.newHosts.slice(0, limit)) {
+  for (const entry of review.unreviewedHosts.slice(0, limit)) {
     lines.push(
       `  NEW ${entry.host.slice(0, 300)} [${entry.category}]: ${entry.sampleFile.slice(0, 300)}`,
     );
   }
-  if (review.newHosts.length > limit) {
-    lines.push(`  ${review.newHosts.length - limit} additional NEW host(s) omitted`);
+  if (review.unreviewedHosts.length > limit) {
+    lines.push(`  ${review.unreviewedHosts.length - limit} additional NEW host(s) omitted`);
   }
   return `${lines.join("\n")}\n`;
 }
@@ -129,20 +160,22 @@ export interface ReviewedArtifactHost {
 export interface GatedArtifactLiteral {
   host: string;
   file: string;
-  sha256: string;
+  filePattern: string;
+  contextSha256: string;
   note: string;
 }
 
 export interface ArtifactHostBaseline {
   justification: string;
-  hosts: ReviewedArtifactHost[];
+  seenHosts: ReviewedArtifactHost[];
+  telemetryDomains: string[];
   gatedLiterals: GatedArtifactLiteral[];
 }
 
 interface ArtifactHost extends ReviewedArtifactHost {
   sampleFile: string;
   fileCount: number;
-  literals: { file: string; sha256: string }[];
+  literals: ArtifactLiteral[];
 }
 
 function categorizeArtifactHost(host: string): ArtifactHostCategory {
@@ -165,22 +198,18 @@ function categorizeArtifactHost(host: string): ArtifactHostCategory {
   return "unexpected/other";
 }
 
-function isForbiddenArtifactHost(host: string) {
-  return matchesDomain(host, [
-    "t3.codes",
-    "pingdotgg.com",
-    "posthog.com",
-    "sentry.io",
-    "sentry.dev",
-    "segment.io",
-    "segment.com",
-    "amplitude.com",
-    "mixpanel.com",
-    "datadoghq.com",
-    "bugsnag.com",
-    "rollbar.com",
-    "axiom.co",
-  ]);
+type ArtifactLiteral = Omit<GatedArtifactLiteral, "host" | "note">;
+
+function isBlockedArtifactHost(host: string, telemetryDomains: string[]) {
+  if (matchesDomain(host, ["t3.codes", "pingdotgg.com"])) return true;
+  // Documentation under telemetry vendors is reference material, not an ingestion endpoint.
+  if (/^(?:docs|documentation)\./.test(host)) return false;
+  return matchesDomain(host, telemetryDomains);
+}
+
+function normalizeChunkNames(value: string) {
+  // Bundlers change chunk suffixes after unrelated edits. Keep call-site context in the fingerprint.
+  return value.replace(/[-.][A-Za-z0-9_-]{8}(?=\.[cm]?js\b)/g, "-*");
 }
 
 function matchesDomain(host: string, domains: string[]) {

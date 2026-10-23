@@ -36,12 +36,12 @@ try {
     extracted,
   ]);
   const artifactArgs = ["scripts/safe/artifact-scan.ts", extracted];
-  if (process.argv.includes("--artifact-report-only")) {
+  if (process.argv.includes("--artifact-report")) {
     const reportIndex = process.argv.indexOf("--artifact-report");
     const report = process.argv[reportIndex + 1];
     if (reportIndex === -1 || !report || report.startsWith("--"))
-      throw new Error("--artifact-report-only requires --artifact-report <json-path>");
-    artifactArgs.push("--report-only", "--report", report);
+      throw new Error("--artifact-report requires <json-path>");
+    artifactArgs.push("--report", report);
   }
   runDesktopSmokeCommand(process.execPath, artifactArgs);
   const violations: string[] = [];

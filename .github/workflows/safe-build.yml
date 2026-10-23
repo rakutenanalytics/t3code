@@ -13,8 +13,6 @@ jobs:
     timeout-minutes: 60
     env:
       SAFE_VERSION: ${{ inputs.version }}
-      # TEMPORARY PR #1: TODO remove after reviewing the actual CI artifact host inventories.
-      SAFE_ARTIFACT_REPORT_ONLY: ${{ github.repository == 'rakutenanalytics/t3code' && github.event_name == 'pull_request' && github.event.pull_request.number == 1 }}
       CSC_IDENTITY_AUTO_DISCOVERY: "false"
       T3CODE_TELEMETRY_ENABLED: "false"
       T3CODE_DISABLE_AUTO_UPDATE: "true"
@@ -50,11 +48,7 @@ jobs:
           mv "${dmg[0]}" "release-safe/t3safe-${SAFE_VERSION}-darwin-arm64.dmg"
       - name: Inspect policy and endpoints inside the built DMG
         run: |
-          artifact_args=()
-          if [ "$SAFE_ARTIFACT_REPORT_ONLY" = true ]; then
-            artifact_args=(--artifact-report-only --artifact-report release-safe/dmg-host-report.json)
-          fi
-          node scripts/safe/desktop-smoke.ts "release-safe/t3safe-${SAFE_VERSION}-darwin-arm64.dmg" "${artifact_args[@]}"
+          node scripts/safe/desktop-smoke.ts "release-safe/t3safe-${SAFE_VERSION}-darwin-arm64.dmg" --artifact-report release-safe/dmg-host-report.json
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: "26.8.2"
@@ -77,12 +71,10 @@ jobs:
           tar -xzf "release-safe/t3safe-${SAFE_VERSION}-darwin-arm64.tar.gz" -C "$RUNNER_TEMP/safe-smoke"
           executable="$RUNNER_TEMP/safe-smoke/t3-${SAFE_VERSION}-darwin-arm64/t3"
           node scripts/safe/egress-smoke.ts "$executable"
-          artifact_args=()
-          if [ "$SAFE_ARTIFACT_REPORT_ONLY" = true ]; then
-            artifact_args=(--report-only)
-          fi
-          node scripts/safe/artifact-scan.ts apps/server/dist-exe "${artifact_args[@]}" --report release-safe/cli-build-host-report.json
-          node scripts/safe/artifact-scan.ts "$RUNNER_TEMP/safe-smoke" "${artifact_args[@]}" --report release-safe/cli-archive-host-report.json
+          status=0
+          node scripts/safe/artifact-scan.ts apps/server/dist-exe --report release-safe/cli-build-host-report.json || status=1
+          node scripts/safe/artifact-scan.ts "$RUNNER_TEMP/safe-smoke" --report release-safe/cli-archive-host-report.json || status=1
+          exit "$status"
       - name: Package management command, policy and checksums
         run: |
           cp scripts/safe/t3safe release-safe/t3safe

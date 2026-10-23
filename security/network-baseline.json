@@ -41,7 +41,7 @@
       "5ffd5d8c545cfaf50ca0f508f856c08cfde969e6ba12caa5df689a4f931ac2b5": 1
     },
     ".github/workflows/safe-build.yml": {
-      "e79c9cfe5c755e000e354e7c86993375cb42fa1f598a256e5a8d9008e4763673": 1
+      "a7d4c5b4922685f0aac976ea4f999d29083710b1a2fb42dde3811a16c7e8d486": 1
     },
     ".github/workflows/upstream-watch.yml": {
       "b8f09d94311798ae73abcf6446f4282f474f1f260087726ddce4ae68d05c87b6": 1
@@ -7133,10 +7133,13 @@
       "bcf06f604f7ae76d6cfac2c2e2eddab1b21fe42eb7606b601b69df90a57adf9c": 1
     },
     "scripts/safe/artifact-host-review.ts": {
-      "2ae0e57517c3eb326130cd61e48ce4ee0d2b09a169b5406ddcf0d896c74ea050": 1
+      "bbd5fa938f7d5bb1182648cb5c7b8369049511042ccf65802ff11bdf41cbec26": 1
     },
     "scripts/safe/artifact-scan.test.ts": {
-      "d7331b75a9136621380fc639c16904a0a07aca898fceda928fa8dec74ae7861d": 1
+      "2917366285890e6d668924e71880baf388cfc44a2e00a0ead89088c6bdee4c21": 1
+    },
+    "scripts/safe/artifact-scan.ts": {
+      "597901adf05fcb5f58020d42489154a4bbcc5b16478490f9f6222ecd62173745": 1
     },
     "scripts/safe/dependency-lockfile.ts": {
       "95e1b7cde70519e3075aefe71ac6f7777afd7cc50f11303efceeadf6f223119f": 1
@@ -7151,7 +7154,7 @@
       "bf943d453c1b780925a936c70d3fadaffca7a8f96f826f21b2ff265bc09a0cd2": 1
     },
     "scripts/safe/desktop-smoke.ts": {
-      "5ccb9986068ce51f30fa913955ec0e77006fb910ec18a0fa8676a20ce40f8ad5": 1
+      "7d77af4872fca5cb76035890faeecc4f8eec47863e8553593ca3d54709d80deb": 1
     },
     "scripts/safe/egress-detection.ts": {
       "c8d08140441dd4aa8242cc08cc4c4b5401e74d135a100cb529a275d48a653752": 1
@@ -9285,20 +9288,29 @@
       "json-schema.org",
       "npmjs.com",
       "npmjs.org",
+      "pingdotgg.com",
       "schemastore.org",
+      "t3.codes",
+      "url.spec.whatwg.org",
       "w3.org",
       "whatwg.org"
     ],
     "scripts/safe/artifact-scan.test.ts": [
       "a.example.com",
       "account.updated",
+      "api.anthropic.com",
+      "api.openai.com",
+      "api.statsigcdn.com",
       "app.t3.codes",
       "b.example.com",
-      "example.com",
+      "custom-provider.company.net",
+      "docs.sentry.io",
+      "docs.statsig.com",
+      "events.statsigapi.net",
       "host-report.json",
       "ingest.t3.codes",
       "main.js",
-      "new.example.com",
+      "new.customer-service.net",
       "relay.t3.codes",
       "reviewed.example.com",
       "t3.codes",
@@ -13607,14 +13619,21 @@
       "https://github.com/pingdotgg/t3code/releases",
       "https://github.com/pingdotgg/t3code/releases/download"
     ],
+    "scripts/safe/artifact-host-review.ts": ["https://url.spec.whatwg.org/#concept-host-parser"],
     "scripts/safe/artifact-scan.test.ts": [
       "http://www.w3.org/1999/xhtml",
       "https://a.example.com",
+      "https://api.anthropic.com",
+      "https://api.openai.com",
+      "https://api.statsigcdn.com/v1",
       "https://app.t3.codes",
       "https://b.example.com",
-      "https://example.com/api",
+      "https://café.customer-service.net",
+      "https://custom-provider.company.net",
+      "https://docs.sentry.io",
+      "https://docs.statsig.com",
       "https://ingest.t3.codes",
-      "https://new.example.com",
+      "https://new.customer-service.net",
       "https://relay.t3.codes",
       "https://reviewed.example.com",
       "https://t3.codes",
