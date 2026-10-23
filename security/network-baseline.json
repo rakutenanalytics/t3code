@@ -35,13 +35,13 @@
       "744c4a762a58431eb6dbd5a45460d9dc577971439f7ca43710b2dd7f2e8d8119": 1
     },
     ".github/workflows/pr-checks.yml": {
-      "6505a0757215aacc295935d5a2d54dd86076e00ef136f4f1b61206cd3c265d47": 1
+      "74c33cd88b5ac69978153a2420cb3d5ac13a223146cf94d7a8c5671629271938": 1
     },
     ".github/workflows/release.yml": {
       "5ffd5d8c545cfaf50ca0f508f856c08cfde969e6ba12caa5df689a4f931ac2b5": 1
     },
     ".github/workflows/safe-build.yml": {
-      "85266a16649770ddc94580bf761dae333264270e5ebc395662e75eb8bfd81698": 1
+      "e79c9cfe5c755e000e354e7c86993375cb42fa1f598a256e5a8d9008e4763673": 1
     },
     ".github/workflows/upstream-watch.yml": {
       "b8f09d94311798ae73abcf6446f4282f474f1f260087726ddce4ae68d05c87b6": 1
@@ -7133,10 +7133,10 @@
       "bcf06f604f7ae76d6cfac2c2e2eddab1b21fe42eb7606b601b69df90a57adf9c": 1
     },
     "scripts/safe/artifact-host-review.ts": {
-      "f4d4e740455ca780f6af332dee7a4c893932dc453494b14846ff9c4a6923250b": 1
+      "2ae0e57517c3eb326130cd61e48ce4ee0d2b09a169b5406ddcf0d896c74ea050": 1
     },
     "scripts/safe/artifact-scan.test.ts": {
-      "5398d9cbb7ddfebd25dd674d2e15708af324290fd6db650dc62a0b2882f47114": 1
+      "d7331b75a9136621380fc639c16904a0a07aca898fceda928fa8dec74ae7861d": 1
     },
     "scripts/safe/dependency-lockfile.ts": {
       "95e1b7cde70519e3075aefe71ac6f7777afd7cc50f11303efceeadf6f223119f": 1
@@ -7151,7 +7151,7 @@
       "bf943d453c1b780925a936c70d3fadaffca7a8f96f826f21b2ff265bc09a0cd2": 1
     },
     "scripts/safe/desktop-smoke.ts": {
-      "208c434813187e05d607688bf443d03169b9e25b88690d9ac30fe53d10b1049e": 1
+      "5ccb9986068ce51f30fa913955ec0e77006fb910ec18a0fa8676a20ce40f8ad5": 1
     },
     "scripts/safe/egress-detection.ts": {
       "c8d08140441dd4aa8242cc08cc4c4b5401e74d135a100cb529a275d48a653752": 1
@@ -9292,9 +9292,13 @@
     "scripts/safe/artifact-scan.test.ts": [
       "a.example.com",
       "account.updated",
+      "app.t3.codes",
       "b.example.com",
       "example.com",
+      "host-report.json",
       "ingest.t3.codes",
+      "main.js",
+      "new.example.com",
       "relay.t3.codes",
       "reviewed.example.com",
       "t3.codes",
@@ -13606,9 +13610,11 @@
     "scripts/safe/artifact-scan.test.ts": [
       "http://www.w3.org/1999/xhtml",
       "https://a.example.com",
+      "https://app.t3.codes",
       "https://b.example.com",
       "https://example.com/api",
       "https://ingest.t3.codes",
+      "https://new.example.com",
       "https://relay.t3.codes",
       "https://reviewed.example.com",
       "https://t3.codes",

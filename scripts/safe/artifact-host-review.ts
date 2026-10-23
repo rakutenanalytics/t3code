@@ -1,7 +1,8 @@
+import { digest } from "./repository.ts";
 import { literalNetworkUrls } from "./egress-detection.ts";
 
 export function collectArtifactHosts(files: Iterable<{ file: string; text: string }>) {
-  const hostFiles = new Map<string, Set<string>>();
+  const hostFiles = new Map<string, Map<string, string>>();
   for (const { file, text } of files) {
     const hosts = new Set<string>();
     for (const match of text.matchAll(/(?:https?|wss?):\/\/([a-zA-Z0-9.-]+)(?=[:/\s'"`?#)]|$)/g)) {
@@ -25,9 +26,10 @@ export function collectArtifactHosts(files: Iterable<{ file: string; text: strin
         // Bundled strings can contain incomplete URL templates; the authority match retains their host.
       }
     }
+    const sha256 = digest(text);
     for (const host of hosts) {
-      const paths = hostFiles.get(host) ?? new Set<string>();
-      paths.add(file);
+      const paths = hostFiles.get(host) ?? new Map<string, string>();
+      paths.set(file, sha256);
       hostFiles.set(host, paths);
     }
   }
@@ -36,19 +38,40 @@ export function collectArtifactHosts(files: Iterable<{ file: string; text: strin
     inventory.push({
       host,
       category: categorizeArtifactHost(host),
-      sampleFile: paths.values().next().value!,
+      sampleFile: paths.keys().next().value!,
       fileCount: paths.size,
+      literals: [...paths].map(([file, sha256]) => ({ file, sha256 })),
     });
   }
   return inventory.sort((left, right) => left.host.localeCompare(right.host));
 }
 
-export function reviewArtifactHosts(hosts: ArtifactHost[], baseline: ReviewedArtifactHost[]) {
+export function reviewArtifactHosts(
+  hosts: ArtifactHost[],
+  baseline: ReviewedArtifactHost[],
+  gatedLiterals: GatedArtifactLiteral[] = [],
+) {
   const reviewedHosts = new Set(baseline.map((entry) => entry.host));
-  const newHosts = hosts.filter((entry) => !reviewedHosts.has(entry.host));
   const forbiddenHosts = hosts.filter((entry) => isForbiddenArtifactHost(entry.host));
-  const passed = newHosts.length === 0 && forbiddenHosts.length === 0;
-  return { newHosts, forbiddenHosts, passed };
+  const unapprovedForbiddenLiterals: GatedArtifactLiteral[] = [];
+  for (const entry of forbiddenHosts) {
+    for (const literal of entry.literals) {
+      const accepted = gatedLiterals.some(
+        (gated) =>
+          gated.host === entry.host &&
+          gated.file === literal.file &&
+          gated.sha256 === literal.sha256 &&
+          gated.note.trim().length > 0,
+      );
+      if (!accepted) unapprovedForbiddenLiterals.push({ host: entry.host, ...literal, note: "" });
+    }
+  }
+  // Forbidden hosts use only the file-bound ledger, never the ordinary host baseline.
+  const newHosts = hosts.filter(
+    (entry) => !isForbiddenArtifactHost(entry.host) && !reviewedHosts.has(entry.host),
+  );
+  const passed = newHosts.length === 0 && unapprovedForbiddenLiterals.length === 0;
+  return { newHosts, forbiddenHosts, unapprovedForbiddenLiterals, passed };
 }
 
 export function formatArtifactHostReview(
@@ -58,19 +81,27 @@ export function formatArtifactHostReview(
 ) {
   const status = review.passed ? "PASS" : "FAIL";
   const lines = [
-    `${status} artifact hosts: ${hosts.length} unique hosts; ${review.newHosts.length} NEW; ${review.forbiddenHosts.length} forbidden`,
+    `${status} artifact hosts: ${hosts.length} unique hosts; ${review.newHosts.length} NEW; ${review.forbiddenHosts.length} forbidden; ${review.unapprovedForbiddenLiterals.length} unapproved literals`,
   ];
   const categoryCounts = new Map<ArtifactHostCategory, number>();
   for (const { category } of hosts) {
     categoryCounts.set(category, (categoryCounts.get(category) ?? 0) + 1);
   }
   for (const [category, count] of categoryCounts) lines.push(`  ${category}: ${count}`);
-  // Forbidden entries stay visible even if a baseline mistakenly includes them.
+  // Accepted forbidden literals remain visible so the summary never implies their removal.
   for (const entry of review.forbiddenHosts.slice(0, limit)) {
     lines.push(`  FORBIDDEN ${entry.host.slice(0, 300)}: ${entry.sampleFile.slice(0, 300)}`);
   }
   if (review.forbiddenHosts.length > limit) {
     lines.push(`  ${review.forbiddenHosts.length - limit} additional FORBIDDEN host(s) omitted`);
+  }
+  for (const entry of review.unapprovedForbiddenLiterals.slice(0, limit)) {
+    lines.push(`  UNAPPROVED ${entry.host}: ${entry.file} sha256=${entry.sha256}`);
+  }
+  if (review.unapprovedForbiddenLiterals.length > limit) {
+    lines.push(
+      `  ${review.unapprovedForbiddenLiterals.length - limit} additional UNAPPROVED literal(s) omitted`,
+    );
   }
   for (const entry of review.newHosts.slice(0, limit)) {
     lines.push(
@@ -95,9 +126,23 @@ export interface ReviewedArtifactHost {
   note?: string;
 }
 
+export interface GatedArtifactLiteral {
+  host: string;
+  file: string;
+  sha256: string;
+  note: string;
+}
+
+export interface ArtifactHostBaseline {
+  justification: string;
+  hosts: ReviewedArtifactHost[];
+  gatedLiterals: GatedArtifactLiteral[];
+}
+
 interface ArtifactHost extends ReviewedArtifactHost {
   sampleFile: string;
   fileCount: number;
+  literals: { file: string; sha256: string }[];
 }
 
 function categorizeArtifactHost(host: string): ArtifactHostCategory {

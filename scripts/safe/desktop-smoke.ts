@@ -35,7 +35,15 @@ try {
     "--bundle",
     extracted,
   ]);
-  runDesktopSmokeCommand(process.execPath, ["scripts/safe/artifact-scan.ts", extracted]);
+  const artifactArgs = ["scripts/safe/artifact-scan.ts", extracted];
+  if (process.argv.includes("--artifact-report-only")) {
+    const reportIndex = process.argv.indexOf("--artifact-report");
+    const report = process.argv[reportIndex + 1];
+    if (reportIndex === -1 || !report || report.startsWith("--"))
+      throw new Error("--artifact-report-only requires --artifact-report <json-path>");
+    artifactArgs.push("--report-only", "--report", report);
+  }
+  runDesktopSmokeCommand(process.execPath, artifactArgs);
   const violations: string[] = [];
   const updateFeed = NodePath.join(resources, "app-update.yml");
   if (NodeFS.existsSync(updateFeed)) {

@@ -2,6 +2,13 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-10-23 — gated artifact literals and temporary PR inventory
+
+- baseline-update: security/artifact-hosts.json — Adds an empty gated-literal ledger keyed by forbidden host, exact artifact-relative path and whole-file SHA-256 with a required review note. Writing requires --accept-gated-literals and packaged policy verification. No host or literal is approved from the provisional local snapshot.
+- baseline-update: security/network-baseline.json — Refreshes complete-file fingerprints for the ledger review, explicit writer, report-only CLI and focused regression cases. No runtime capability grants change.
+
+TEMPORARY PR #1 only in rakutenanalytics/t3code: safe-build artifact scans report unknown hosts and forbidden literals without failing, and upload their JSON inventories beside available DMGs with if: always(). Policy verification and all other smoke checks remain hard failures. Release builds remain strict. TODO restore strict artifact scans after reviewing the real CI DMG and CLI inventories. This exception is diagnostic, not release approval.
+
 ## 2026-10-23 — bounded artifact host diagnostics
 
 - baseline-update: security/network-baseline.json — Refreshes complete-file fingerprints for artifact host grouping, forbidden-domain checks, bounded desktop smoke diagnostics and their focused regression fixtures. Source inventory entries do not approve artifact hosts. security/artifact-hosts.json remains unchanged pending review.

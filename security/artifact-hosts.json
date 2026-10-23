@@ -1,5 +1,5 @@
 {
-  "justification": "Additional dependency-owned URLs and hosts require explicit per-entry review. Source literals are bound to security/network-baseline.json. CI fails on unknown artifact destinations; do not automatically approve candidate inventories.",
-  "urls": {},
-  "hosts": {}
+  "justification": "Additional dependency-owned hosts require explicit per-entry review. Forbidden literals require --accept-gated-literals, a policy-verify pass and a gating review note. Each ledger entry binds one host to an exact relative file path and whole-file SHA-256; content or hashed chunk filename changes require renewed review. Never approve entries from an unrepresentative bundle.",
+  "hosts": [],
+  "gatedLiterals": []
 }
