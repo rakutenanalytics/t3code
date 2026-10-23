@@ -61,13 +61,26 @@ case "${1:-help}" in
     printf 'Installed version: '; cat "$release_dir/VERSION"
     printf 'Verify release provenance: gh attestation verify <asset> --repo rakutenanalytics/t3code\n'
     printf 'Release policy: '; cat "$release_dir/managed-policy.json"
-    prefix=$(cd "$release_dir/../../../.." && pwd)
-    t3_path=$(command -v t3 || true)
-    if [[ -n "$t3_path" ]]; then
-      t3_directory=$(cd -P "$(dirname "$t3_path")" && pwd)
-      if [[ "$t3_directory/" != "$prefix/"* ]]; then
-        printf 'WARNING: t3 on PATH is outside the t3safe prefix: %s (expected under %s)\n' "$t3_path" "$prefix"
+    prefix=$(cd "$release_dir/../../../.." && pwd -P)
+    # The identity file ships with the release, so app-only installs report it too.
+    identity="$release_dir/app-identity.json"
+    if [[ -f "$identity" ]]; then
+      home_dir_name=$(plutil -extract homeDirName raw -o - "$identity")
+      home_env_var=$(plutil -extract homeEnvVar raw -o - "$identity")
+      data_dir="${!home_env_var:-$HOME/$home_dir_name}"
+      printf 'Data directory: %s (override with %s)\n' "$data_dir" "$home_env_var"
+      if [[ "$data_dir" == "$HOME/.t3" || "$data_dir" == "$HOME/.t3/"* ]]; then
+        printf 'WARNING: data directory is inside the official T3 home (~/.t3); safe and official T3 would share state.\n'
+        status=1
       fi
+    else
+      printf 'MISSING: %s\n' "$identity"; status=1
+    fi
+    # Earlier installers linked the CLI as `t3`, shadowing the official command.
+    legacy_link="$prefix/bin/t3"
+    if [[ -L "$legacy_link" && "$(readlink "$legacy_link")" == "$prefix/share/t3safe/"* ]]; then
+      printf 'WARNING: legacy t3 link from an earlier t3safe install: %s. Rerun the installer to remove it.\n' "$legacy_link"
+      status=1
     fi
     if [[ -x "$release_dir/t3" ]]; then
       printf 'Effective CLI policy: '
@@ -88,6 +101,12 @@ case "${1:-help}" in
     done
     exit "$status"
     ;;
-  help|--help|-h) printf '%s\n' 'Usage: t3safe update [installer options] | version | doctor' ;;
-  *) fail "Unknown command: $1" ;;
+  help|--help|-h)
+    printf '%s\n' 'Usage: t3safe update [installer options] | version | doctor | <bundled T3 CLI command>'
+    printf '%s\n' 'Any other command runs the bundled T3 CLI (CLI installs only), e.g. t3safe pair.'
+    ;;
+  *)
+    [[ -x "$release_dir/t3" ]] || fail "Unknown command: $1 (no bundled CLI in this install)"
+    exec "$release_dir/t3" "$@"
+    ;;
 esac

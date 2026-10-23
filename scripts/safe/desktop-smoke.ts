@@ -1,10 +1,12 @@
 // @effect-diagnostics nodeBuiltinImport:off - Read-only DMG extraction uses a temporary mount and never launches Electron.
+import * as NodeChildProcess from "node:child_process";
 import * as NodeFS from "node:fs";
 import * as NodeOS from "node:os";
 import * as NodePath from "node:path";
 import { extractAll } from "@electron/asar";
 import { assertStagedDependencyVersions } from "../lib/locked-stage-dependencies.ts";
 import { finishScan, sourceText } from "./repository.ts";
+import { packagedAppIdentityViolations } from "./bundle-policy.ts";
 import { runDesktopSmokeCommand } from "./desktop-smoke-command.ts";
 
 const dmg = process.argv[2];
@@ -44,7 +46,18 @@ try {
     artifactArgs.push("--report", report);
   }
   runDesktopSmokeCommand(process.execPath, artifactArgs);
-  const violations: string[] = [];
+  const infoPlist = JSON.parse(
+    NodeChildProcess.execFileSync(
+      "plutil",
+      ["-convert", "json", "-o", "-", NodePath.join(mount, apps[0]!, "Contents/Info.plist")],
+      { encoding: "utf8" },
+    ),
+  ) as { CFBundleIdentifier: string; CFBundleURLTypes?: Array<{ CFBundleURLSchemes?: string[] }> };
+  const violations: string[] = packagedAppIdentityViolations({
+    directoryName: apps[0]!,
+    bundleIdentifier: infoPlist.CFBundleIdentifier,
+    urlSchemes: (infoPlist.CFBundleURLTypes ?? []).flatMap((type) => type.CFBundleURLSchemes ?? []),
+  });
   const updateFeed = NodePath.join(resources, "app-update.yml");
   if (NodeFS.existsSync(updateFeed)) {
     const feed = NodeFS.readFileSync(updateFeed, "utf8");
@@ -57,7 +70,7 @@ try {
   finishScan(
     "desktop DMG",
     violations,
-    "actual asar policy and dependency versions verified; app never launched",
+    "actual asar policy, app identity and dependency versions verified; app never launched",
   );
 } finally {
   if (mounted) runDesktopSmokeCommand("hdiutil", ["detach", mount, "-quiet"]);

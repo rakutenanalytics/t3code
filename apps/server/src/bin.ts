@@ -20,6 +20,9 @@ if (
   if (command === "managed-policy") {
     const { managedPolicy } = await import("@t3tools/shared/managedPolicy");
     process.stdout.write(`${JSON.stringify(managedPolicy.policy)}\n`);
+  } else if (command === "app-identity") {
+    const { appIdentity } = await import("@t3tools/shared/appIdentity");
+    process.stdout.write(`${JSON.stringify(appIdentity)}\n`);
   } else if (command === "acp-mcp-bridge" || command === "acp-mcp-call") {
     const { runAcpMcpCliFastPath } = await import("./mcp/AcpMcpStdioBridge.ts");
     await runAcpMcpCliFastPath(command, process.argv.slice(3));

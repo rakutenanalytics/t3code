@@ -1,3 +1,4 @@
+import { appIdentity } from "@t3tools/shared/appIdentity";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
@@ -24,7 +25,6 @@ export class DesktopLegacyLocalStorage extends Context.Service<
 >()("@t3tools/desktop/app/DesktopLegacyLocalStorage") {}
 
 const MARKER_FILE_NAME = "v1-local-storage-imported";
-const V1_PROFILE_NAMES = ["T3 Code (Alpha)", "t3code"];
 
 const make = Effect.gen(function* () {
   const environment = yield* DesktopEnvironment.DesktopEnvironment;
@@ -53,7 +53,8 @@ const make = Effect.gen(function* () {
 
   const findV1LocalStorage = Effect.gen(function* () {
     let newest: { readonly directory: string; readonly mtime: number } | null = null;
-    for (const name of V1_PROFILE_NAMES) {
+    // Empty for the safe fork: it must never read another install's browser storage.
+    for (const name of appIdentity.legacyProfileNames) {
       const directory = path.join(environment.appDataDirectory, name, "Local Storage", "leveldb");
       const mtime = yield* newestFileMtime(directory);
       if (Option.isNone(mtime)) continue;

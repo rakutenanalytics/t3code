@@ -1,0 +1,13 @@
+{
+  "baseName": "T3 Code Safe",
+  "showStageLabel": false,
+  "appId": "com.rakuten.t3code-safe",
+  "slug": "t3code-safe",
+  "homeDirName": ".t3-safe",
+  "homeEnvVar": "T3SAFE_HOME",
+  "userDataDirName": "t3code-safe",
+  "legacyProfileNames": [],
+  "cliCommand": "t3safe",
+  "urlScheme": "t3safe",
+  "defaultPort": 3873
+}

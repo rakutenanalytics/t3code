@@ -1405,6 +1405,34 @@
       "filePattern": "client/assets/utils-*.js",
       "contextSha256": "928af48181b7cbc4f2a2dc4866b3df5ec9f51c15295ad5d62c38ccceeaa7a18d",
       "note": "11-gated-literals.md S7: inert-string: local project schema/docs metadata; no application fetch; accepted by maintainer 2026-10-23"
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "apps/server/dist/client/assets/main-C4DHVSMa.js",
+      "filePattern": "apps/server/dist/client/assets/main-*.js",
+      "contextSha256": "c98c2f29d4363cefa034df3b116aa5f3f137c15dfd6cf82c5814a48a3a834e24",
+      "note": "11-gated-literals.md S3/S5 unchanged: same two app.t3.codes call sites as main-DMwFN5Y_.js (auth return origin; prompt link fallback), user-initiated navigation only, no automatic request; context differs only by minifier identifier renames (gf->hf, rH->aH) after the isolated-identity change (not egress)"
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "apps/server/dist/client/assets/main-C4DHVSMa.js",
+      "filePattern": "apps/server/dist/client/assets/main-*.js",
+      "contextSha256": "c84c86fcad32a2d6dcf5f7b6e54cc2871401fd923ccfbe3ac450e44c1b7d1441",
+      "note": "11-gated-literals.md S3/S5 unchanged: same two app.t3.codes call sites as main-DMwFN5Y_.js (auth return origin; prompt link fallback), user-initiated navigation only, no automatic request; context differs only by minifier identifier renames (gf->hf, rH->aH) after the isolated-identity change (not egress)"
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "client/assets/main-C4DHVSMa.js",
+      "filePattern": "client/assets/main-*.js",
+      "contextSha256": "c98c2f29d4363cefa034df3b116aa5f3f137c15dfd6cf82c5814a48a3a834e24",
+      "note": "11-gated-literals.md S3/S5 unchanged: same two app.t3.codes call sites as main-DMwFN5Y_.js (auth return origin; prompt link fallback), user-initiated navigation only, no automatic request; context differs only by minifier identifier renames (gf->hf, rH->aH) after the isolated-identity change (not egress)"
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "client/assets/main-C4DHVSMa.js",
+      "filePattern": "client/assets/main-*.js",
+      "contextSha256": "c84c86fcad32a2d6dcf5f7b6e54cc2871401fd923ccfbe3ac450e44c1b7d1441",
+      "note": "11-gated-literals.md S3/S5 unchanged: same two app.t3.codes call sites as main-DMwFN5Y_.js (auth return origin; prompt link fallback), user-initiated navigation only, no automatic request; context differs only by minifier identifier renames (gf->hf, rH->aH) after the isolated-identity change (not egress)"
     }
   ]
 }

@@ -36,6 +36,7 @@ if $dry_run; then
   printf 'Download selected assets and SHA256SUMS with curl; verify SHA256 before extraction.\n'
   printf 'Install mode: %s\nManagement command: %s/bin/t3safe\nCLI versions: %s/share/t3safe/versions\nApp directory: %s\n' "$mode" "$install_root" "$install_root" "$app_dir"
   printf 'Refuse downgrades unless --allow-downgrade; strip quarantine; preserve valid signatures.\n'
+  printf 'Link only t3safe; remove a legacy t3 symlink only if it points into %s/share/t3safe.\n' "$install_root"
   exit 0
 fi
 for command in curl plutil shasum tar ditto hdiutil xattr codesign; do command -v "$command" >/dev/null || fail "Missing command: $command"; done
@@ -86,7 +87,7 @@ verify_signature() {
   codesign --force --deep --sign - --preserve-metadata=entitlements,requirements,flags,runtime --timestamp=none "$target"
   codesign --verify --deep "$target"
 }
-for asset in t3safe managed-policy.json VERSION; do download_verified "$asset"; done
+for asset in t3safe managed-policy.json app-identity.json VERSION; do download_verified "$asset"; done
 [[ $(cat "$work/VERSION") == "$version" ]] || fail 'Release VERSION does not match selected tag.'
 mkdir -p "$install_root"
 install_root=$(cd "$install_root" && pwd -P)
@@ -127,8 +128,21 @@ fi
 # Preserve the other component when repeating an app-only or CLI-only install of this version.
 mkdir -p "$release_dir"
 ditto "$work/payload" "$release_dir"
-for asset in t3safe managed-policy.json VERSION; do cp "$work/$asset" "$release_dir/$asset"; done
+for asset in t3safe managed-policy.json app-identity.json VERSION; do cp "$work/$asset" "$release_dir/$asset"; done
 chmod +x "$release_dir/t3safe"
 ln -sfn "$release_dir/t3safe" "$install_root/bin/t3safe"
-if [[ "$mode" != app ]]; then ln -sfn "$release_dir/t3" "$install_root/bin/t3"; fi
-printf 'Installed %s (%s). Add %s/bin to PATH, then run t3safe doctor.\n' "$version" "$mode" "$install_root"
+# Earlier releases linked the bundled CLI as `t3`, shadowing the official command. Remove only
+# a symlink that points into this installer's own directory; anything else named t3 is not ours.
+# BEGIN legacy-t3-link-cleanup
+legacy_link="$install_root/bin/t3"
+if [[ -L "$legacy_link" ]]; then
+  legacy_target=$(readlink "$legacy_link")
+  if [[ "$legacy_target" == "$install_root/share/t3safe/"* ]]; then
+    rm -f "$legacy_link"
+    printf 'Removed legacy link %s -> %s (created by an earlier t3safe install).\n' "$legacy_link" "$legacy_target"
+  else
+    printf 'Left %s alone: it does not point into %s/share/t3safe.\n' "$legacy_link" "$install_root"
+  fi
+fi
+# END legacy-t3-link-cleanup
+printf 'Installed %s (%s). Add %s/bin to PATH, then run t3safe doctor. Data lives in ~/.t3-safe, separate from official T3.\n' "$version" "$mode" "$install_root"
