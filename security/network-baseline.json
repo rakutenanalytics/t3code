@@ -41,7 +41,7 @@
       "5ffd5d8c545cfaf50ca0f508f856c08cfde969e6ba12caa5df689a4f931ac2b5": 1
     },
     ".github/workflows/safe-build.yml": {
-      "86e53118f667da42d9e7cfcad8b15b6646fd11fe329c45a39d964fd22e323e63": 1
+      "29c28667d01c1960e5ef0346d2afcdf3c82d0da9fddd10d6a1898604a762a09c": 1
     },
     ".github/workflows/upstream-watch.yml": {
       "b8f09d94311798ae73abcf6446f4282f474f1f260087726ddce4ae68d05c87b6": 1
@@ -101,7 +101,7 @@
       "1e8557e00192970d35385c05c6d6588b5ab03688456e022c57a6059606868c53": 1
     },
     "apps/desktop/src/app/DesktopApp.ts": {
-      "5268ac7eaf3b0141c7c373719b5f70638932516b4cd0d3cc33703582406770ce": 1
+      "7337e481eb623a91b13c816a7fda2b55d554ab0bed5ddcfa29fc881046e9f6c0": 1
     },
     "apps/desktop/src/app/DesktopAppActivation.test.ts": {
       "3dc477b78a108c754412ecc21a7677f449e50ea024295e3fe1a7cd22eabdab45": 1
@@ -122,16 +122,16 @@
       "f4e970b0af7ccfa4d5c35fca8746d802eec87a7e66e12ea808c94f0b97542f2e": 1
     },
     "apps/desktop/src/app/DesktopCliCommand.test.ts": {
-      "dcf964e3f808a624e773f4dc8fed1616afed578b717d01d36f4119094fb10e22": 1
+      "9b852a0334694287c3371342dcc613b51ab5dde241523b83152326b99eb9e8ca": 1
     },
     "apps/desktop/src/app/DesktopCliCommand.ts": {
-      "b3a784bc6cc90a40f6736478de712c3e79146ad50ef253352d5af8ae2f060924": 1
+      "ec958e3b5c05272209992715ffc0fd2c6d93728b9166dba5601c890202aa6640": 1
     },
     "apps/desktop/src/app/DesktopCliShim.test.ts": {
       "ddbb69b64ee509792463ef84018b6184e92abaf90a6ec146305f93c4ccf87ac5": 1
     },
     "apps/desktop/src/app/DesktopConfig.ts": {
-      "d7fd2d17e62ad3a75ae8456442d3c42b3e8ed68f1caa837e33a38e1c88664547": 1
+      "a9dbac6f74441ab2224a2e6602830218ff78f93057fa015dd48bf15121e66f53": 1
     },
     "apps/desktop/src/app/DesktopConnectionCatalogStore.test.ts": {
       "d54b70fd87722874986c991070e2f62cd1195447bca0d90b5c34a3141c20d05b": 1
@@ -143,7 +143,7 @@
       "feaddf56dcf71a82f53dfd17427a084b5589c9d74231705cbea7b7c1e4a8b805": 1
     },
     "apps/desktop/src/app/DesktopEnvironment.ts": {
-      "bbb158a4d7bfb329a6bdc9fee998a8c8ed43dfb3b6c9f6635e7100cc39f43460": 1
+      "94c103b0db0085ce75625e59e236a73981d5bf0c8ee297b3a8a5d5096e99b82d": 1
     },
     "apps/desktop/src/app/DesktopLinuxUrlHandler.test.ts": {
       "bb8c523a7dbb7ae4ec52b8ba4b54b434386f804ecec02306a66dfabf1d8088c1": 1
@@ -167,7 +167,7 @@
       "f24387fa2e3c6157762e770d870936b8b40d55b408ce594d8c47ace50a00d554": 1
     },
     "apps/desktop/src/app/DesktopStatePaths.ts": {
-      "ae9704d2e66e0033c853750368faea0fea7aa898681ee4931c296891915e510a": 1
+      "425518c342fb4286e58b9d4a2e90108d18a9f18893f14bd99e8420c206710441": 1
     },
     "apps/desktop/src/app/DesktopWebLinks.test.ts": {
       "b751828876bc549e98e41bc921917e2d0a6f0eee71535f69a411ca55fd8c7802": 1
@@ -178,11 +178,14 @@
     "apps/desktop/src/app/chromiumLocalStorage.ts": {
       "6297abefbb19aa53386c1bdd42ee033be9a2647b8fca8828ed348f91d54906fc": 1
     },
+    "apps/desktop/src/app/safeIdentity.test.ts": {
+      "4cec01c9120fcdd5b3eeb1f5bcdfabdc4fb1575adbfca1333e8e9854f0214594": 1
+    },
     "apps/desktop/src/backend/DesktopBackendConfiguration.test.ts": {
       "bda0c8a29383abd21c98a1337a0420fef1fae8e7362fd8786fb26f9d02174e9c": 1
     },
     "apps/desktop/src/backend/DesktopBackendConfiguration.ts": {
-      "2444e4b7a704fd76cf9c613a4acc176fd6abff4f3d8b72d0615bf3fcde1796a8": 1
+      "20f311f92ccf0cd598a57bf399ac2185bcdab8f08c3715f83a6831fe5940fdfb": 1
     },
     "apps/desktop/src/backend/DesktopBackendManager.test.ts": {
       "182600a01d1ab1e17494a82a9e4243658875e93901574d9995c379e684877715": 1
@@ -194,7 +197,7 @@
       "864e1ea8d2b8a5eeebd839f39a1cfb39c053ce6baf4beabaae5fb79f5cf32f71": 1
     },
     "apps/desktop/src/backend/DesktopBackendPool.ts": {
-      "b37d7f02dcb4cfe5b67685f1adb4e9b2732a4d30b9e84fcfdd9c43508e597f93": 1
+      "408e7833a33768dc432dee9890708a1b02bbb78491f3b18d06d6141ee3fe0ac8": 1
     },
     "apps/desktop/src/backend/DesktopLocalEnvironmentAuth.test.ts": {
       "ac361ef17257e73db77fb781ae7bd2e5432724db4da1553849637f2151a210f1": 1
@@ -224,7 +227,7 @@
       "5bf426fd13619f59ef297e171aaa4ce36af7a04f0e2b5b1dba58b793c6e35a78": 1
     },
     "apps/desktop/src/electron/ElectronProtocol.ts": {
-      "0381021c47adf069d82a9483e370823e57824716f9a8fb661b268e7845a9668a": 1
+      "8fcaeccc15bbc6cfdd96e33d5824a4830c2170d02a12eea74624f68e9f7cedb8": 1
     },
     "apps/desktop/src/electron/ElectronShell.test.ts": {
       "aeaf8139681115fda512c3a6660f04bf3feb9666bff3c8a7cbdebd6ef6701b7a": 1
@@ -581,13 +584,13 @@
       "c4b9882bc90f6ac6837fe15a13b48a7ed94bce9e23b43abe7ce8edcb45c049fd": 1
     },
     "apps/desktop/src/wsl/DesktopWslEnvironment.ts": {
-      "b7357dbe26a5fe293440eff537362a3aa81190e7f0dc86ab136f715aec2065c9": 1
+      "b4aa0326ef2a5f01fe56af3ab88fe89c35649ee11a109d6f3c4c4382029db21f": 1
     },
     "apps/desktop/src/wsl/wslPathParsing.test.ts": {
       "a46247494e075c3e09a7b363db6a551dc84c7262e509e17d21338f6ab21de211": 1
     },
     "apps/desktop/vite.config.ts": {
-      "0fa1c431080c98d62663f012c91fb6e379c7028484ecea2d3945b03d659fb741": 1
+      "4dedcf0c10008c0ef7b0731f9054cacba2a9f48188d65f3c0373acf8aa0402be": 1
     },
     "apps/marketing/astro.config.mjs": {
       "4af44ceb02efb4697d22ca8b1328384e70665366dc8047f19884eff591effcd8": 1
@@ -1841,7 +1844,7 @@
       "fd8b61e0a126c8508332dd21ffc2d4be8a528cdf49182ce3e8f84726e21fa3e9": 1
     },
     "apps/server/src/bin.ts": {
-      "f2545a45f2998c761373438085c58a4b787b88cc335ecc1b575f6b8987c362e6": 1
+      "648e463dd3a7a62844b93c8220ec1428eadeaeb228f4f6a5895b85a9efdde173": 1
     },
     "apps/server/src/binCli.ts": {
       "eccf7372fe5e1f29f539920dedb5e1d5d5130feafd9e19e1ce637e8c01e16dc7": 1
@@ -1871,13 +1874,13 @@
       "246725b994619ca810092593e4f0595baac3ed00539f429aca0259bccd0d637b": 1
     },
     "apps/server/src/cli/app.ts": {
-      "bffdd964b05cfa87dff5ad916fab0842c4aa70581ffa4149a97a1c9197ad3965": 1
+      "410b79036d50982b98e01598d5fea70b892266e1b79dad54e2a7dbda5f66400b": 1
     },
     "apps/server/src/cli/browser.test.ts": {
       "ad18ba21cb022d6b1f4cc1cdd630fc2c984b2c070cfc83971249261dc51cf671": 1
     },
     "apps/server/src/cli/browser.ts": {
-      "4b8a97bd1fc673b26924a4e93442afcd045ee2efe59291f53663b418b76dc7d0": 1
+      "11c3b56e82bba714299ec07af73339464733f2ca8dbb84a436508965e84578c0": 1
     },
     "apps/server/src/cli/claudeHistory.ts": {
       "03eccb270616aee5c82550a37e78c6e0f7f96adb066d5b083872438690f0a68b": 1
@@ -1886,7 +1889,7 @@
       "701c594fcc4ec6032cb653fd667a2fd25aa54277591749d07adbe41a97d2e754": 1
     },
     "apps/server/src/cli/config.ts": {
-      "8b9722dde023286825c98781b159b2a3d0b43d9b554214d1d9fb99981a112b44": 1
+      "ead383fcf9f06bb36b640defe1849f14a1d0c049ee2b200aa53f1c2f0984df60": 1
     },
     "apps/server/src/cli/connect.test.ts": {
       "45b4e7eaa1da1b0ff87e1eba9eeed7fdfaa1fb47bb22d08ea1ae37de31af795c": 1
@@ -1907,7 +1910,7 @@
       "78fca386b51dbe31fd623762f4faaa3ec20fc45df3eecdd75ce3186c07781525": 1
     },
     "apps/server/src/cli/pair.ts": {
-      "9e4d1ff6be8188b1672a831a93ad8aaaeb58f12b432e0e5e1bf10eb25508bb37": 1
+      "c9bab0f0711ac57073ea3780077025fa608d28cb1b450d46289f058ef46762c9": 1
     },
     "apps/server/src/cli/project.test.ts": {
       "94807dac5cba2c0d317ec738e4dd8354e3eadd78baabb22196f65477bbb129e9": 1
@@ -1934,13 +1937,13 @@
       "0378e326b1e6f67cd1c3d748e2b3af6837b1bcc95dcbea02353463f8e9cde9ec": 1
     },
     "apps/server/src/cli/trace.ts": {
-      "e6ee3f3d598642cc67ddc231cea673f1faff9cb703379138c9f38c593b205345": 1
+      "0ebacc4d9c984308bd7882dbcc241010144761aa959baf353d02eac4d511b71a": 1
     },
     "apps/server/src/cli/triage.test.ts": {
       "dc978615396a0a0644e9b1679af2fe294b66890823ca76ac151eed343cbddb97": 1
     },
     "apps/server/src/cli/triage.ts": {
-      "fc4658b182facc3e459c00fab4dfe040799de24cc7d5e0a32f6f14f6586d3890": 1
+      "fd4e9ced7cee35c26123d11f17616c7d37772d4a656385590f2273cb361d0d8e": 1
     },
     "apps/server/src/cli/triagePrompt.test.ts": {
       "2a48cf8ac69b2e134edef6ae80934719a51f31510dd9006c33691be16ca23a43": 1
@@ -2000,7 +2003,7 @@
       "a58cd1e5677b7a8644b7be2ad10b63c6f2a942e945ab55980cf585a16402c92a": 1
     },
     "apps/server/src/cloud/bootService.ts": {
-      "48658a2da7404ddc73aadfa395543a85f80405a11d0bdf169180d4f8d4aa878a": 1
+      "0c4ef9e072b8bb4fddb8f9898700ff44a4ead82806e138009c3bfc3aa70ec74a": 1
     },
     "apps/server/src/cloud/http.test.ts": {
       "14ff9c52d6c4f2648ca6f5b0f6f0113f40b4fb4c473c6bee5046e32f902cbf06": 1
@@ -2057,7 +2060,7 @@
       "a14a48f3c4f863457d959b48d220ed66eae36365285e895a3d36fee55cff2e66": 1
     },
     "apps/server/src/config.ts": {
-      "716312ff1c8dad7839577dcd7622d9f35b7d2a9ffff2af6a190ecf26c65e8e53": 1
+      "c48a53421dd60d4d04262c1b8bd67f6f71f61e2844e733b88c8a37e25d51fde9": 1
     },
     "apps/server/src/desktopUpdate/DesktopAppUpdate.test.ts": {
       "3f45987220bdf8188fe86e889ada24c28ffeec2342237f1f41ebf97cbb2ce9e0": 1
@@ -2126,7 +2129,7 @@
       "db04d6f94815be3de3baf03dd4e4445e6f97f92bd762a65ba559851ce4a26c74": 1
     },
     "apps/server/src/device/SshDeviceHost.ts": {
-      "eda8ecd3d4f59b96044ceb8c7abbc9ea99a160296e2db2f1a52c4d08dc7840f6": 1
+      "cd13c46be8e70615ac0a429abfa02e70f6c7e8f6ca896d45ab7d0fae62ddeae3": 1
     },
     "apps/server/src/device/deviceToolMaintenance.test.ts": {
       "550c1eee336824db60efe5644081d66f52de6ce603ed70a6128bac7b069b69e2": 1
@@ -2150,7 +2153,7 @@
       "331054ff2b82903041f1a90407e7b928e0bfa5e1e134abffba458e0da096807b": 1
     },
     "apps/server/src/device/sshDeviceScript.ts": {
-      "0decdcafd891d50c0cee56494c99f518a5da4d308fd3a09bb3d3ab2b84e735a5": 1
+      "99106549f9a31fc2a9fafc47e470d486c070723cd6b6fdcb9ce1bbb4bb61fd7e": 1
     },
     "apps/server/src/diagnostics/ProcessDiagnostics.test.ts": {
       "1e8885d3fb6e456d035ded79b991b623a5d722c0c1f698fc2a0358c657d06975": 1
@@ -3115,6 +3118,9 @@
     "apps/server/src/rpcInitialItems.memory.test.ts": {
       "7abc7a07fdf888f0aff88e1ced9d50d25085dc130f1764eb810f85fe7cac2fc1": 1
     },
+    "apps/server/src/safeIdentity.test.ts": {
+      "062f23972e5d8d4fa8322df7b1db6cd3747d5eec0c41e22a01a25fa74135a786": 1
+    },
     "apps/server/src/scheduledTasks/ScheduledTaskService.webhook.test.ts": {
       "05f711a0eddc15eead3f6182fe7f8e3d14ebaed3c92de9d17fbe109e042eb427": 1
     },
@@ -3164,7 +3170,7 @@
       "5aee815a706205bbb778b3cc2ccae50dfb27fda80db4dc0301615d92ebf0a4f2": 1
     },
     "apps/server/src/serviceLauncher.ts": {
-      "db28b70bad0210d05869fe8060143e81a8e6dd2a6cf185d6a9c6bbc7f42bd285": 1
+      "ba064c261f6ce9835a076694e73410e89431eeb24730c5f1716a58c9682fb819": 1
     },
     "apps/server/src/sourceControl/BitbucketApi.test.ts": {
       "3a3bb268c12da0217260ace420af62fd216912c75e408f56124ea325b8647417": 1
@@ -3380,7 +3386,7 @@
       "17497b37f0576582feb54507d2fb4a06bdea064db0af44c162ee54c852ec97eb": 1
     },
     "apps/server/vite.config.ts": {
-      "dd31aecd78e269009b78d0d05749cdc2cbe7e685f8b0a338412d8aac3072f19a": 1
+      "b2b5bc74ae596d4fee7bc599a3cfdc4ba0f49bb5165975086aafa542b33f602c": 1
     },
     "apps/web/components.json": {
       "eec028667d6a6fcaf8032cd511da27cbae1d8f5faf20d061766c943195d56e20": 1
@@ -5153,13 +5159,13 @@
       "addbefa1ceaf068e7bc4bea0b18a9052489ba97736afafed2771f5182b2417a4": 1
     },
     "apps/web/vite.config.ts": {
-      "8c9c5426fb6a4169b9055e218af60dffb43975e00612be01e06cd046179f260b": 1
+      "f8a10609f855d5740c0f50f13914baed12259187baebbd5dfe516341119cc300": 1
     },
     "apps/web/vite/warmBundledDev.ts": {
       "73ee1b04ad42043f10aa54d5c9efb03e0e66c789f70ed7e27a1e74b9eca0a5df": 1
     },
     "install.sh": {
-      "560dbe572e55474988cf9e4f5e48bac7dabf2f2c2fc1bce3adbb41b9263c89f5": 1
+      "341de96fbcc714d0763138ea0c1aaf90d997da21c7a46f010b499ffa37e958be": 1
     },
     "native/hyprland-snap-shot/src/feedback.rs": {
       "c75185957e2864a5878d6f3bdf3b24d97b9d881ef95b792d022d6c361564f213": 1
@@ -5720,7 +5726,7 @@
       "36704cc93580254f0d8678e44f43392c43854b90da875cbc9a04c98d5eea98e3": 1
     },
     "packages/contracts/src/ipc.ts": {
-      "d3ebf137a9ce27da1dc763d1640957134632031bb2851d00176de9f1b73f3d1a": 1
+      "d7b2c83179e4fd5a7e1de025915b77106c18c33916bfd28e65d3e177e7b94c83": 1
     },
     "packages/contracts/src/keybindings.ts": {
       "0c5f5f9f0e60279d0c69403a8c1270796be44d28a7525ec1accfd2a340818312": 1
@@ -6281,7 +6287,7 @@
       "172023719de2ef1dbc46c391b5fd7be33e9088fda6526e7dfc0cf13136285704": 1
     },
     "packages/shared/package.json": {
-      "eb5ab0ab1e6338e77cb0f767d2aac3c2cab7884ea706f83a66a3d7943343e923": 1
+      "6da69b0022022dcb4c683df9165f46449883d40a19d4a4bf1cec7d5be38833bd": 1
     },
     "packages/shared/src/AgentScope.test.ts": {
       "723477ff3160dc23cbdf5dec4aafc92bdb25623621bbcc6790b059d22c6d8d18": 1
@@ -6297,6 +6303,9 @@
     },
     "packages/shared/src/advertisedEndpoint.ts": {
       "e9704c6e9ca198bdfdf85b5de42df850cb55ccbf019589f7232893127b1c14d3": 1
+    },
+    "packages/shared/src/appIdentity.test.ts": {
+      "b98c81596ea5667f8da5aeb11177cc93c4316417efb7594f02919587d7f76b37": 1
     },
     "packages/shared/src/assistantCitations.test.ts": {
       "83f51598481ea69ada04e3db8f443028f4c7f5d8999d05db6ac3f271d842cfcc": 1
@@ -6332,7 +6341,7 @@
       "6e693db7fc10c640a556c82cffe442417ef4d71d8e9bd533b8a7c50310d58fb8": 1
     },
     "packages/shared/src/codexAuthHandoff.ts": {
-      "1dc777af58570756a894a7aa94c6c82021c41e3e860c95dc88d0f6bd9aa83e13": 1
+      "b421ed0c25f4a614872c469000f97108ed86bd8cfe01105b198e1fc8ad9468e1": 1
     },
     "packages/shared/src/codexFileCitations.test.ts": {
       "1554396e648b1456a219592375634d59163a049911e91b0e1014413000252d83": 1
@@ -6533,13 +6542,13 @@
       "b0cee45dc1ae5303b90927536be1b45539183a1788fd9bb6bc330b4c93e9b0f9": 1
     },
     "packages/shared/src/promptLinks.ts": {
-      "90396e49be8814ad9c651576515c2c8009cd340bbf3e7412767cb82137bc32eb": 1
+      "ab920c0f5ef4ee19e4a1c6be049ace2a59d59b70e75b44c45abe927730959191": 1
     },
     "packages/shared/src/providerAuthReturnUrl.test.ts": {
       "198fddac8a77c1bfd7f66b0fd455af90e15dc28d18fd9a04e7874b76dc5fe6b8": 1
     },
     "packages/shared/src/providerAuthReturnUrl.ts": {
-      "47406f4bd6c4aba9e395844432e0ed5fd2e1d932ad103a0740f1e5be551d5629": 1
+      "4fd2f5532c89df5ab65193fd034f64d248a09f1dd5ad28dd3e5d602f054abafa": 1
     },
     "packages/shared/src/providerEnvironment.ts": {
       "c20f2aca249ca8c56a34e86d002ef3eb86f7c8bd5bb2cabd03a7e56cb0b39c21": 1
@@ -6974,7 +6983,7 @@
       "7ff431a59a90f0ecc41f659296e2e54f0f71e7eb3253c056dd42d0292f2ca683": 1
     },
     "packages/ssh/src/tunnel.ts": {
-      "01910eefec47a50c9b5fe0e8c64ea6a40e5156afb1728b6da66b794bbef50bfb": 1
+      "b29546699b28677693c7be0d6eacef6f77a7e2ad0144ba744578453d2cef0876": 1
     },
     "packages/tailscale/src/tailscale.test.ts": {
       "e4e328775fd7c76a09215c95c8655f3378b1c791db506d75e8358d6ba0281dc3": 1
@@ -6995,10 +7004,10 @@
       "3b7bd4cbb94991c12a9a5329fca174d772955bb64e5b010f7055b0f69991e36e": 1
     },
     "scripts/build-desktop-artifact.test.ts": {
-      "0100d536a2386353909ed1da2fc07cc242eb5fddfed911970a78241bc9a6310b": 1
+      "87ab46c201db5737e5fcc7bc23853f3cf8d060aaf899cb6cf59afdddd6699e3e": 1
     },
     "scripts/build-desktop-artifact.ts": {
-      "f49df66a2546bdb0ce2d447496cd8b5e2536fed5d18071ca7748ada6ec68e9db": 1
+      "7cbef45ff41a76c10d52f67e8a6f8b5214789f6f5e4fca04eb7b9eeeb0b27b4d": 1
     },
     "scripts/build-npm-launcher.test.ts": {
       "9237acb2d4e8079067a638a712cdef9a987202908dd2e4c8120fcad6e1e0fb14": 1
@@ -7035,6 +7044,9 @@
     },
     "scripts/legend-list-initial-reveal.test.ts": {
       "b3e69f9fb3e40bdedf8db9485b515b82df657882db1be12a33e8a240806677e7": 1
+    },
+    "scripts/lib/app-identity.ts": {
+      "e72f813e3c65c5d706cdd9d425de44be42576350cb733e8d5bd59e3f825b8c27": 1
     },
     "scripts/lib/build-target-arch.ts": {
       "13f68848716fdac08def4e76ebe1817c3333372f0d072d932f23db6c0c310822": 1
@@ -7136,10 +7148,13 @@
       "a0365f4314adb0c56d38e19f491a2346a55f03b4062869f589d01f94790b99a2": 1
     },
     "scripts/safe/artifact-scan.test.ts": {
-      "e2d3d1de3627f36fa38f05d0f345b237c70b58b2300e22a3d1c54c3eb323ada5": 1
+      "e4fb47e4404519878c4ca6a9ce3bcfa9dc3926076d8f82cb06043ff995941d80": 1
     },
     "scripts/safe/artifact-scan.ts": {
       "5ffcd54a5fe7bda86cc093bd9d24adcf3294ca406904873fd1785b4ca12740e5": 1
+    },
+    "scripts/safe/bundle-policy.test.ts": {
+      "3adb9b87835441b43ea5197e40b99c4b46bbe50f59d653fb5ff7bcef3e8e4d1d": 1
     },
     "scripts/safe/dependency-lockfile.ts": {
       "95e1b7cde70519e3075aefe71ac6f7777afd7cc50f11303efceeadf6f223119f": 1
@@ -7154,13 +7169,16 @@
       "bf943d453c1b780925a936c70d3fadaffca7a8f96f826f21b2ff265bc09a0cd2": 1
     },
     "scripts/safe/desktop-smoke.ts": {
-      "7d77af4872fca5cb76035890faeecc4f8eec47863e8553593ca3d54709d80deb": 1
+      "e0897d55a7ff5580703655d20780b86caa643063ab236f89df8ebbd7a632b1cf": 1
     },
     "scripts/safe/egress-detection.ts": {
       "c8d08140441dd4aa8242cc08cc4c4b5401e74d135a100cb529a275d48a653752": 1
     },
     "scripts/safe/egress-smoke.ts": {
-      "d74121259a8a21c3f2742042e63182e952f556a88d90f6da314d39d1478ff48f": 1
+      "c67a6d2dd1583078d2b8f6396ce50b5a27055346d1bbeef944da4d25bfffd4fc": 1
+    },
+    "scripts/safe/install.test.ts": {
+      "cf85cab6d68e0f72dbf4f4d3213227e2f7621069a7eb7a820f5609f171063154": 1
     },
     "scripts/safe/managed-policy.test.ts": {
       "5dd58942b8a1ddfeb0ba328281461fc61aa7ec77f81b165b8783d7dc942cc1c8": 1
@@ -7178,7 +7196,7 @@
       "74bc4cbc35d4fb135f3d4ce68e1667e86e091f5148af70d3b11a372348b09f8a": 1
     },
     "scripts/safe/t3safe": {
-      "930a94669bea4e755f6a4255d45d5358bc39006e9d9e6ace08a82d6777ed0a7e": 1
+      "76ff2c73f663de4638f9ba52dcad1a77e983d13c3279fb899379dbcde3bae1e0": 1
     },
     "scripts/safe/touched-checks.ts": {
       "296ebd752e8f8a6bc1c71b8a44eb57a35d9eeff219aea4edb4ff653941c1e822": 1
