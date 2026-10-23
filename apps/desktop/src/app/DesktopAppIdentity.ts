@@ -1,3 +1,4 @@
+import { appIdentity } from "@t3tools/shared/appIdentity";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
@@ -95,7 +96,9 @@ export const make = Effect.gen(function* () {
     // product token, but leaves parentheses intact. Keep the runtime name valid
     // without rewriting preview sessions (which breaks Turnstile, #7110).
     yield* electronApp.setName(
-      `${environment.branding.baseName} ${environment.branding.stageLabel}`,
+      appIdentity.showStageLabel
+        ? `${environment.branding.baseName} ${environment.branding.stageLabel}`
+        : environment.branding.baseName,
     );
     yield* electronApp.setAboutPanelOptions({
       applicationName: environment.displayName,

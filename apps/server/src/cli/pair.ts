@@ -25,6 +25,7 @@ import * as Schema from "effect/Schema";
 import { Command, Flag, GlobalFlag } from "effect/cli";
 import { FetchHttpClient, HttpClient, HttpClientRequest, HttpClientResponse } from "effect/http";
 
+import { appIdentity } from "@t3tools/shared/appIdentity";
 import * as EnvironmentAuth from "../auth/EnvironmentAuth.ts";
 import * as ServerConfig from "../config.ts";
 import { resolveBaseDir } from "../os-jank.ts";
@@ -238,7 +239,7 @@ const discoverPairTarget = Effect.fn("pair.discoverPairTarget")(function* (
     if (worktreeHome !== undefined) {
       bases.push(worktreeHome);
     }
-    const envHome = yield* Config.String("T3CODE_HOME").pipe(Config.option);
+    const envHome = yield* Config.String(appIdentity.homeEnvVar).pipe(Config.option);
     bases.push(yield* resolveBaseDir(Option.getOrUndefined(envHome)));
   }
 

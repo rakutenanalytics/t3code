@@ -1,3 +1,4 @@
+import { appIdentity } from "@t3tools/shared/appIdentity";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
 import * as Path from "effect/Path";
@@ -39,11 +40,15 @@ export const resolveUserDataPath = Effect.fn("desktop.userData.resolveUserDataPa
   }) {
     const fs = yield* FileSystem.FileSystem;
     const path = yield* Path.Path;
-    const names = input.isDevelopment
-      ? { current: "t3code-dev", legacy: "T3 Code (Dev)" }
-      : { current: "t3code-v2", legacy: "T3 Code (Alpha)" };
-    const destinationPath = path.join(input.appDataDirectory, names.current);
-    const legacyPath = path.join(input.appDataDirectory, names.legacy);
+    const destinationPath = path.join(
+      input.appDataDirectory,
+      input.isDevelopment ? "t3code-dev" : appIdentity.userDataDirName,
+    );
+    // Profiles of earlier installs to inherit from. Empty for the safe fork,
+    // which never reads another install's keys or storage.
+    const legacyProfilePaths = (
+      input.isDevelopment ? ["T3 Code (Dev)"] : appIdentity.legacyProfileNames
+    ).map((name) => path.join(input.appDataDirectory, name));
     const inspect = (resourcePath: string) =>
       fs
         .exists(resourcePath)
@@ -53,17 +58,24 @@ export const resolveUserDataPath = Effect.fn("desktop.userData.resolveUserDataPa
           ),
         );
     if (input.isDevelopment) {
-      return (yield* inspect(legacyPath)) ? legacyPath : destinationPath;
+      const [legacyPath] = legacyProfilePaths;
+      return legacyPath !== undefined && (yield* inspect(legacyPath))
+        ? legacyPath
+        : destinationPath;
     }
     // Chromium databases require their own profile for each running version.
     if (input.platform !== "win32") return destinationPath;
     const destinationState = path.join(destinationPath, "Local State");
     if (yield* inspect(destinationState)) return destinationPath;
-    const legacyState = path.join(legacyPath, "Local State");
-    const sourceState = (yield* inspect(legacyState))
-      ? legacyState
-      : path.join(input.appDataDirectory, "t3code", "Local State");
-    if (!(yield* inspect(sourceState))) return destinationPath;
+    let sourceState: string | undefined;
+    for (const profilePath of legacyProfilePaths) {
+      const candidate = path.join(profilePath, "Local State");
+      if (yield* inspect(candidate)) {
+        sourceState = candidate;
+        break;
+      }
+    }
+    if (sourceState === undefined) return destinationPath;
     // Windows safeStorage keys live here. Copy only these preferences, never locked databases.
     const state = yield* fs
       .readFileString(sourceState)

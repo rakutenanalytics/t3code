@@ -1,3 +1,4 @@
+import { appIdentityDefine } from "../../scripts/lib/app-identity.ts";
 import { managedPolicyDefine } from "../../scripts/lib/managed-policy.ts";
 import * as NodeZlib from "node:zlib";
 
@@ -171,7 +172,7 @@ const configuredAllowedHosts = (process.env.T3CODE_DEV_ALLOWED_HOSTS ?? "")
   .filter((entry) => entry.length > 0);
 const allowedHosts = [".ts.net", ...configuredAllowedHosts];
 
-export default defineConfig(() => {
+export default defineConfig(({ command }) => {
   return {
     assetsInclude: ["**/*.wasm"],
     plugins: [
@@ -205,6 +206,8 @@ export default defineConfig(() => {
     },
     define: {
       ...managedPolicyDefine,
+      // Dev servers and tests keep the upstream identity; only production builds are safe-bound.
+      ...(command === "build" ? appIdentityDefine : {}),
       "import.meta.env.VITE_WS_URL": JSON.stringify(configuredWsUrl ?? ""),
       // Pinned explicitly rather than left to Vite's automatic VITE_ exposure:
       // under single-origin dev this must stay empty even when a `.env`

@@ -15,6 +15,7 @@ import * as Path from "effect/Path";
 import * as Schema from "effect/Schema";
 import { Command, Flag } from "effect/cli";
 
+import { appIdentity } from "@t3tools/shared/appIdentity";
 import packageJson from "../../package.json" with { type: "json" };
 import * as BootService from "../cloud/bootService.ts";
 import * as ServerConfig from "../config.ts";
@@ -156,7 +157,7 @@ export const triageCommand = Command.make("triage", {
 
       // Triage is a user-facing feature: always the userdata state, never dev.
       const explicitBaseDir = Option.getOrUndefined(flags.baseDir);
-      const envHome = yield* Config.String("T3CODE_HOME").pipe(Config.option);
+      const envHome = yield* Config.String(appIdentity.homeEnvVar).pipe(Config.option);
       const baseDir = yield* resolveBaseDir(explicitBaseDir ?? Option.getOrUndefined(envHome));
       const paths = yield* ServerConfig.deriveServerPaths(baseDir, undefined, {});
 

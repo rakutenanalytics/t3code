@@ -11,11 +11,12 @@ import * as Schedule from "effect/Schedule";
 import * as Schema from "effect/Schema";
 import * as Scope from "effect/Scope";
 
+import { appIdentity } from "@t3tools/shared/appIdentity";
 import * as Electron from "electron";
 
 export const DESKTOP_HOST = "app";
-const DESKTOP_PRODUCTION_SCHEME = "t3code";
-const DESKTOP_DEVELOPMENT_SCHEME = "t3code-dev";
+const DESKTOP_PRODUCTION_SCHEME = appIdentity.urlScheme;
+const DESKTOP_DEVELOPMENT_SCHEME = `${appIdentity.urlScheme}-dev`;
 
 export function getDesktopScheme(isDevelopment: boolean): string {
   return isDevelopment ? DESKTOP_DEVELOPMENT_SCHEME : DESKTOP_PRODUCTION_SCHEME;

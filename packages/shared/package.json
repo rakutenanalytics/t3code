@@ -511,6 +511,10 @@
       "types": "./src/markdownMath.ts",
       "import": "./src/markdownMath.ts"
     },
+    "./appIdentity": {
+      "types": "./src/appIdentity.ts",
+      "import": "./src/appIdentity.ts"
+    },
     "./managedPolicy": {
       "types": "./src/managedPolicy.ts",
       "import": "./src/managedPolicy.ts"

@@ -10,6 +10,7 @@ import * as Option from "effect/Option";
 import * as Schema from "effect/Schema";
 import { Command, Flag } from "effect/cli";
 
+import { appIdentity } from "@t3tools/shared/appIdentity";
 import * as ServerConfig from "../config.ts";
 import { streamTraceFileLines, toRotatedTracePaths } from "../diagnostics/TraceDiagnostics.ts";
 import { resolveBaseDir } from "../os-jank.ts";
@@ -164,7 +165,7 @@ const traceSummaryCommand = Command.make("summary", {
   Command.withHandler(
     Effect.fn("cli.trace.summary")(function* (flags) {
       const fs = yield* FileSystem.FileSystem;
-      const envHome = yield* Config.String("T3CODE_HOME").pipe(Config.option);
+      const envHome = yield* Config.String(appIdentity.homeEnvVar).pipe(Config.option);
       const baseDir = yield* resolveBaseDir(
         Option.getOrUndefined(Option.orElse(flags.baseDir, () => envHome)),
       );

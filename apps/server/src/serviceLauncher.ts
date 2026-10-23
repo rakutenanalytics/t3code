@@ -11,6 +11,8 @@ import * as NodeFSP from "node:fs/promises";
 import * as NodePath from "node:path";
 import * as NodeUtil from "node:util";
 
+import { appIdentity } from "@t3tools/shared/appIdentity";
+
 import type {
   PendingServiceUpdate,
   ServiceLauncherChildMessage,
@@ -89,7 +91,7 @@ async function pathExists(target: string): Promise<boolean> {
 
 const MANAGED_SERVICE_ENV_NAMES = new Set([
   "PATH",
-  "T3CODE_HOME",
+  appIdentity.homeEnvVar,
   "T3_BOOT_SERVICE_UNIT",
   SERVICE_LAUNCHER_CONTEXT_ENV,
 ]);
@@ -862,9 +864,9 @@ export class Launcher {
 }
 
 export async function main(): Promise<void> {
-  const baseDir = process.env.T3CODE_HOME?.trim();
+  const baseDir = process.env[appIdentity.homeEnvVar]?.trim();
   if (baseDir === undefined || baseDir === "") {
-    throw new Error("T3CODE_HOME is required by the T3 Code service launcher.");
+    throw new Error(`${appIdentity.homeEnvVar} is required by the T3 Code service launcher.`);
   }
   const environment = await readServiceEnvironment(baseDir);
   const statePath = NodePath.join(baseDir, "runtime", SERVICE_STATE_FILE);
