@@ -1,3 +1,4 @@
+import { enforceManagedCapability } from "@t3tools/shared/managedPolicyHttpClient";
 import { RelayApi } from "@t3tools/contracts/relay";
 import * as Effect from "effect/Effect";
 import * as FetchHttpClient from "effect/http/FetchHttpClient";
@@ -11,7 +12,14 @@ export const makeRelayEnvironmentClient = (connection: {
 }) =>
   HttpApiClient.make(RelayApi, {
     baseUrl: connection.url,
-    transformClient: HttpClient.mapRequest(
-      HttpClientRequest.setHeader("authorization", `Bearer ${connection.environmentCredential}`),
-    ),
+    transformClient: (client) =>
+      client.pipe(
+        enforceManagedCapability("t3Connect"),
+        HttpClient.mapRequest(
+          HttpClientRequest.setHeader(
+            "authorization",
+            `Bearer ${connection.environmentCredential}`,
+          ),
+        ),
+      ),
   }).pipe(Effect.provide(FetchHttpClient.layer));

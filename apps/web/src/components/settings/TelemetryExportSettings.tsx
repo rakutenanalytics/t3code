@@ -1,3 +1,6 @@
+import { allowsManagedCapability } from "@t3tools/contracts";
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { ManagedPolicyDisabledAction } from "../ManagedPolicyDisabledAction";
 import { useAtomValue } from "@effect/atom-react";
 import type { OtlpEndpointCheckResult, OtlpSignal } from "@t3tools/contracts";
 import { useEffect, useEffectEvent, useState } from "react";
@@ -48,6 +51,16 @@ export function TelemetryExportSettings() {
         <SettingsScopeNotice target="environment">
           Choose one environment to configure its telemetry exports.
         </SettingsScopeNotice>
+      </SettingsSection>
+    );
+  }
+  if (
+    !managedPolicy.allows("telemetryExport") ||
+    !allowsManagedCapability(environment.serverConfig?.managedPolicy, "telemetryExport")
+  ) {
+    return (
+      <SettingsSection title="OpenTelemetry export" id="telemetry-export">
+        <ManagedPolicyDisabledAction>Configure telemetry export</ManagedPolicyDisabledAction>
       </SettingsSection>
     );
   }

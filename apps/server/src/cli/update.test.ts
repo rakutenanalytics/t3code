@@ -11,7 +11,8 @@ import * as Option from "effect/Option";
 import * as Path from "effect/Path";
 import { Command } from "effect/cli";
 import { HttpClient, HttpClientResponse } from "effect/http";
-import { afterEach, vi } from "vite-plus/test";
+import { afterEach, beforeEach, vi } from "vite-plus/test";
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 
 import packageJson from "../../package.json" with { type: "json" };
 import * as BootService from "../cloud/bootService.ts";
@@ -23,6 +24,9 @@ import {
   updateCommand,
 } from "./update.ts";
 
+beforeEach(() => {
+  vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
+});
 afterEach(() => vi.restoreAllMocks());
 
 it.effect.each([

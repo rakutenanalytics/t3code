@@ -1,3 +1,4 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import {
   CommandId,
   MessageId,
@@ -1534,6 +1535,11 @@ export const layer = Layer.effect(
             return { _tag: "disabled" as const };
           }
           const signature = schedule.signature;
+          if (managedPolicy.policy !== null && signature === null) {
+            yield* log("rejected_signature");
+            yield* observe("rejected_signature");
+            return { _tag: "rejected_signature" as const };
+          }
           if (signature !== null) {
             const verified =
               row.webhook_secret !== null &&

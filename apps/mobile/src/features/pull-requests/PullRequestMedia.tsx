@@ -1,3 +1,4 @@
+import { allowsRemoteContentUrl } from "@t3tools/shared/remoteContent";
 import { createContext, useContext, useMemo, useState } from "react";
 import { pullRequestMediaSource, pullRequestImageSource } from "./pullRequestMediaSource";
 import { useFilePreviewGallery } from "../../components/FilePreviewGallery";
@@ -25,16 +26,22 @@ export const PullRequestMediaContext = createContext<{
 
 export function usePullRequestMediaUrl(url: string) {
   const context = useContext(PullRequestMediaContext);
-  const fetchUrl = githubMediaFetchUrl(url);
+  const allowed = allowsRemoteContentUrl(url);
+  const fetchUrl = allowed ? githubMediaFetchUrl(url) : null;
   const resource = useMemo<AssetResource | null>(
     () => (context && fetchUrl ? { _tag: "github-media", cwd: context.cwd, url: fetchUrl } : null),
     [context, fetchUrl],
   );
   const asset = useAssetUrlState(context?.environmentId ?? null, resource);
   const refresh = useRefreshAssetUrl(context?.environmentId ?? null, resource);
+  let uri: string | null = null;
+  if (allowed) {
+    if (asset._tag === "Success") uri = asset.url;
+    else if (resource === null) uri = url;
+  }
   return {
-    uri: asset._tag === "Success" ? asset.url : resource ? null : url,
-    unavailable: resource !== null && asset._tag === "Failure",
+    uri,
+    unavailable: !allowed || (resource !== null && asset._tag === "Failure"),
     source: pullRequestMediaSource(url, context),
     resolvePlaybackUri: resource ? async () => (await refresh()) ?? null : undefined,
   };

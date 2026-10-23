@@ -46,3 +46,6 @@ node_modules/
 
 # pnpm content-addressable store; never belongs in the repo.
 .pnpm-store/
+
+# Generated dependency review report.
+/security/young-or-unknown.json

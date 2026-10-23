@@ -1,3 +1,4 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import {
   createAdvertisedEndpoint,
   type CreateAdvertisedEndpointInput,
@@ -122,9 +123,9 @@ const resolveDesktopServerExposure = (input: {
   const localHttpUrl = `http://${DESKTOP_LOOPBACK_HOST}:${input.port}`;
   const localWsUrl = `ws://${DESKTOP_LOOPBACK_HOST}:${input.port}`;
 
-  if (input.mode === "local-only") {
+  if (!managedPolicy.allows("remoteAccess.network") || input.mode === "local-only") {
     return {
-      mode: input.mode,
+      mode: "local-only",
       bindHost: DESKTOP_LOOPBACK_HOST,
       localHttpUrl,
       localWsUrl,
@@ -369,7 +370,8 @@ function runtimeStateFromResolvedExposure(input: {
     httpBaseUrl: new URL(input.exposure.localHttpUrl),
     endpointUrl: Option.fromNullishOr(input.exposure.endpointUrl),
     advertisedHost: Option.fromNullishOr(input.exposure.advertisedHost),
-    tailscaleServeEnabled: input.settings.tailscaleServeEnabled,
+    tailscaleServeEnabled:
+      managedPolicy.allows("remoteAccess.network") && input.settings.tailscaleServeEnabled,
     tailscaleServePort: input.settings.tailscaleServePort,
   };
 }
@@ -552,7 +554,8 @@ export const make = Effect.gen(function* () {
 
       const nextState = yield* Ref.updateAndGet(stateRef, (current) => ({
         ...current,
-        tailscaleServeEnabled: result.settings.tailscaleServeEnabled,
+        tailscaleServeEnabled:
+          managedPolicy.allows("remoteAccess.network") && result.settings.tailscaleServeEnabled,
         tailscaleServePort: result.settings.tailscaleServePort,
       }));
 

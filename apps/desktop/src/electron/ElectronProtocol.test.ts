@@ -110,7 +110,7 @@ describe("ElectronProtocol", () => {
           );
           assert.include(
             response.headers.get("content-security-policy") ?? "",
-            "img-src 'self' t3code-dev: blob: data: http: https:",
+            "img-src 'self' t3code-dev: blob: data: http://localhost:* https://localhost:* http://127.0.0.1:* https://127.0.0.1:* http://[::1]:* https://[::1]:*",
           );
           assert.include(
             response.headers.get("content-security-policy") ?? "",
@@ -317,10 +317,25 @@ describe("ElectronProtocol", () => {
       "t3code:",
       "blob:",
       "data:",
-      "http:",
-      "https:",
+      "http://localhost:*",
+      "https://localhost:*",
+      "http://127.0.0.1:*",
+      "https://127.0.0.1:*",
+      "http://[::1]:*",
+      "https://[::1]:*",
     ]);
-    assert.deepEqual(directives["media-src"], ["'self'", "t3code:", "blob:", "http:", "https:"]);
+    assert.deepEqual(directives["media-src"], [
+      "'self'",
+      "t3code:",
+      "blob:",
+      "data:",
+      "http://localhost:*",
+      "https://localhost:*",
+      "http://127.0.0.1:*",
+      "https://127.0.0.1:*",
+      "http://[::1]:*",
+      "https://[::1]:*",
+    ]);
     assert.deepEqual(directives["frame-src"], ["'self'", "blob:", "http:", "https:"]);
     assert.deepEqual(directives["object-src"], ["'self'", "blob:", "http:", "https:"]);
     assert.deepEqual(directives["font-src"], ["'self'", "t3code:", "data:"]);

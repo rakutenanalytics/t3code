@@ -1,3 +1,5 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { ManagedPolicyDisabledAction } from "../ManagedPolicyDisabledAction";
 import { SettingsGroup } from "./SettingsGroup";
 import { settingsScopeEnvironmentLabels } from "./settingsScopeAxis";
 import { useScopedSettingsWriteAllowed } from "./useScopedSettings";
@@ -429,21 +431,25 @@ function AboutVersionSection() {
         title={<AboutVersionTitle />}
         description={description}
         control={
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <Button
-                  size="sm"
-                  variant="outline"
-                  disabled={buttonDisabled || isUpdateActionPending}
-                  onClick={handleButtonClick}
-                >
-                  {buttonLabel}
-                </Button>
-              }
-            />
-            {buttonTooltip ? <TooltipPopup>{buttonTooltip}</TooltipPopup> : null}
-          </Tooltip>
+          !managedPolicy.allows("desktopAutoUpdate") ? (
+            <ManagedPolicyDisabledAction>Check for Updates</ManagedPolicyDisabledAction>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={buttonDisabled || isUpdateActionPending}
+                    onClick={handleButtonClick}
+                  >
+                    {buttonLabel}
+                  </Button>
+                }
+              />
+              {buttonTooltip ? <TooltipPopup>{buttonTooltip}</TooltipPopup> : null}
+            </Tooltip>
+          )
         }
       />
       {hasDesktopBridge ? (
@@ -461,7 +467,7 @@ function AboutVersionSection() {
                 size="sm"
                 className="w-full sm:w-40"
                 aria-label="Update track"
-                disabled={isChangingUpdateChannel}
+                disabled={!managedPolicy.allows("desktopAutoUpdate") || isChangingUpdateChannel}
               >
                 <SelectValue>
                   {selectedUpdateChannel === "nightly" ? "Nightly" : "Stable"}

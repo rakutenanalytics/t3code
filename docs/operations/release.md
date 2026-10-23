@@ -9,6 +9,30 @@ remain stable and nightly. To ship 0.1.0 Beta, use `channel=stable` and
 `version=0.1.0`. Removing the Beta label later is a branding change independent of
 the version.
 
+## Safe artifact host review
+
+`node scripts/safe/artifact-scan.ts <extracted-bundle>` fails on unknown hosts and unapproved
+forbidden literals. `--report-only --report <json-path>` prints violations and writes the full
+inventory while exiting 0. It does not approve anything or suppress scanner errors.
+
+Before accepting forbidden literals, review their source reachability under the managed policy
+and pass `node scripts/safe/policy-verify.ts --bundle <extracted-bundle>` on the actual artifact.
+Then use `--accept-gated-literals --note "<gating evidence>"` to write the gated-literal ledger.
+The writer repeats policy verification. Review every added host, path, SHA-256 and note before
+committing. Never use an unrepresentative local snapshot to approve CI artifacts.
+
+Entries in `security/artifact-hosts.json` bind one forbidden host to an exact relative file path
+and whole-file SHA-256. A new file, changed content, changed chunk filename or new forbidden host
+fails again. Exact paths intentionally require review after hashed chunk names change.
+`--write-baseline` approves ordinary hosts only and refuses to write while forbidden literals
+remain unapproved. Neither writer can be combined with report-only mode.
+
+TEMPORARY for rakutenanalytics/t3code PR #1: `safe-build.yml` uses report-only artifact scans
+only in that PR's build. Policy verification, dependency checks and other smoke checks still
+fail normally. The always-run upload preserves available DMGs and host-report JSON files even
+after later failures. TODO remove this exception after reviewing the actual CI host reports;
+release builds keep hard failures.
+
 ## What the workflow does
 
 - Workflow: `.github/workflows/release.yml`

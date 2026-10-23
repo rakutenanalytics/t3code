@@ -1,3 +1,27 @@
+import { afterEach, beforeEach, vi } from "vite-plus/test";
+
+const policyInput = vi.hoisted(
+  (): { policy: import("@t3tools/contracts").ManagedPolicy | null } => ({ policy: null }),
+);
+vi.mock("@t3tools/shared/managedPolicy", async (importOriginal) => {
+  const original = await importOriginal<typeof import("@t3tools/shared/managedPolicy")>();
+  return {
+    ...original,
+    managedPolicy: {
+      ...original.managedPolicy,
+      get policy() {
+        return policyInput.policy;
+      },
+    },
+  };
+});
+beforeEach(() => {
+  policyInput.policy = null;
+});
+afterEach(() => {
+  policyInput.policy = null;
+});
+
 // @effect-diagnostics-next-line nodeBuiltinImport:off -- Effect's Crypto has no createHmac.
 import * as NodeCrypto from "node:crypto";
 
@@ -952,4 +976,25 @@ it.effect("counts each handled request by what happened to it", () =>
       assert.equal((yield* deliveriesCounted("duplicate", "relay")) - before.duplicate, 1);
     }),
   ),
+);
+
+it.effect(
+  "should record rejected_signature and start zero agent runs for an unsigned webhook under managed policy",
+  () =>
+    withService(({ service, launches }) =>
+      Effect.gen(function* () {
+        policyInput.policy = { allow: ["remoteAccess.network"] };
+        const { task } = yield* service.upsert(yield* webhookTaskInput());
+
+        const result = yield* service.triggerWebhook(requestFor(task));
+        const { deliveries } = yield* service.listWebhookDeliveries({ id: task.id });
+
+        assert.equal(result._tag, "rejected_signature");
+        assert.equal(yield* Queue.size(launches), 0);
+        assert.deepEqual(
+          deliveries.map((delivery) => [delivery.outcome, delivery.signatureVerified]),
+          [["rejected_signature", false]],
+        );
+      }),
+    ),
 );

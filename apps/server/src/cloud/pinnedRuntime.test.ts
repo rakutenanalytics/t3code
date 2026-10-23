@@ -1,3 +1,6 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { beforeEach, afterEach, vi } from "vite-plus/test";
+
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { assert, it } from "@effect/vitest";
 import * as Deferred from "effect/Deferred";
@@ -18,6 +21,11 @@ import {
   PinnedRuntimeInstallError,
   type PinnedRuntimeProgress,
 } from "./pinnedRuntime.ts";
+
+beforeEach(() => {
+  vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
+});
+afterEach(() => vi.restoreAllMocks());
 
 const version = "1.2.3";
 const archiveName = `t3-${version}-linux-x64.tar.gz`;

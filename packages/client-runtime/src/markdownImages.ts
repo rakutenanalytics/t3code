@@ -1,3 +1,4 @@
+import { allowsRemoteContentUrl } from "@t3tools/shared/remoteContent";
 import { isWindowsAbsolutePath, stripSlashPrefixedWindowsDrive } from "@t3tools/shared/path";
 
 import {
@@ -41,6 +42,7 @@ export function classifyMarkdownImageSource(
     return { _tag: "Blocked" };
   }
   if (DIRECT_IMAGE_SOURCE_PATTERN.test(source)) {
+    if (!allowsRemoteContentUrl(source)) return { _tag: "Blocked" };
     return { _tag: "Direct", uri: source };
   }
 

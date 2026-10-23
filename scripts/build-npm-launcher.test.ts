@@ -99,6 +99,54 @@ const serveFakeRelease = Effect.fn("test.serveFakeRelease")(function* (root: str
 });
 
 it.layer(NodeServices.layer)("build-npm-launcher", (it) => {
+  it.effect(
+    "rejects direct and legacy launchers before download or cached execution when upstreamUpdate is denied",
+    () =>
+      Effect.gen(function* () {
+        const fs = yield* FileSystem.FileSystem;
+        const path = yield* Path.Path;
+        const root = yield* fs.makeTempDirectoryScoped({ prefix: "t3-npm-policy-test-" });
+        const output = yield* buildNpmLauncher({
+          version: VERSION,
+          outputDir: path.join(root, "out"),
+        });
+        const release = yield* serveFakeRelease(root);
+        const home = path.join(root, "home");
+        const cached = path.join(home, "runtime/versions", VERSION);
+        yield* fs.makeDirectory(cached, { recursive: true });
+        yield* fs.writeFileString(path.join(cached, ".install-complete"), `${VERSION}\n`);
+        yield* fs.writeFileString(path.join(cached, "t3"), "#!/bin/sh\necho CACHED_EXECUTED\n");
+        yield* fs.chmod(path.join(cached, "t3"), 0o755);
+        const environment = {
+          PATH: process.env.PATH,
+          T3CODE_HOME: home,
+          T3CODE_RELEASE_BASE_URL: release.baseUrl,
+        };
+
+        const direct = yield* run(
+          process.execPath,
+          [path.join(output.packageDir, "bin/t3.mjs"), "--version"],
+          { cwd: root, env: environment },
+        );
+        const legacy = yield* run(
+          process.execPath,
+          [path.join(output.packageDir, "dist/bin.mjs"), "--version"],
+          { cwd: root, env: environment },
+        );
+        const uncached = yield* run(
+          process.execPath,
+          [path.join(output.packageDir, "bin/t3.mjs"), "--version"],
+          { cwd: root, env: { ...environment, T3CODE_HOME: path.join(root, "empty-home") } },
+        );
+
+        for (const result of [direct, legacy, uncached]) {
+          assert.equal(result.exitCode, 1);
+          assert.include(result.stderr, "Use t3safe update");
+          assert.equal(result.stdout, "");
+        }
+        assert.deepStrictEqual(release.requests, []);
+      }),
+  );
   it.effect.skipIf(HostProcess.Platform.defaultValue() === "win32")(
     "publishes a launcher that downloads, verifies, caches, and runs the release executable",
     () =>
@@ -130,6 +178,11 @@ it.layer(NodeServices.layer)("build-npm-launcher", (it) => {
         });
         assert.equal(unpack.exitCode, 0, unpack.stderr);
         const packageDir = path.join(installed, "package");
+        const allowedManifest = { ...manifest, t3codeManagedPolicy: { allow: ["upstreamUpdate"] } };
+        yield* fs.writeFileString(
+          path.join(packageDir, "package.json"),
+          JSON.stringify(allowedManifest),
+        );
 
         const release = yield* serveFakeRelease(root);
         const home = path.join(root, "home");
@@ -139,11 +192,17 @@ it.layer(NodeServices.layer)("build-npm-launcher", (it) => {
           T3CODE_RELEASE_BASE_URL: release.baseUrl,
         };
         const launcher = path.join(packageDir, "bin/t3.mjs");
+        // macOS reports the resolved path for its /var -> /private/var temp symlink.
+        const reportedLauncher = yield* fs.realPath(launcher);
         const first = yield* run(process.execPath, [launcher, "serve", "a b"], {
           cwd: root,
           env,
         });
-        assert.equal(first.stdout.trim(), `stub serve a b launcher=${launcher}`, first.stderr);
+        assert.equal(
+          first.stdout.trim(),
+          `stub serve a b launcher=${reportedLauncher}`,
+          first.stderr,
+        );
         assert.equal(first.exitCode, 7);
         // The same layout the install scripts and `t3 update` use.
         const versionDir = path.join(home, "runtime/versions", VERSION);

@@ -1,3 +1,4 @@
+import { managedPolicy } from "./managedPolicy.ts";
 import * as Config from "effect/Config";
 import * as ConfigProvider from "effect/ConfigProvider";
 import * as Data from "effect/Data";
@@ -341,7 +342,7 @@ export const resolveSignalEndpoint = (
   t3: { readonly url: string | undefined; readonly export: SignalExport },
   ...fallbackUrls: ReadonlyArray<string | undefined>
 ): SignalEndpoint | undefined => {
-  if (otel.disabled) {
+  if (!managedPolicy.allows("telemetryExport") || otel.disabled) {
     return undefined;
   }
   const t3Url = blankAsUnset(t3.url);

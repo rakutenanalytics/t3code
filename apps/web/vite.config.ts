@@ -1,3 +1,4 @@
+import { managedPolicyDefine } from "../../scripts/lib/managed-policy.ts";
 import * as NodeZlib from "node:zlib";
 
 import react from "@vitejs/plugin-react";
@@ -203,6 +204,7 @@ export default defineConfig(() => {
       ],
     },
     define: {
+      ...managedPolicyDefine,
       "import.meta.env.VITE_WS_URL": JSON.stringify(configuredWsUrl ?? ""),
       // Pinned explicitly rather than left to Vite's automatic VITE_ exposure:
       // under single-origin dev this must stay empty even when a `.env`

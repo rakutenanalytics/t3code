@@ -1,3 +1,4 @@
+import { managedPolicy } from "./managedPolicy.ts";
 import * as Cause from "effect/Cause";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
@@ -157,7 +158,7 @@ export function layer(
   config: RelayClientTracingConfig | null,
   resource: RelayClientTracingResource,
 ): Layer.Layer<never, never, HttpClient.HttpClient> {
-  if (config === null) {
+  if (!managedPolicy.allows("t3Connect") || config === null) {
     return Layer.succeed(RelayClientTracer, Option.none());
   }
 

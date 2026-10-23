@@ -1,3 +1,6 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { beforeEach, afterEach, vi } from "vite-plus/test";
+
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { expect, it } from "@effect/vitest";
 import { ServerSelfUpdateError, ThreadId } from "@t3tools/contracts";
@@ -18,6 +21,11 @@ import * as ProcessRunner from "../processRunner.ts";
 import * as ServiceLauncherClient from "./serviceLauncherClient.ts";
 import { SERVICE_LAUNCHER_PROTOCOL } from "./serviceProtocol.ts";
 import * as ServerSelfUpdate from "./selfUpdate.ts";
+
+beforeEach(() => {
+  vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
+});
+afterEach(() => vi.restoreAllMocks());
 
 interface HarnessOptions {
   readonly mode?: "web" | "desktop";
@@ -128,6 +136,29 @@ const makeHarness = Effect.fn("test.make_self_update_harness")(function* (
 });
 
 it.layer(NodeServices.layer)("server self update", (it) => {
+  it.effect(
+    "should reject a boot-service update with t3safe update guidance before download or launcher handoff when upstreamUpdate is denied",
+    () =>
+      Effect.gen(function* () {
+        vi.mocked(managedPolicy.allows).mockReturnValue(false);
+        const { selfUpdate, order } = yield* makeHarness();
+        const stages: string[] = [];
+
+        const failure = yield* selfUpdate
+          .update({ targetVersion: "1.1.0" }, (stage) =>
+            Effect.sync(() => {
+              stages.push(stage);
+            }),
+          )
+          .pipe(Effect.flip);
+
+        expect(failure.message).toBe(
+          "Server update failed: Upstream updates are disabled by managed policy. Use `t3safe update`.",
+        );
+        expect(stages).toEqual([]);
+        expect(order).toEqual([]);
+      }),
+  );
   it.effect("marks running threads at the boot-service handoff", () =>
     Effect.gen(function* () {
       const events: string[] = [];

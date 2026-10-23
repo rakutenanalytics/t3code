@@ -1,3 +1,5 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { enforceManagedCapability } from "@t3tools/shared/managedPolicyHttpClient";
 import * as Cause from "effect/Cause";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
@@ -362,5 +364,16 @@ const installPinnedRuntime = Effect.fn("cloud.pinned_runtime.ensure_installed")(
   );
 });
 
-export const ensurePinnedRuntimeInstalled = (input: PinnedRuntimeInstallInput) =>
-  pinnedRuntimeInstallLock.withPermit(installPinnedRuntime(input));
+export const ensurePinnedRuntimeInstalled = Effect.fn("cloud.pinned_runtime.ensureInstalled")(
+  function* (input: PinnedRuntimeInstallInput) {
+    if (!managedPolicy.allows("upstreamUpdate")) {
+      return yield* new PinnedRuntimeInstallError({
+        step: "installing upstream builds: disabled by managed policy; use `t3safe update`",
+      });
+    }
+    const httpClient = enforceManagedCapability("upstreamUpdate")(input.httpClient);
+    return yield* pinnedRuntimeInstallLock.withPermit(
+      installPinnedRuntime({ ...input, httpClient }),
+    );
+  },
+);

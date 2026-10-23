@@ -1,0 +1,7 @@
+{
+  "tag": "v0.1.0",
+  "tagSha": "81493efb71e8e8244f95d3e9f71d8369654ab151",
+  "sha": "90c3f8350d777f09c7afdf643db63bf8135161e6",
+  "syncCount": 0,
+  "note": "Initial reviewed source anchor includes this stable tag plus subsequent upstream main changes."
+}

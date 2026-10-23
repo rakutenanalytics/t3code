@@ -1,3 +1,6 @@
+import { allowsManagedCapability, type ManagedPolicy } from "@t3tools/contracts";
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { ManagedPolicyDisabledAction } from "../ManagedPolicyDisabledAction";
 import { SessionPermissions } from "./SessionPermissions";
 import { AUTH_SCOPE_OPTIONS as PAIRING_SCOPE_OPTIONS } from "@t3tools/shared/authScopeOptions";
 import {
@@ -2018,12 +2021,22 @@ function ConfiguredCloudLinkRow({ canManageRelay }: { readonly canManageRelay: b
 }
 
 function CloudLinkRow({
+  policy,
   canReadRelay,
   canManageRelay,
 }: {
+  readonly policy: ManagedPolicy | null | undefined;
   readonly canReadRelay: boolean;
   readonly canManageRelay: boolean;
 }) {
+  if (!managedPolicy.allows("t3Connect") || !allowsManagedCapability(policy, "t3Connect")) {
+    return (
+      <SettingsRow
+        title="T3 Connect"
+        control={<ManagedPolicyDisabledAction>Enable T3 Connect</ManagedPolicyDisabledAction>}
+      />
+    );
+  }
   if (!hasCloudPublicConfig()) return null;
   if (!canReadRelay) {
     return (
@@ -3561,14 +3574,22 @@ export function ConnectionsSettings() {
                 {renderTailscaleRow()}
                 {renderWslRow()}
                 {canReadRelay || canManageRelay ? (
-                  <CloudLinkRow canReadRelay={canReadRelay} canManageRelay={canManageRelay} />
+                  <CloudLinkRow
+                    policy={primaryServerConfig?.managedPolicy}
+                    canReadRelay={canReadRelay}
+                    canManageRelay={canManageRelay}
+                  />
                 ) : null}
               </>
             ) : canManageLocalBackend ? (
               <>
                 {renderDisabledNetworkAccessRow()}
                 {canReadRelay || canManageRelay ? (
-                  <CloudLinkRow canReadRelay={canReadRelay} canManageRelay={canManageRelay} />
+                  <CloudLinkRow
+                    policy={primaryServerConfig?.managedPolicy}
+                    canReadRelay={canReadRelay}
+                    canManageRelay={canManageRelay}
+                  />
                 ) : null}
               </>
             ) : null}
@@ -3909,7 +3930,11 @@ export function ConnectionsSettings() {
           />
           <LocalEnvironmentSetting />
           {canReadRelay || canManageRelay ? (
-            <CloudLinkRow canReadRelay={canReadRelay} canManageRelay={canManageRelay} />
+            <CloudLinkRow
+              policy={primaryServerConfig?.managedPolicy}
+              canReadRelay={canReadRelay}
+              canManageRelay={canManageRelay}
+            />
           ) : null}
         </SettingsSection>
       )}

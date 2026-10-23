@@ -1,3 +1,5 @@
+import { enforceManagedCapability } from "@t3tools/shared/managedPolicyHttpClient";
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import type {
   EnvironmentId,
   OrchestrationV2DomainEvent,
@@ -192,7 +194,11 @@ function sanitizeRelayAgentActivityState(
 }
 
 function relayEnvironmentClient(token: string) {
-  return HttpClient.mapRequest(HttpClientRequest.setHeader("authorization", `Bearer ${token}`));
+  return (client: HttpClient.HttpClient) =>
+    client.pipe(
+      enforceManagedCapability("t3Connect"),
+      HttpClient.mapRequest(HttpClientRequest.setHeader("authorization", `Bearer ${token}`)),
+    );
 }
 
 function deliveryStats(
@@ -773,6 +779,7 @@ export const make = Effect.gen(function* () {
 
   const start: AgentAwarenessRelay["Service"]["start"] = Effect.fn("AgentAwarenessRelay.start")(
     function* () {
+      if (!managedPolicy.allows("t3Connect")) return;
       const [relayConfig, publishEnabled] = yield* Effect.all([
         readRelayConfig.pipe(Effect.orElseSucceed(() => null)),
         readPublishAgentActivityEnabled.pipe(Effect.orElseSucceed(() => false)),

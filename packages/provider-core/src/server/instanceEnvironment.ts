@@ -1,3 +1,4 @@
+import { createManagedProviderEnvironment } from "@t3tools/shared/providerEnvironment";
 import type { ProviderInstanceEnvironment } from "@t3tools/contracts";
 import * as HostProcess from "@t3tools/shared/HostProcess";
 import * as Effect from "effect/Effect";
@@ -9,7 +10,7 @@ export const mergeProviderInstanceEnvironment = Effect.fn(function* (
   baseEnv: NodeJS.ProcessEnv = process.env,
 ) {
   if (!environment || environment.length === 0) {
-    return baseEnv;
+    return createManagedProviderEnvironment(baseEnv);
   }
 
   const home = yield* HostProcess.HomeDirectory;
@@ -21,5 +22,5 @@ export const mergeProviderInstanceEnvironment = Effect.fn(function* (
         ? expandHomePath(variable.value, home)
         : variable.value;
   }
-  return next;
+  return createManagedProviderEnvironment(next);
 });

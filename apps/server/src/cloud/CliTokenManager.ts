@@ -1,3 +1,4 @@
+import { enforceManagedCapability } from "@t3tools/shared/managedPolicyHttpClient";
 // @effect-diagnostics nodeBuiltinImport:off - The CLI loopback OAuth callback is a Node HTTP boundary.
 import * as NodeHttp from "node:http";
 
@@ -317,7 +318,9 @@ const exchangeToken = Effect.fn("cloud.cli_token.exchange")(function* (
   metadata: Pick<CloudCliOAuthConfig, "tokenEndpoint">,
   params: Record<string, string>,
 ) {
-  const httpClient = (yield* HttpClient.HttpClient).pipe(HttpClient.filterStatusOk);
+  const httpClient = (yield* HttpClient.HttpClient.pipe(
+    Effect.map(enforceManagedCapability("t3Connect")),
+  )).pipe(HttpClient.filterStatusOk);
   const startedAt = yield* Clock.monotonicTimeNanos;
   return yield* HttpClientRequest.post(metadata.tokenEndpoint).pipe(
     HttpClientRequest.bodyUrlParams(params),
@@ -392,7 +395,9 @@ const pollDeviceToken = Effect.fn("cloud.cli_token.poll_device_token")(function*
   deviceCode: string,
   initialInterval: Duration.Duration,
 ) {
-  const httpClient = yield* HttpClient.HttpClient;
+  const httpClient = yield* HttpClient.HttpClient.pipe(
+    Effect.map(enforceManagedCapability("t3Connect")),
+  );
   const params = {
     grant_type: DEVICE_CODE_GRANT_TYPE,
     device_code: deviceCode,
@@ -441,7 +446,9 @@ const pollDeviceToken = Effect.fn("cloud.cli_token.poll_device_token")(function*
 export const deviceAuthorizationLogin = Effect.fn("cloud.cli_token.device_authorization_login")(
   function* <E, R>(showPrompt: (prompt: DeviceAuthorizationPrompt) => Effect.Effect<void, E, R>) {
     const metadata = yield* cloudCliOAuthConfig;
-    const httpClient = (yield* HttpClient.HttpClient).pipe(HttpClient.filterStatusOk);
+    const httpClient = (yield* HttpClient.HttpClient.pipe(
+      Effect.map(enforceManagedCapability("t3Connect")),
+    )).pipe(HttpClient.filterStatusOk);
     const authorization = yield* HttpClientRequest.post(metadata.deviceAuthorizationEndpoint).pipe(
       HttpClientRequest.bodyUrlParams({
         client_id: metadata.clientId,
@@ -474,7 +481,9 @@ export const deviceAuthorizationLogin = Effect.fn("cloud.cli_token.device_author
 /** @public Service construction is part of the canonical Effect module API. */
 export const make = Effect.gen(function* () {
   const crypto = yield* Crypto.Crypto;
-  const httpClient = yield* HttpClient.HttpClient;
+  const httpClient = yield* HttpClient.HttpClient.pipe(
+    Effect.map(enforceManagedCapability("t3Connect")),
+  );
   const services = Context.make(Crypto.Crypto, crypto).pipe(
     Context.add(HttpClient.HttpClient, httpClient),
   );

@@ -1,3 +1,6 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { afterEach, beforeEach, vi } from "vite-plus/test";
+
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { describe, expect, it } from "@effect/vitest";
 import * as Effect from "effect/Effect";
@@ -5,6 +8,11 @@ import * as Path from "effect/Path";
 import * as HostProcess from "@t3tools/shared/HostProcess";
 
 import { mergeProviderInstanceEnvironment } from "./instanceEnvironment.ts";
+
+beforeEach(() => {
+  vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
+});
+afterEach(() => vi.restoreAllMocks());
 
 describe("mergeProviderInstanceEnvironment", () => {
   it.effect.each([
@@ -72,3 +80,35 @@ describe("mergeProviderInstanceEnvironment", () => {
     }),
   );
 });
+
+it.effect(
+  "should force telemetry opt-outs to 1 and preserve ANTHROPIC_API_KEY when instance settings try to enable telemetry",
+  () =>
+    Effect.gen(function* () {
+      vi.mocked(managedPolicy.allows).mockReturnValue(false);
+      const baseEnv = {
+        ANTHROPIC_API_KEY: "fixed-auth-key",
+        PATH: "/bin",
+        OTEL_EXPORTER_OTLP_ENDPOINT: "https://collector.example",
+      };
+
+      const environment = yield* mergeProviderInstanceEnvironment(
+        [
+          { name: "DISABLE_TELEMETRY", value: "0", sensitive: false },
+          { name: "DO_NOT_TRACK", value: "0", sensitive: false },
+        ],
+        baseEnv,
+      );
+
+      expect(environment).toEqual({
+        ANTHROPIC_API_KEY: "fixed-auth-key",
+        PATH: "/bin",
+        DO_NOT_TRACK: "1",
+        CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1",
+        DISABLE_TELEMETRY: "1",
+        DISABLE_ERROR_REPORTING: "1",
+        OTEL_SDK_DISABLED: "true",
+      });
+      expect(baseEnv.OTEL_EXPORTER_OTLP_ENDPOINT).toBe("https://collector.example");
+    }).pipe(Effect.provideService(HostProcess.HomeDirectory, "/home/ada")),
+);

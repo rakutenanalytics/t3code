@@ -1,3 +1,5 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { allowsManagedCapability } from "@t3tools/contracts";
 import * as Dialog from "../../components/ui/Dialog";
 import { useAtomValue } from "@effect/atom-react";
 import { useNavigation, type StaticScreenProps } from "@react-navigation/native";
@@ -89,6 +91,9 @@ function EnvironmentDetail({ environmentId }: { readonly environmentId: Environm
   const version = config?.environment.serverVersion;
   const checkedRelease = release?.fromVersion === version ? release : null;
   const capabilities = config?.environment.capabilities;
+  const updateDisabledByPolicy =
+    !managedPolicy.allows("upstreamUpdate") ||
+    !allowsManagedCapability(config?.managedPolicy, "upstreamUpdate");
 
   async function run(label: string, action: () => Promise<void>) {
     if (pendingRef.current) return;
@@ -109,7 +114,13 @@ function EnvironmentDetail({ environmentId }: { readonly environmentId: Environm
 
   function requestServerUpdate() {
     const targetVersion = checkedRelease?.targetVersion;
-    if (disabled || !targetVersion || !capabilities || !supportsEnvironmentUpdate(capabilities))
+    if (
+      disabled ||
+      updateDisabledByPolicy ||
+      !targetVersion ||
+      !capabilities ||
+      !supportsEnvironmentUpdate(capabilities)
+    )
       return;
     Dialog.alert(
       `Update ${environment?.environmentLabel ?? "environment"}?`,
@@ -259,8 +270,12 @@ function EnvironmentDetail({ environmentId }: { readonly environmentId: Environm
                   </View>
                   <SettingsActionRow
                     icon="arrow.clockwise"
-                    label="Check for updates"
-                    disabled={disabled}
+                    label={
+                      updateDisabledByPolicy
+                        ? "Disabled by managed policy. Use t3safe update."
+                        : "Check for updates"
+                    }
+                    disabled={disabled || updateDisabledByPolicy}
                     loading={pending === "check"}
                     onPress={() => {
                       if (disabled) return;
@@ -285,7 +300,7 @@ function EnvironmentDetail({ environmentId }: { readonly environmentId: Environm
                     <SettingsActionRow
                       icon="arrow.up.circle"
                       label={`Update to ${checkedRelease.targetVersion}`}
-                      disabled={disabled}
+                      disabled={disabled || updateDisabledByPolicy}
                       loading={pending === "server" || running}
                       onPress={requestServerUpdate}
                     />

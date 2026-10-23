@@ -1,3 +1,4 @@
+import { ManagedPolicy } from "./managedPolicy.ts";
 import * as Effect from "effect/Effect";
 import * as Schema from "effect/Schema";
 import { AcpRegistryUrlAuthAction } from "./acpRegistry.ts";
@@ -99,6 +100,7 @@ export const ServerProviderSlashCommandInput = Schema.Struct({
 export type ServerProviderSlashCommandInput = typeof ServerProviderSlashCommandInput.Type;
 
 export const ServerProviderSlashCommand = Schema.Struct({
+  disabledReason: Schema.optional(Schema.String),
   name: TrimmedNonEmptyString,
   description: Schema.optional(TrimmedNonEmptyString),
   input: Schema.optional(ServerProviderSlashCommandInput),
@@ -587,6 +589,7 @@ export const ServerDirectEndpoint = Schema.Struct({
 export type ServerDirectEndpoint = typeof ServerDirectEndpoint.Type;
 
 export const ServerConfig = Schema.Struct({
+  managedPolicy: Schema.optionalKey(Schema.NullOr(ManagedPolicy)),
   environment: ExecutionEnvironmentDescriptor,
   auth: ServerAuthDescriptor,
   cwd: TrimmedNonEmptyString,

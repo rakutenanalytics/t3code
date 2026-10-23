@@ -1,3 +1,4 @@
+import { enforceManagedCapability } from "@t3tools/shared/managedPolicyHttpClient";
 import * as NodeNet from "node:net";
 
 import {
@@ -200,7 +201,9 @@ export class ConnectReachability extends Context.Service<
 const make = Effect.gen(function* () {
   const runtime = yield* ManagedEndpointRuntime.CloudManagedEndpointRuntime;
   const secrets = yield* ServerSecretStore.ServerSecretStore;
-  const httpClient = yield* HttpClient.HttpClient;
+  const httpClient = yield* HttpClient.HttpClient.pipe(
+    Effect.map(enforceManagedCapability("t3Connect")),
+  );
   // `order` ranks checks by start, so a slow older one cannot replace a newer result.
   const latestRef = yield* Ref.make(
     Option.none<{ readonly order: number; readonly result: EnvironmentConnectReachability }>(),

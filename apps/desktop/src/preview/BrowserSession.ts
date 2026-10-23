@@ -31,9 +31,7 @@ export type BrowserSessionPartitionNamespace = "profile";
 // / Vercel error overlay — fail with `Failed to execute 'writeText' on
 // 'Clipboard': Write permission denied`.
 const ALLOWED_PREVIEW_PERMISSIONS: ReadonlySet<string> = new Set([
-  "clipboard-read",
   "clipboard-sanitized-write",
-  "geolocation",
   // `DesktopWindow` disables HTML fullscreen window resizing for the app window
   // and every preview guest, so a page that goes fullscreen fills its own
   // webview instead of taking over the whole T3 window.

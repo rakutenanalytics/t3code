@@ -1,3 +1,5 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { enforceManagedCapability } from "@t3tools/shared/managedPolicyHttpClient";
 // @effect-diagnostics-next-line nodeBuiltinImport:off -- Effect's Crypto has no createPublicKey.
 import * as NodeCrypto from "node:crypto";
 import {
@@ -236,6 +238,7 @@ export class CloudLinkEndpointUnavailableError extends Schema.TaggedError<CloudL
 }
 
 const INTERNAL_OPERATION_MESSAGES = {
+  "managed-policy": "Disabled by managed policy",
   "relay-url-unconfigured":
     "T3CODE_RELAY_URL must be configured as a secure absolute HTTPS origin.",
   "generate-link-proof": "Could not generate environment link proof.",
@@ -533,7 +536,9 @@ const make = Effect.gen(function* () {
   const reachability = yield* ConnectReachability.ConnectReachability;
   const environmentAuth = yield* EnvironmentAuth.EnvironmentAuth;
   const cliTokenManager = yield* CliTokenManager.CloudCliTokenManager;
-  const httpClient = yield* HttpClient.HttpClient;
+  const httpClient = yield* HttpClient.HttpClient.pipe(
+    Effect.map(enforceManagedCapability("t3Connect")),
+  );
   const httpServer = yield* HttpServer.HttpServer;
   const awarenessRelay = yield* AgentAwarenessRelay.AgentAwarenessRelay;
   const crypto = yield* Crypto.Crypto;
@@ -638,6 +643,8 @@ const make = Effect.gen(function* () {
 
   const linkProof = Effect.fn("environment.cloud.linkProof")(
     function* (request: RelayLinkProofRequest, httpRequest: HttpServerRequest.HttpServerRequest) {
+      if (!managedPolicy.allows("t3Connect"))
+        return yield* new CloudLinkInternalError({ operation: "managed-policy" });
       const requestUrl = requestAbsoluteUrl(httpRequest);
       if (requestUrl === null || hasForwardedAuthorityHeaders(httpRequest)) {
         return yield* new CloudLinkOriginInvalidError({ origin: "endpoint" });
@@ -718,6 +725,7 @@ const make = Effect.gen(function* () {
   const startManagedTunnelIfOriginConfirmed = Effect.fn(
     "environment.cloud.startManagedCloudTunnelIfOriginConfirmed",
   )(function* (localOrigin: string, options?: { readonly requireConfirmedOrigin?: boolean }) {
+    if (!managedPolicy.allows("t3Connect")) return false;
     const requireConfirmedOrigin = options?.requireConfirmedOrigin ?? true;
     const parsedOrigin = yield* Effect.try({
       try: () => parseManagedEndpointLocalOrigin(localOrigin),
@@ -767,6 +775,8 @@ const make = Effect.gen(function* () {
       readonly confirmedOrigin?: RelayManagedEndpointOrigin;
     },
   ) {
+    if (!managedPolicy.allows("t3Connect"))
+      return yield* new CloudLinkInternalError({ operation: "managed-policy" });
     const apply = Effect.gen(function* () {
       yield* validateRelayConfigPayload(payload);
       yield* validateLinkedCloudUser(payload.cloudUserId);
@@ -1237,6 +1247,7 @@ const make = Effect.gen(function* () {
   const releaseManagedTunnelOnShutdown = Effect.fn(
     "environment.cloud.releaseManagedTunnelOnShutdown",
   )(function* () {
+    if (!managedPolicy.allows("t3Connect")) return false;
     const runtimeConfig = yield* secrets.get(CLOUD_ENDPOINT_RUNTIME_CONFIG);
     if (Option.isNone(runtimeConfig)) {
       return false;
@@ -1448,6 +1459,8 @@ const make = Effect.gen(function* () {
 
   const updatePreferences = Effect.fn("environment.cloud.preferences")(
     function* (input: EnvironmentCloudPreferencesRequest) {
+      if (!managedPolicy.allows("t3Connect"))
+        return yield* new CloudLinkInternalError({ operation: "managed-policy" });
       yield* savePreferences(input);
       return yield* readCloudLinkState();
     },
@@ -1456,6 +1469,8 @@ const make = Effect.gen(function* () {
 
   const answerHealthRequest = Effect.fn("environment.cloud.health")(
     function* (request: RelayCloudEnvironmentHealthRequest) {
+      if (!managedPolicy.allows("t3Connect"))
+        return yield* new CloudLinkInternalError({ operation: "managed-policy" });
       const cloudMintPublicKey = yield* secrets
         .get(CLOUD_MINT_PUBLIC_KEY)
         .pipe(
@@ -1560,6 +1575,8 @@ const make = Effect.gen(function* () {
 
   const mintCredential = Effect.fn("environment.cloud.mintCredential")(
     function* (request: RelayCloudMintCredentialRequest) {
+      if (!managedPolicy.allows("t3Connect"))
+        return yield* new CloudLinkInternalError({ operation: "managed-policy" });
       const cloudMintPublicKey = yield* secrets
         .get(CLOUD_MINT_PUBLIC_KEY)
         .pipe(

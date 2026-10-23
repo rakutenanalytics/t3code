@@ -1,3 +1,5 @@
+import { allowsManagedCapability } from "@t3tools/contracts";
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import { formatFilePathForClipboard } from "@t3tools/client-runtime/media-actions";
 import { resolvePathLinkTarget } from "@t3tools/shared/fileLinks";
 import { ThreadFind, ThreadFindCanvas, type ThreadFindControls } from "./chat/ThreadFindProvider";
@@ -6375,6 +6377,15 @@ export default function ChatView(props: ChatViewProps) {
         ? parseCodexFeedbackCommand(trimmed)
         : null;
     if (feedbackCommand && multipleModelSelections === null) {
+      if (
+        !managedPolicy.allows("providerFeedback") ||
+        !allowsManagedCapability(serverConfig?.managedPolicy, "providerFeedback")
+      ) {
+        toastManager.add(
+          stackedThreadToast({ type: "warning", title: "Disabled by managed policy" }),
+        );
+        return;
+      }
       if (!isServerThread || activeThread.activeProviderThreadId === null) {
         toastManager.add(
           stackedThreadToast({

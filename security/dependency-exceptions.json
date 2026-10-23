@@ -1,0 +1,50 @@
+[
+  {
+    "package": "@pierre/theme@1.1.0",
+    "resolutionSha256": "8699a77a125b70e1a986b4adbdc592857d626b7a8d231d09bd5781623a6c3bd5",
+    "reason": "SAFE exact-tarball review against 1.0.3: static theme variants and JSON exports, no hooks, runtime dependencies or bins. Publisher was already a maintainer; repository moved within the same owner. Accept missing provenance for these inspected bytes only. Evidence: 08-package-review.md.",
+    "date": "2026-10-22"
+  },
+  {
+    "package": "@pierre/theme@2.0.0",
+    "resolutionSha256": "3f9a41227c95438fb3a5c732f0b921733f0a0e04138ea98bf67d45a2967ec06b",
+    "reason": "SAFE exact-tarball review against 1.1.0 and attested 1.0.3: license, notice and manifest changes only since 1.1.0; static runtime bytes unchanged, no hooks, dependencies or bins. Accept missing provenance for these inspected bytes only. Evidence: 08-package-review.md.",
+    "date": "2026-10-22"
+  },
+  {
+    "package": "chokidar@4.0.3",
+    "resolutionSha256": "ed786ae83d40d31a08c8389ee2efc7920267dbc75969d0b17d4bbc3205aac09d",
+    "reason": "SAFE exact-tarball review against 4.0.2 and attested 4.0.1: runtime unchanged since 4.0.2; earlier changes fix watcher events and FreeBSD support. Expected filesystem watching and polling-option environment reads; no install hooks or downloads. Publisher/repository unchanged. Accept missing provenance for these bytes only. Evidence: 08-package-review.md.",
+    "date": "2026-10-22"
+  },
+  {
+    "package": "electron-webauthn@1.3.1",
+    "resolutionSha256": "7db5e436d474ac5d7aa054c5b6f5ed1f08e643b0ba6ac4a08da8a0a27ab65e19",
+    "reason": "SAFE exact-tarball review against 1.3.0 and attested 0.0.2: only the version field changes since 1.3.0; runtime is a small optional macOS binding wrapper with no install hooks, bins or downloads. Publisher/repository unchanged. Accept missing provenance for this wrapper only, not its native dependency. Evidence: 08-package-review.md.",
+    "date": "2026-10-22"
+  },
+  {
+    "package": "semver@5.7.2",
+    "resolutionSha256": "409c1b8de026f7cfcee98724b0199ca4deb7bf6005b402070c0893da60cd99c2",
+    "reason": "SAFE exact-tarball review against 5.7.1 and earlier-published attested 7.5.4: regex ReDoS hardening, unchanged CLI and opt-in NODE_DEBUG logging, no runtime dependencies or install hooks. Publisher is a listed maintainer of the same repository. Accept missing provenance for these inspected v5 bytes only. Evidence: 08-package-review.md.",
+    "date": "2026-10-22"
+  },
+  {
+    "package": "semver@6.3.1",
+    "resolutionSha256": "bd9bbd45b08ee4845be69cedb3693708cf680c82be2d3801538107fbb8925a2a",
+    "reason": "SAFE exact-tarball review against 6.3.0, previous-published 5.7.2 and attested 7.5.4: regex ReDoS hardening, unchanged CLI and opt-in NODE_DEBUG logging, no runtime dependencies or install hooks. Publisher/repository agree with the previous published release. Accept missing provenance for these inspected v6 bytes only. Evidence: 08-package-review.md.",
+    "date": "2026-10-22"
+  },
+  {
+    "package": "ua-parser-js@0.7.41",
+    "resolutionSha256": "11bb9e74cb23b0ee2f9a32b2bbe7a8f210e5ebc2363bc4763da4c8ab2a2c6be8",
+    "reason": "SAFE exact-tarball review against 0.7.40 and earlier-published attested 2.0.4: parser matching updates, unchanged CLI, no dependencies or install hooks; minified browser AST matches readable source after equivalent property-key normalization. Publisher/repository unchanged. Accept missing provenance for these inspected legacy bytes only. Evidence: 08-package-review.md.",
+    "date": "2026-10-22"
+  },
+  {
+    "package": "uniwind@1.13.0",
+    "resolutionSha256": "dd87c52e82fa54223b2d3d692d401b95214a8f78d406662e99455d4804d06058",
+    "reason": "SAFE exact-tarball review against 1.12.2: CSS cascade/media and Metro tracking updates; unchanged dependencies, CLI, trusted publisher and repository. Existing CSS Function evaluation and local artifact I/O reviewed; no install hooks or downloads. Exact age exception permits this required locked release before 72 hours. Evidence: 08-package-review.md.",
+    "date": "2026-10-22"
+  }
+]

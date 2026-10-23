@@ -11,7 +11,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-const { version } = JSON.parse(
+const { version, t3codeManagedPolicy } = JSON.parse(
   fs.readFileSync(path.join(import.meta.dirname, "../package.json"), "utf8"),
 );
 
@@ -131,6 +131,13 @@ function publish(staging, dir) {
 }
 
 async function main() {
+  // The npm package can enter here through both direct CLI and legacy service paths.
+  // Denial also covers cached unmanaged executables, before any network or process launch.
+  if (!t3codeManagedPolicy?.allow?.includes("upstreamUpdate")) {
+    throw new Error(
+      "Upstream binary distribution is disabled by managed policy. Use t3safe update.",
+    );
+  }
   const key = `${process.platform}-${process.arch}`;
   if (!SUPPORTED.includes(key)) {
     throw new Error(

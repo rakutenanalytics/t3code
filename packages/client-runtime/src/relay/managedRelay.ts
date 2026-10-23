@@ -1,3 +1,4 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import {
   RelayAccessTokenType,
   RelayApi,
@@ -443,7 +444,7 @@ export const make = Effect.fn("ManagedRelayClient.make")(function* (
   options: ManagedRelayClientLayerOptions,
 ) {
   const relayUrl = normalizeSecureRelayUrl(options.relayUrl);
-  if (relayUrl === null) {
+  if (!managedPolicy.allows("t3Connect") || relayUrl === null) {
     return disabledManagedRelayClient(options.relayUrl);
   }
   const signer = yield* ManagedRelayDpopSigner;

@@ -1,3 +1,4 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import { useAtomValue } from "@effect/atom-react";
 import * as Effect from "effect/Effect";
 import { FetchHttpClient, HttpClient, HttpClientResponse } from "effect/http";
@@ -6,6 +7,7 @@ import { AsyncResult, Atom } from "effect/reactivity";
 export const npmReleasePublishedAtom = Atom.family((version: string) =>
   Atom.make(
     Effect.gen(function* () {
+      if (!managedPolicy.allows("providerMetadata")) return false;
       const response = yield* HttpClient.get(
         `https://registry.npmjs.org/t3/${encodeURIComponent(version)}`,
       );

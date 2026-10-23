@@ -1,0 +1,11 @@
+# Security-sensitive paths; listing an owner makes GitHub request their review.
+/.github/** @paulsenon-r
+/scripts/safe/** @paulsenon-r
+/scripts/lib/managed-policy.ts @paulsenon-r
+/scripts/lib/locked-stage-dependencies.ts @paulsenon-r
+/scripts/build-desktop-artifact.ts @paulsenon-r
+/security/** @paulsenon-r
+/install.sh @paulsenon-r
+/packages/*/src/managedPolicy*.ts @paulsenon-r
+/apps/**/managed* @paulsenon-r
+/.agents/skills/t3safe-sync/** @paulsenon-r

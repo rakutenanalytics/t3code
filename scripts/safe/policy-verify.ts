@@ -1,0 +1,36 @@
+import * as Schema from "effect/Schema";
+import { ManagedCapability } from "@t3tools/contracts";
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { loadBakedManagedPolicy } from "../lib/managed-policy.ts";
+import { bundlePolicyViolations, cliBundlePolicyViolations } from "./bundle-policy.ts";
+import { finishScan, jsonFile } from "./repository.ts";
+
+const policy = loadBakedManagedPolicy();
+if (policy === null) throw new Error("Safe artifacts require security/managed-policy.json");
+const inventory = jsonFile<{ deniedCapabilities: string[] }>("security/allowlist.json");
+const violations: string[] = [];
+const decodeCapability = Schema.decodeUnknownSync(ManagedCapability);
+for (const capability of inventory.deniedCapabilities) {
+  const knownCapability = decodeCapability(capability);
+  if (managedPolicy.allows(knownCapability))
+    violations.push(`${capability} is allowed but inventory says denied`);
+}
+if (JSON.stringify(managedPolicy.policy) !== JSON.stringify(policy))
+  violations.push("source policy differs from build policy");
+const bundleIndex = process.argv.indexOf("--bundle");
+if (bundleIndex !== -1) {
+  const bundle = process.argv[bundleIndex + 1];
+  if (!bundle) throw new Error("--bundle needs the extracted application directory");
+  violations.push(...bundlePolicyViolations(bundle));
+}
+const cliBundleIndex = process.argv.indexOf("--cli-bundle");
+if (cliBundleIndex !== -1) {
+  const bundle = process.argv[cliBundleIndex + 1];
+  if (!bundle) throw new Error("--cli-bundle needs the staged CLI source and client directory");
+  violations.push(...cliBundlePolicyViolations(bundle));
+}
+finishScan(
+  "policy",
+  violations,
+  `source and build policy agree; allowed: ${policy.allow.join(", ") || "none"}`,
+);

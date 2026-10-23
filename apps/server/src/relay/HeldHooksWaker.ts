@@ -1,3 +1,4 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Schedule from "effect/Schedule";
@@ -9,6 +10,7 @@ import * as ServerEnvironment from "../environment/ServerEnvironment.ts";
 import { makeRelayEnvironmentClient } from "./relayEnvironmentClient.ts";
 
 const wakeHeldHooks = Effect.fn("HeldHooksWaker.wake")(function* () {
+  if (!managedPolicy.allows("t3Connect")) return false;
   if (!(yield* readHoldWebhooksWhileOffline)) return false;
   const connection = yield* readRelayConnection;
   if (connection === null) return false;

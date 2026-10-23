@@ -1,3 +1,5 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { enforceManagedCapability } from "@t3tools/shared/managedPolicyHttpClient";
 import * as HostProcess from "@t3tools/shared/HostProcess";
 import {
   CLI_RELEASE_BASE_URL_ENV,
@@ -55,7 +57,12 @@ const RELEASE_INDEX_MAX_PAGES = 10;
 export const resolveNewestVersion = Effect.fn("cli.update.resolve_newest")(function* (
   channel: CliReleaseChannel,
 ) {
-  const httpClient = yield* HttpClient.HttpClient;
+  if (!managedPolicy.allows("upstreamUpdate")) {
+    return yield* new CliUpdateError({
+      reason: "Upstream updates are disabled by managed policy. Use `t3safe update`.",
+    });
+  }
+  const httpClient = enforceManagedCapability("upstreamUpdate")(yield* HttpClient.HttpClient);
   const environment = yield* HostProcess.Environment;
   const githubToken = environment.GH_TOKEN?.trim() || environment.GITHUB_TOKEN?.trim() || undefined;
   for (let page = 1; page <= RELEASE_INDEX_MAX_PAGES; page += 1) {
@@ -307,6 +314,11 @@ const runUpdate = Effect.fn("cli.update.run")(function* (input: {
   readonly allowDowngrade: boolean;
   readonly assumeYes: boolean;
 }) {
+  if (!managedPolicy.allows("upstreamUpdate")) {
+    return yield* new CliUpdateError({
+      reason: "Upstream updates are disabled by managed policy. Use `t3safe update`.",
+    });
+  }
   const fs = yield* FileSystem.FileSystem;
   const path = yield* Path.Path;
   const runner = yield* ProcessRunner.ProcessRunner;

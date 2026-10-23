@@ -24,12 +24,15 @@ import rootPackageJson from "../package.json" with { type: "json" };
 import serverPackageJson from "../apps/server/package.json" with { type: "json" };
 
 import {
-  createStagePatchedDependencies,
   createStageWorkspaceConfig,
   resolveFffNativeDependencies,
   STAGE_INSTALL_ARGS,
 } from "./build-desktop-artifact.ts";
 import { selectCliRuntimeExternalDependencies } from "./lib/cli-external-packages.ts";
+import {
+  createLockedStageFiles,
+  assertStagedDependencyVersions,
+} from "./lib/locked-stage-dependencies.ts";
 import { resolveCatalogDependencies } from "./lib/resolve-catalog.ts";
 
 const BuildPlatform = Schema.Literals(["mac", "linux", "win"]);
@@ -45,18 +48,6 @@ const WorkspaceConfig = Schema.Struct({
 });
 const decodeWorkspaceConfig = Schema.decodeEffect(fromYaml(WorkspaceConfig));
 const encodeJsonString = Schema.encodeEffect(Schema.fromJsonString(Schema.Unknown));
-const StageWorkspaceConfig = Schema.Struct({
-  supportedArchitectures: Schema.Struct({
-    os: Schema.Array(Schema.String),
-    cpu: Schema.Array(Schema.String),
-    libc: Schema.optional(Schema.Array(Schema.String)),
-  }),
-  allowBuilds: Schema.optional(Schema.Record(Schema.String, Schema.Boolean)),
-  patchedDependencies: Schema.optional(Schema.Record(Schema.String, Schema.String)),
-  overrides: Schema.optional(Schema.Record(Schema.String, Schema.String)),
-  nodeLinker: Schema.optional(Schema.Literals(["hoisted"])),
-});
-const encodeStageWorkspaceConfig = Schema.encodeEffect(fromYaml(StageWorkspaceConfig));
 
 const RepoRoot = Effect.service(Path.Path).pipe(
   Effect.flatMap((path) => path.fromFileUrl(new URL("..", import.meta.url))),
@@ -160,10 +151,6 @@ const stageRuntimeExternals = Effect.fn("stageRuntimeExternals")(function* (inpu
     ...selectCliRuntimeExternalDependencies(serverDependencies),
     ...resolveFffNativeDependencies(input.platform, input.arch, fffNodeVersion),
   };
-  const patchedDependencies = createStagePatchedDependencies(
-    workspace.patchedDependencies ?? {},
-    dependencies,
-  );
 
   yield* fs.writeFileString(
     path.join(input.stageDir, "package.json"),
@@ -175,20 +162,29 @@ const stageRuntimeExternals = Effect.fn("stageRuntimeExternals")(function* (inpu
       dependencies,
     })}\n`,
   );
-  yield* fs.writeFileString(
-    path.join(input.stageDir, "pnpm-workspace.yaml"),
-    yield* encodeStageWorkspaceConfig({
-      ...createStageWorkspaceConfig({
-        platform: input.platform,
-        arch: input.arch,
-        ...(workspace.allowBuilds ? { allowBuilds: workspace.allowBuilds } : {}),
-        patchedDependencies,
-        overrides: resolveCatalogDependencies(workspace.overrides ?? {}, catalog, "apps/server"),
-      }),
+  const reviewedLockfile = yield* fs.readFileString(path.join(input.repoRoot, "pnpm-lock.yaml"));
+  const reviewedWorkspace = yield* fs.readFileString(
+    path.join(input.repoRoot, "pnpm-workspace.yaml"),
+  );
+  const architectureConfig = createStageWorkspaceConfig({
+    platform: input.platform,
+    arch: input.arch,
+  });
+  const lockedFiles = yield* Effect.try(() =>
+    createLockedStageFiles({
+      lockfile: reviewedLockfile,
+      workspace: reviewedWorkspace,
+      dependencies,
+      supportedArchitectures: architectureConfig.supportedArchitectures,
       nodeLinker: "hoisted",
     }),
   );
-  if (Object.keys(patchedDependencies).length > 0) {
+  yield* fs.writeFileString(path.join(input.stageDir, "pnpm-lock.yaml"), lockedFiles.lockfile);
+  yield* fs.writeFileString(
+    path.join(input.stageDir, "pnpm-workspace.yaml"),
+    lockedFiles.workspace,
+  );
+  if (Object.keys(workspace.patchedDependencies ?? {}).length > 0) {
     yield* fs.copy(path.join(input.repoRoot, "patches"), path.join(input.stageDir, "patches"));
   }
 
@@ -200,8 +196,10 @@ const stageRuntimeExternals = Effect.fn("stageRuntimeExternals")(function* (inpu
       stdout: "inherit",
       stderr: "inherit",
     }),
-    "vp install --prod (cli archive runtime externals)",
+    "vp install --prod --frozen-lockfile (cli archive runtime externals)",
   );
+
+  yield* Effect.try(() => assertStagedDependencyVersions(input.stageDir, reviewedLockfile));
 
   const platformKey = cliArchivePlatformKey(input.platform, input.arch);
   const prebuildsDir = path.join(input.stageDir, "node_modules/node-pty/prebuilds");

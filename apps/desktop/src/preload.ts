@@ -1,3 +1,4 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import type {
   DesktopBridge,
   DesktopPreviewOpenLinkEvent,
@@ -30,7 +31,9 @@ function isSnapShotEvent(value: unknown): value is DesktopSnapShotEvent {
   );
 }
 
-exposeClerkBridge({ passkeys: true });
+if (managedPolicy.allows("t3Connect")) {
+  exposeClerkBridge({ passkeys: true });
+}
 
 // Runs before any app script reads localStorage. See DesktopLegacyLocalStorage.
 try {

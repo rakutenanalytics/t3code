@@ -1,3 +1,4 @@
+import { managedPolicy } from "./managedPolicy.ts";
 import { isPublicFaviconHost } from "./hostClassification.ts";
 
 function faviconUrlForPage(rawUrl: string | null | undefined, _size = 32): string | null {
@@ -56,6 +57,7 @@ export function toolActivityFaviconUrl(
   appearance: "light" | "dark",
   size = 32,
 ): string | null {
+  if (!managedPolicy.allows("remoteContent")) return null;
   if (appearance === "dark") {
     return (
       explicitFaviconUrl(icon.faviconUrlDark) ??
@@ -72,6 +74,7 @@ export function toolActivityFaviconUrl(
 }
 
 export function faviconUrlForOrigin(rawUrl: string | null | undefined, size = 32): string | null {
+  if (!managedPolicy.allows("remoteContent")) return null;
   if (!rawUrl) return null;
   try {
     const url = new URL(rawUrl);
