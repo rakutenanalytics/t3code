@@ -1,5 +1,5 @@
 {
-  "justification": "Only T3-owned domains and the explicit telemetryDomains denylist fail. Telemetry literals under the directory prefixes in providerSdkPaths are provider-owned and trusted; T3-owned hosts never gain this exemption. Other hosts are trusted by default; seenHosts is informational. Ledger keys bind host + artifact-relative filePattern with normalized 8-character chunk suffix + SHA-256 of the literal plus 80 characters on each side. For normalized encoded hosts the literal spans the full URL. The same chunk normalization applies to context. Adjacent changes require renewed review. Acceptance requires a source review note and packaged policy verification. DMG paths and stable CLI bin.mjs/client paths have separate entries, accepted from real CI extraction on 2026-10-23.",
+  "justification": "Only T3-owned domains and the explicit telemetryDomains denylist fail. Telemetry literals under the directory prefixes in providerSdkPaths are provider-owned and trusted; T3-owned hosts never gain this exemption. Other hosts are trusted by default; seenHosts is informational. Ledger keys bind host + artifact-relative filePattern with normalized 8-character chunk suffix + SHA-256 of the literal plus 80 characters on each side. For normalized encoded hosts the literal spans the full URL. The same chunk normalization applies to context, and embedded build versions (N.N.N-safe.N) normalize to 0.0.0-safe.* so releases need no ledger edits. Adjacent changes require renewed review. Acceptance requires a source review note and packaged policy verification. DMG paths and stable CLI bin.mjs/client paths have separate entries, accepted from real CI extraction on 2026-10-23.",
   "seenHosts": [
     {
       "host": ".",
@@ -1261,10 +1261,10 @@
     },
     {
       "host": "t3.codes",
-      "file": "apps/server/dist/client/assets/runtime-DQGidlD3.js",
+      "file": "apps/server/dist/client/assets/runtime-C964WQsj.js",
       "filePattern": "apps/server/dist/client/assets/runtime-*.js",
-      "contextSha256": "a1bac5cb7fe1fe7e6c1be9dafd92a879c8cb9e7792e70b2f7fa6c2ae77d0d26f",
-      "note": "11-gated-literals.md S6: privacy/download anchor; user-initiated navigation only, no automatic request; accepted by maintainer 2026-10-23 (not egress)"
+      "contextSha256": "fdba597b95a8ad7535a4926dc63338842f3adc2586b7a3e8e78fb3c069cfbebb",
+      "note": "11-gated-literals.md S6: privacy/download anchor; user-initiated navigation only, no automatic request; accepted by maintainer 2026-10-23 (not egress); context fingerprint normalizes the embedded build version (0.0.0-safe.*), verified identical for 0.1.0-safe.0 and 0.1.0-safe.1 (20-ledger-normalize.md)"
     },
     {
       "host": "t3.codes",
@@ -1387,13 +1387,6 @@
     },
     {
       "host": "t3.codes",
-      "file": "client/assets/runtime-DQGidlD3.js",
-      "filePattern": "client/assets/runtime-*.js",
-      "contextSha256": "a1bac5cb7fe1fe7e6c1be9dafd92a879c8cb9e7792e70b2f7fa6c2ae77d0d26f",
-      "note": "11-gated-literals.md S6: privacy/download anchor; user-initiated navigation only, no automatic request; accepted by maintainer 2026-10-23 (not egress)"
-    },
-    {
-      "host": "t3.codes",
       "file": "client/assets/utils-CFCu5C4p.js",
       "filePattern": "client/assets/utils-*.js",
       "contextSha256": "a2fefc1ed7e3fabe2a7e91f95b2c8df60bc2e03237d755854972570495d2f8ac",
@@ -1436,17 +1429,10 @@
     },
     {
       "host": "t3.codes",
-      "file": "apps/server/dist/client/assets/runtime-C964WQsj.js",
-      "filePattern": "apps/server/dist/client/assets/runtime-*.js",
-      "contextSha256": "83261d30305cc5c841b95aad269fe5b6039206b77055d45021c5a95f187134da",
-      "note": "11-gated-literals.md S6: privacy/download anchor; user-initiated navigation only, no automatic request; accepted by maintainer 2026-10-23 (not egress); 19-release-ledger.md: context differs from the 0.1.0-safe.0 entry only by the embedded version literal 0.1.0-safe.1, release run 39910806296"
-    },
-    {
-      "host": "t3.codes",
-      "file": "client/assets/runtime-C964WQsj.js",
+      "file": "client/assets/runtime-DQGidlD3.js",
       "filePattern": "client/assets/runtime-*.js",
-      "contextSha256": "83261d30305cc5c841b95aad269fe5b6039206b77055d45021c5a95f187134da",
-      "note": "CLI mirror of apps/server/dist/client/assets/runtime-*.js entry: same chunk, same S6 download anchor; context differs from the 0.1.0-safe.0 entry only by the embedded version literal 0.1.0-safe.1 (not egress)"
+      "contextSha256": "fdba597b95a8ad7535a4926dc63338842f3adc2586b7a3e8e78fb3c069cfbebb",
+      "note": "CLI mirror of apps/server/dist/client/assets/runtime-*.js entry: same chunk, same S6 download anchor; version-normalized fingerprint (0.0.0-safe.*) identical for 0.1.0-safe.0 and 0.1.0-safe.1 (not egress)"
     }
   ]
 }

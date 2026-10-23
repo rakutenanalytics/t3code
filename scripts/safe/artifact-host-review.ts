@@ -52,8 +52,8 @@ export function collectArtifactHosts(
           Math.max(0, match.index - 80),
           match.index + match[0].length + 80,
         );
-        const contextSha256 = digest(normalizeChunkNames(context));
-        const filePattern = normalizeChunkNames(file);
+        const contextSha256 = digest(normalizeVolatileNames(context));
+        const filePattern = normalizeVolatileNames(file);
         const literal = { file, filePattern, contextSha256 };
         literals.set(`${file}:${contextSha256}`, literal);
       }
@@ -227,9 +227,12 @@ function isProviderSdkPath(file: string, prefixes: string[]) {
   return prefixes.some((prefix) => `/${file}`.includes(`/${prefix}`));
 }
 
-function normalizeChunkNames(value: string) {
-  // Bundlers change chunk suffixes after unrelated edits. Keep call-site context in the fingerprint.
-  return value.replace(/[-.][A-Za-z0-9_-]{8}(?=\.[cm]?js\b)/g, "-*");
+function normalizeVolatileNames(value: string) {
+  // Bundlers change chunk suffixes after unrelated edits, and each release embeds its own build
+  // version next to literals. Neither may invalidate a ledger entry; call-site context stays hashed.
+  return value
+    .replace(/[-.][A-Za-z0-9_-]{8}(?=\.[cm]?js\b)/g, "-*")
+    .replace(/\d+\.\d+\.\d+-safe\.\d+/g, "0.0.0-safe.*");
 }
 
 function matchesDomain(host: string, domains: string[]) {
