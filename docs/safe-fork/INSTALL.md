@@ -2,9 +2,25 @@
 
 Requires macOS on Apple Silicon. Releases and downloads are public; no GitHub login, Node, or compiler required.
 
-## Install with curl
+## Install the app (DMG)
 
-Select a reviewed tag from [Releases](https://github.com/rakutenanalytics/t3code/releases), then download its installer and checksums into an empty directory:
+1. Download the `*-darwin-arm64.dmg` and `SHA256SUMS` from [Releases](https://github.com/rakutenanalytics/t3code/releases).
+2. Verify: compare `shasum -a 256 <downloaded.dmg>` with its line in `SHA256SUMS`.
+3. Open the DMG and drag `T3 Code Safe.app` anywhere (for example `/Applications` or `~/Applications`).
+4. The build is unsigned. Remove quarantine, adjusting the path to where you put it:
+
+   ```sh
+   xattr -dr com.apple.quarantine "/Applications/T3 Code Safe.app"
+   ```
+
+5. Open the app. If macOS still blocks it, use System Settings → Privacy & Security → Open Anyway. Device policy may prohibit unsigned apps.
+6. Optional terminal command: in the app, open Settings and press **Install** on the CLI command row. It creates `t3safe` only (never `t3`), using the installed app.
+
+The app installs next to the official T3 Code without replacing it, and keeps its data in `~/.t3-safe`.
+
+## Optional: install with curl
+
+Use this for a CLI-only install or scripted setup. Select a reviewed tag from [Releases](https://github.com/rakutenanalytics/t3code/releases), then download its installer and checksums into an empty directory:
 
 ```sh
 tag=vX.Y.Z-safe.N # replace with the reviewed release tag
@@ -19,11 +35,7 @@ The installer verifies each asset before extraction, copies `T3 Code Safe.app` t
 
 Add `--cli-only` or `--app-only` to select one component. Inspect the plan with `--dry-run`. `--prefix /path` installs command files and the app below that directory; relative prefixes are normalized. Repeating an install is supported. Installing a lower version requires explicit `--allow-downgrade`, even with `--version`.
 
-## Install from a DMG
-
-Download the `*-darwin-arm64.dmg` and `SHA256SUMS` from [Releases](https://github.com/rakutenanalytics/t3code/releases). Compare `shasum -a 256 <downloaded.dmg>` with its entry before opening it. Drag `T3 Code Safe.app` to Applications; it installs next to the official app without replacing it. A manual DMG install does not install the `t3safe` management command; use the curl installer for it. The Settings "install CLI command" button creates a `t3safe` launcher for the installed app, using the patched build without a download. It never creates `t3`.
-
-These builds have no Apple Developer ID or notarization. Browser downloads can have quarantine metadata. For this reviewed app, remove it with `xattr -dr com.apple.quarantine "/Applications/T3 Code Safe.app"`, adjusting the path to the actual install location. If macOS still blocks launch, use System Settings → Privacy & Security → Open Anyway when available. Device policy may prohibit an unsigned app. Curl normally does not set download quarantine, and the installer clears it explicitly; launch on every managed Mac is not guaranteed.
+The `t3safe doctor` and `t3safe update` commands come from this installer; a DMG-only install has the Settings launcher without them.
 
 ## Coexists with official T3
 
