@@ -1433,6 +1433,20 @@
       "filePattern": "client/assets/main-*.js",
       "contextSha256": "c84c86fcad32a2d6dcf5f7b6e54cc2871401fd923ccfbe3ac450e44c1b7d1441",
       "note": "11-gated-literals.md S3/S5 unchanged: same two app.t3.codes call sites as main-DMwFN5Y_.js (auth return origin; prompt link fallback), user-initiated navigation only, no automatic request; context differs only by minifier identifier renames (gf->hf, rH->aH) after the isolated-identity change (not egress)"
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/server/dist/client/assets/runtime-C964WQsj.js",
+      "filePattern": "apps/server/dist/client/assets/runtime-*.js",
+      "contextSha256": "83261d30305cc5c841b95aad269fe5b6039206b77055d45021c5a95f187134da",
+      "note": "11-gated-literals.md S6: privacy/download anchor; user-initiated navigation only, no automatic request; accepted by maintainer 2026-10-23 (not egress); 19-release-ledger.md: context differs from the 0.1.0-safe.0 entry only by the embedded version literal 0.1.0-safe.1, release run 39910806296"
+    },
+    {
+      "host": "t3.codes",
+      "file": "client/assets/runtime-C964WQsj.js",
+      "filePattern": "client/assets/runtime-*.js",
+      "contextSha256": "83261d30305cc5c841b95aad269fe5b6039206b77055d45021c5a95f187134da",
+      "note": "CLI mirror of apps/server/dist/client/assets/runtime-*.js entry: same chunk, same S6 download anchor; context differs from the 0.1.0-safe.0 entry only by the embedded version literal 0.1.0-safe.1 (not egress)"
     }
   ]
 }
