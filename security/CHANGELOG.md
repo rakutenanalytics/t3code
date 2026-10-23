@@ -50,3 +50,7 @@ Each change to a security file requires a new entry naming that exact path and t
 - baseline-update: security/network-baseline.json — Refreshes the scripts/build-npm-launcher.test.ts fingerprint after a test-only change comparing the resolved launcher path on macOS; no host or network behavior change.
 - baseline-update: security/app-identity.json — New reviewed source for the safe build's app name, bundle id, data directory (~/.t3-safe), home variable (T3SAFE_HOME), URL scheme (t3safe), CLI command (t3safe) and first port (3873); isolates it from official T3 state, ports and commands. No host or capability added.
 - baseline-update: security/network-baseline.json — Refreshes fingerprints of files that now read names, paths and ports from appIdentity (desktop, server CLI, service, SSH/WSL scripts, installer, shared URL-scheme helpers), the t3safe wrapper, build scripts and the new identity tests; no new host, URL or network statement.
+
+## 2026-10-23 — isolated identity client chunk
+
+- baseline-update: security/artifact-hosts.json — Gates the two existing app.t3.codes call sites (auth return origin, prompt link fallback) in the renamed client chunk main-*.js for the DMG and CLI bundles. Contexts are unchanged apart from minifier identifier renames (gf→hf, rH→aH) caused by the isolated-identity change; user-initiated navigation only, no new host, URL or request.
