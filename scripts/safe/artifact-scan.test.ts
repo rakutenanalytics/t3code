@@ -15,6 +15,84 @@ import { jsonFile, root } from "./repository.ts";
 const { telemetryDomains } = jsonFile<ArtifactHostBaseline>("security/artifact-hosts.json");
 
 describe("artifact host review", () => {
+  it("trusts telemetry hosts only under listed provider SDK path prefixes", () => {
+    const fixture = createScannerFixture();
+    const paths = [
+      "node_modules/@cursor/sdk/dist/index.js",
+      "release/node_modules/@statsig/client-core/index.js",
+      "node_modules/@cursor/sdk-other/index.js",
+      "node_modules/new-package/index.js",
+      "apps/telemetry.js",
+    ];
+    for (const file of paths) fixture.write(file, 'fetch("https://statsigapi.net")');
+    fixture.write("node_modules/@cursor/sdk/dist/t3.js", '"https://app.t3.codes"');
+
+    try {
+      const scan = fixture.scan();
+
+      expect(scan.status).toBe(1);
+      expect(fixture.report().unapprovedForbiddenLiterals).toMatchObject([
+        { host: "app.t3.codes", file: "node_modules/@cursor/sdk/dist/t3.js" },
+        { host: "statsigapi.net", file: "apps/telemetry.js" },
+        { host: "statsigapi.net", file: "node_modules/@cursor/sdk-other/index.js" },
+        { host: "statsigapi.net", file: "node_modules/new-package/index.js" },
+      ]);
+      expect(fixture.report().unapprovedForbiddenLiterals).toHaveLength(4);
+    } finally {
+      fixture.cleanup();
+    }
+  });
+
+  it("accepts reviewed T3 literals while rejecting new hosts and changed contexts", () => {
+    const fixture = createScannerFixture();
+    fixture.write("main.js", 'const origin = "https://app.t3.codes";');
+
+    try {
+      const acceptance = fixture.scan("--accept-gated-literals", "--note", "Reviewed navigation");
+
+      expect(acceptance.status, acceptance.stderr).toBe(0);
+      expect(fixture.scan().status).toBe(0);
+      expect(fixture.report().unapprovedForbiddenLiterals).toEqual([]);
+
+      fixture.write("main.js", 'fetch("https://app.t3.codes");');
+      fixture.write("new.js", '"https://new.t3.codes"');
+
+      expect(fixture.scan().status).toBe(1);
+      expect(fixture.report().unapprovedForbiddenLiterals).toMatchObject([
+        { host: "app.t3.codes", file: "main.js" },
+        { host: "new.t3.codes", file: "new.js" },
+      ]);
+    } finally {
+      fixture.cleanup();
+    }
+  });
+
+  it("preserves literal approvals when only eight-character chunk suffixes change", () => {
+    const fixture = createScannerFixture();
+    fixture.write(
+      "main-abcdefgh.js",
+      'import "./runtime-12345678.js"; const origin = "https://app.t3.codes";',
+    );
+
+    try {
+      expect(fixture.scan("--accept-gated-literals", "--note", "Reviewed navigation").status).toBe(
+        0,
+      );
+      NodeFS.unlinkSync(NodePath.join(fixture.bundle, "main-abcdefgh.js"));
+      fixture.write(
+        "main-87654321.js",
+        'import "./runtime-aB_cD-12.js"; const origin = "https://app.t3.codes";',
+      );
+
+      const rebuilt = fixture.scan();
+
+      expect(rebuilt.status, rebuilt.stderr).toBe(0);
+      expect(fixture.report().unapprovedForbiddenLiterals).toEqual([]);
+    } finally {
+      fixture.cleanup();
+    }
+  });
+
   it("should group multiple URLs and literal hosts into one categorized host with a sample file", () => {
     const files = [
       {
@@ -192,3 +270,54 @@ describe("artifact host review", () => {
     }
   });
 });
+
+function createScannerFixture() {
+  const work = NodeFS.mkdtempSync(NodePath.join(NodeOS.tmpdir(), "artifact-ledger-"));
+  const bundle = NodePath.join(work, "bundle");
+  const baseline = NodePath.join(work, "baseline.json");
+  const report = NodePath.join(work, "report.json");
+  NodeFS.writeFileSync(
+    baseline,
+    JSON.stringify({
+      justification: "Test fixture",
+      seenHosts: [],
+      telemetryDomains,
+      providerSdkPaths: ["node_modules/@cursor/sdk/", "node_modules/@statsig/"],
+      gatedLiterals: [],
+    }),
+  );
+  const write = (file: string, text: string) => {
+    const destination = NodePath.join(bundle, file);
+    NodeFS.mkdirSync(NodePath.dirname(destination), { recursive: true });
+    NodeFS.writeFileSync(destination, text);
+  };
+  const policy = 'const policy = {allow:["remoteAccess.network"]};';
+  write("apps/desktop/dist-electron/main.cjs", policy);
+  write("apps/desktop/dist-electron/preload.cjs", policy);
+  write("apps/server/dist/bin.mjs", policy);
+  write("apps/server/dist/client/assets/runtime.js", policy);
+
+  return {
+    bundle,
+    write,
+    scan: (...args: string[]) =>
+      NodeChildProcess.spawnSync(
+        process.execPath,
+        [
+          "scripts/safe/artifact-scan.ts",
+          bundle,
+          "--baseline",
+          baseline,
+          "--report",
+          report,
+          ...args,
+        ],
+        { cwd: root, encoding: "utf8" },
+      ),
+    report: () =>
+      JSON.parse(NodeFS.readFileSync(report, "utf8")) as {
+        unapprovedForbiddenLiterals: { host: string; file: string }[];
+      },
+    cleanup: () => NodeFS.rmSync(work, { recursive: true, force: true }),
+  };
+}

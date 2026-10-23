@@ -56,6 +56,31 @@ export function textFiles(directory: string) {
     .sort();
 }
 
+export function cliBundlePolicyViolations(bundleRoot: string) {
+  const expected = jsonFile<{ allow: string[] }>("security/managed-policy.json");
+  const violations: string[] = [];
+  const source = NodePath.join(bundleRoot, "bin.mjs");
+  if (!NodeFS.existsSync(source)) {
+    violations.push("bundle missing: bin.mjs");
+  } else if (!containsBakedPolicy(NodeFS.readFileSync(source, "utf8"), expected.allow)) {
+    violations.push("CLI source: reviewed policy literal is missing");
+  }
+  const clientFiles = textFiles(NodePath.join(bundleRoot, "client"));
+  if (
+    !clientFiles.some((file) =>
+      containsBakedPolicy(NodeFS.readFileSync(file, "utf8"), expected.allow),
+    )
+  ) {
+    violations.push("web client: reviewed policy literal is missing");
+  }
+  for (const file of textFiles(bundleRoot)) {
+    if (NodeFS.readFileSync(file, "utf8").includes("__T3CODE_MANAGED_POLICY__")) {
+      violations.push(`${NodePath.relative(bundleRoot, file)}: unexpanded policy build constant`);
+    }
+  }
+  return violations;
+}
+
 function containsBakedPolicy(text: string, allow: string[]) {
   for (const match of text.matchAll(/\{\s*(?:allow|"allow"|'allow')\s*:\s*(\[[^\]]*\])/g)) {
     try {

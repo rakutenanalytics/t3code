@@ -2,6 +2,11 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-10-23 — provider SDK trust and accepted CI literals
+
+- baseline-update: security/artifact-hosts.json — Trusts telemetry only in listed disk-backed Cursor/Statsig SDK directories. Accepts 25 DMG and 15 stable CLI source/client T3 contexts from real CI extraction, traced to S2-S8 in 11-gated-literals.md. Navigation is explicitly maintainer-accepted as user-initiated, with no automatic request. CLI source recovered without execution matches the original CI report SHA-256; its staged policy is verified. New hosts and changed contexts still fail. No runtime capability change.
+- baseline-update: security/network-baseline.json — Refreshes scanner, CLI policy verification, approved regression fixtures and stable CLI staging workflow fingerprints. Dependency inputs are unchanged.
+
 ## 2026-10-23 — tiered artifact trust
 
 - baseline-update: security/artifact-hosts.json — Replaces blocking unknown-host approvals with informational seenHosts and an explicit small telemetry denylist. All other destinations remain trusted by default. Ledger fingerprints now bind host, normalized artifact filename and local literal context, rather than whole hashed chunks. Real CI DMG/CLI review is recorded in 11-gated-literals.md outside the repository; reachable T3 links remain unapproved.

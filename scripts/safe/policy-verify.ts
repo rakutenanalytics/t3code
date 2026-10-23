@@ -2,7 +2,7 @@ import * as Schema from "effect/Schema";
 import { ManagedCapability } from "@t3tools/contracts";
 import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import { loadBakedManagedPolicy } from "../lib/managed-policy.ts";
-import { bundlePolicyViolations } from "./bundle-policy.ts";
+import { bundlePolicyViolations, cliBundlePolicyViolations } from "./bundle-policy.ts";
 import { finishScan, jsonFile } from "./repository.ts";
 
 const policy = loadBakedManagedPolicy();
@@ -22,6 +22,12 @@ if (bundleIndex !== -1) {
   const bundle = process.argv[bundleIndex + 1];
   if (!bundle) throw new Error("--bundle needs the extracted application directory");
   violations.push(...bundlePolicyViolations(bundle));
+}
+const cliBundleIndex = process.argv.indexOf("--cli-bundle");
+if (cliBundleIndex !== -1) {
+  const bundle = process.argv[cliBundleIndex + 1];
+  if (!bundle) throw new Error("--cli-bundle needs the staged CLI source and client directory");
+  violations.push(...cliBundlePolicyViolations(bundle));
 }
 finishScan(
   "policy",

@@ -3,7 +3,7 @@ import * as NodeFS from "node:fs";
 import * as NodeOS from "node:os";
 import * as NodePath from "node:path";
 import { afterEach, describe, expect, it } from "vite-plus/test";
-import { bundlePolicyViolations } from "./bundle-policy.ts";
+import { bundlePolicyViolations, cliBundlePolicyViolations } from "./bundle-policy.ts";
 
 const directories: string[] = [];
 afterEach(() => {
@@ -29,6 +29,31 @@ function createBundleFixture(files: Record<string, string>) {
 }
 
 describe("packaged managed policy", () => {
+  it("accepts the reviewed policy in staged CLI source and client assets", () => {
+    const bundle = createBundleFixture({
+      "bin.mjs": 'const policy={allow:["remoteAccess.network"]};',
+      "client/assets/runtime.js": 'const policy={allow:["remoteAccess.network"]};',
+    });
+
+    const violations = cliBundlePolicyViolations(bundle);
+
+    expect(violations).toEqual([]);
+  });
+
+  it("rejects staged CLI source with a missing policy or unexpanded constant", () => {
+    const bundle = createBundleFixture({
+      "bin.mjs": "const policy=__T3CODE_MANAGED_POLICY__;",
+      "client/assets/runtime.js": 'const policy={allow:["remoteAccess.network"]};',
+    });
+
+    const violations = cliBundlePolicyViolations(bundle);
+
+    expect(violations).toEqual([
+      "CLI source: reviewed policy literal is missing",
+      "bin.mjs: unexpanded policy build constant",
+    ]);
+  });
+
   it("should accept the reviewed policy in a server chunk and a web chunk using backtick strings", () => {
     const bundle = createBundleFixture({
       "apps/server/dist/managedPolicy.mjs":

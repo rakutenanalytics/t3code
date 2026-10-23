@@ -41,7 +41,7 @@
       "5ffd5d8c545cfaf50ca0f508f856c08cfde969e6ba12caa5df689a4f931ac2b5": 1
     },
     ".github/workflows/safe-build.yml": {
-      "a7d4c5b4922685f0aac976ea4f999d29083710b1a2fb42dde3811a16c7e8d486": 1
+      "86e53118f667da42d9e7cfcad8b15b6646fd11fe329c45a39d964fd22e323e63": 1
     },
     ".github/workflows/upstream-watch.yml": {
       "b8f09d94311798ae73abcf6446f4282f474f1f260087726ddce4ae68d05c87b6": 1
@@ -7133,13 +7133,13 @@
       "bcf06f604f7ae76d6cfac2c2e2eddab1b21fe42eb7606b601b69df90a57adf9c": 1
     },
     "scripts/safe/artifact-host-review.ts": {
-      "bbd5fa938f7d5bb1182648cb5c7b8369049511042ccf65802ff11bdf41cbec26": 1
+      "a0365f4314adb0c56d38e19f491a2346a55f03b4062869f589d01f94790b99a2": 1
     },
     "scripts/safe/artifact-scan.test.ts": {
-      "2917366285890e6d668924e71880baf388cfc44a2e00a0ead89088c6bdee4c21": 1
+      "e2d3d1de3627f36fa38f05d0f345b237c70b58b2300e22a3d1c54c3eb323ada5": 1
     },
     "scripts/safe/artifact-scan.ts": {
-      "597901adf05fcb5f58020d42489154a4bbcc5b16478490f9f6222ecd62173745": 1
+      "5ffcd54a5fe7bda86cc093bd9d24adcf3294ca406904873fd1785b4ca12740e5": 1
     },
     "scripts/safe/dependency-lockfile.ts": {
       "95e1b7cde70519e3075aefe71ac6f7777afd7cc50f11303efceeadf6f223119f": 1
@@ -9311,8 +9311,11 @@
       "ingest.t3.codes",
       "main.js",
       "new.customer-service.net",
+      "new.js",
+      "new.t3.codes",
       "relay.t3.codes",
       "reviewed.example.com",
+      "statsigapi.net",
       "t3.codes",
       "us.i.posthog.com",
       "vendor.js",
@@ -13634,8 +13637,10 @@
       "https://docs.statsig.com",
       "https://ingest.t3.codes",
       "https://new.customer-service.net",
+      "https://new.t3.codes",
       "https://relay.t3.codes",
       "https://reviewed.example.com",
+      "https://statsigapi.net",
       "https://t3.codes",
       "https://us.i.posthog.com",
       "https://www.w3.org/2000/svg",

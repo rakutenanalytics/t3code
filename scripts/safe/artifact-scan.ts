@@ -15,7 +15,7 @@ const args = process.argv.slice(2);
 const directory = args[0];
 if (!directory || directory.startsWith("--"))
   throw new Error(
-    "Usage: node scripts/safe/artifact-scan.ts <extracted-bundle-or-dist> [--write-baseline | --accept-gated-literals --note <review>] [--report <json-path>]",
+    "Usage: node scripts/safe/artifact-scan.ts <extracted-bundle-or-dist> [--write-baseline | --accept-gated-literals --note <review>] [--bundle-type desktop|cli] [--baseline <json-path>] [--report <json-path>]",
   );
 if (!NodeFS.existsSync(directory)) throw new Error(`Artifact directory is missing: ${directory}`);
 const acceptGatedLiterals = args.includes("--accept-gated-literals");
@@ -25,7 +25,9 @@ if (modes.length > 1) throw new Error("Baseline-writing modes are mutually exclu
 const note = argumentValue("--note");
 if (acceptGatedLiterals && !note?.trim())
   throw new Error("--accept-gated-literals requires --note with the policy-gating review evidence");
-const baselinePath = "security/artifact-hosts.json";
+const bundleType = argumentValue("--bundle-type") ?? "desktop";
+if (bundleType !== "desktop" && bundleType !== "cli") throw new Error("Unknown bundle type");
+const baselinePath = argumentValue("--baseline") ?? "security/artifact-hosts.json";
 const baseline = jsonFile<ArtifactHostBaseline>(baselinePath);
 const hosts = collectArtifactHosts(
   artifactTextFiles(NodePath.resolve(directory)),
@@ -36,13 +38,14 @@ const review = reviewArtifactHosts(
   baseline.seenHosts,
   baseline.gatedLiterals,
   baseline.telemetryDomains,
+  baseline.providerSdkPaths,
 );
 
 if (acceptGatedLiterals) {
   // Literal fingerprints do not prove reachability. Require the packaged policy check as well as review.
   runDesktopSmokeCommand(process.execPath, [
     "scripts/safe/policy-verify.ts",
-    "--bundle",
+    bundleType === "cli" ? "--cli-bundle" : "--bundle",
     NodePath.resolve(directory),
   ]);
   const accepted = review.unapprovedForbiddenLiterals.map((literal) => ({

@@ -78,11 +78,21 @@ export function reviewArtifactHosts(
   baseline: ReviewedArtifactHost[],
   gatedLiterals: GatedArtifactLiteral[] = [],
   telemetryDomains: string[] = [],
+  providerSdkPaths: string[] = [],
 ) {
   const reviewedHosts = new Set(baseline.map((entry) => entry.host));
-  const forbiddenHosts = hosts.filter((entry) =>
-    isBlockedArtifactHost(entry.host, telemetryDomains),
-  );
+  const forbiddenHosts: ArtifactHost[] = [];
+  for (const entry of hosts) {
+    if (!isBlockedArtifactHost(entry.host, telemetryDomains)) continue;
+    const literals = entry.literals.filter((literal) => {
+      if (isT3OwnedHost(entry.host)) return true;
+      return !isProviderSdkPath(literal.file, providerSdkPaths);
+    });
+    if (literals.length === 0) continue;
+    const sampleFile = literals[0]!.file;
+    const fileCount = new Set(literals.map((literal) => literal.file)).size;
+    forbiddenHosts.push({ ...entry, literals, sampleFile, fileCount });
+  }
   const unapprovedForbiddenLiterals: GatedArtifactLiteral[] = [];
   for (const entry of forbiddenHosts) {
     for (const literal of entry.literals) {
@@ -169,6 +179,7 @@ export interface ArtifactHostBaseline {
   justification: string;
   seenHosts: ReviewedArtifactHost[];
   telemetryDomains: string[];
+  providerSdkPaths: string[];
   gatedLiterals: GatedArtifactLiteral[];
 }
 
@@ -201,10 +212,19 @@ function categorizeArtifactHost(host: string): ArtifactHostCategory {
 type ArtifactLiteral = Omit<GatedArtifactLiteral, "host" | "note">;
 
 function isBlockedArtifactHost(host: string, telemetryDomains: string[]) {
-  if (matchesDomain(host, ["t3.codes", "pingdotgg.com"])) return true;
+  if (isT3OwnedHost(host)) return true;
   // Documentation under telemetry vendors is reference material, not an ingestion endpoint.
   if (/^(?:docs|documentation)\./.test(host)) return false;
   return matchesDomain(host, telemetryDomains);
+}
+
+function isT3OwnedHost(host: string) {
+  return matchesDomain(host, ["t3.codes", "pingdotgg.com"]);
+}
+
+function isProviderSdkPath(file: string, prefixes: string[]) {
+  // Archive roots vary by release; match an entire directory prefix at any depth.
+  return prefixes.some((prefix) => `/${file}`.includes(`/${prefix}`));
 }
 
 function normalizeChunkNames(value: string) {
