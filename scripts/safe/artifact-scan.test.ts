@@ -240,6 +240,25 @@ describe("artifact host review", () => {
     ]);
   });
 
+  describe("gated literal fingerprint", () => {
+    const fingerprintOf = (text: string) =>
+      collectArtifactHosts([{ file: "runtime-abcdefgh.js", text }])[0]!.literals[0]!.contextSha256;
+
+    it("produces the same fingerprint for the same literal when only the safe build version changes from 0.1.0-safe.0 to 0.1.0-safe.7", () => {
+      const callSite = (version: string) =>
+        `Kf=\`${version}\`,qf=\`https://t3.codes/download\`,Jf=\`state\``;
+
+      expect(fingerprintOf(callSite("0.1.0-safe.7"))).toBe(fingerprintOf(callSite("0.1.0-safe.0")));
+    });
+
+    it("produces a different fingerprint when the surrounding code changes beyond the version string", () => {
+      const original = 'v="0.1.0-safe.0",u="https://t3.codes/download"';
+      const changed = 'v="0.1.0-safe.0",u=fetch("https://t3.codes/download")';
+
+      expect(fingerprintOf(changed)).not.toBe(fingerprintOf(original));
+    });
+  });
+
   it("should exit 0 for an unknown host and write it into unreviewedHosts", () => {
     const work = NodeFS.mkdtempSync(NodePath.join(NodeOS.tmpdir(), "artifact-report-"));
     const bundle = NodePath.join(work, "bundle");
