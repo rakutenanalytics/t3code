@@ -7132,6 +7132,12 @@
     "scripts/resolve-previous-release-tag.ts": {
       "bcf06f604f7ae76d6cfac2c2e2eddab1b21fe42eb7606b601b69df90a57adf9c": 1
     },
+    "scripts/safe/artifact-host-review.ts": {
+      "f4d4e740455ca780f6af332dee7a4c893932dc453494b14846ff9c4a6923250b": 1
+    },
+    "scripts/safe/artifact-scan.test.ts": {
+      "5398d9cbb7ddfebd25dd674d2e15708af324290fd6db650dc62a0b2882f47114": 1
+    },
     "scripts/safe/dependency-lockfile.ts": {
       "95e1b7cde70519e3075aefe71ac6f7777afd7cc50f11303efceeadf6f223119f": 1
     },
@@ -7142,7 +7148,7 @@
       "da157e55d3174904ef2a0822dd2c362aaac270b50ab8e50cb64623267829fa1c": 1
     },
     "scripts/safe/desktop-smoke-command.ts": {
-      "a44d4040c260cff92b9f6e22a6fe4c82426272e473a595e0639b01cc8b909d95": 1
+      "bf943d453c1b780925a936c70d3fadaffca7a8f96f826f21b2ff265bc09a0cd2": 1
     },
     "scripts/safe/desktop-smoke.ts": {
       "208c434813187e05d607688bf443d03169b9e25b88690d9ac30fe53d10b1049e": 1
@@ -9275,6 +9281,27 @@
     "scripts/notify-discord-release.test.ts": ["discord.com", "example.com", "github.com"],
     "scripts/notify-discord-release.ts": ["github.com"],
     "scripts/npm-launcher/t3.mjs": ["github.com"],
+    "scripts/safe/artifact-host-review.ts": [
+      "json-schema.org",
+      "npmjs.com",
+      "npmjs.org",
+      "schemastore.org",
+      "w3.org",
+      "whatwg.org"
+    ],
+    "scripts/safe/artifact-scan.test.ts": [
+      "a.example.com",
+      "account.updated",
+      "b.example.com",
+      "example.com",
+      "ingest.t3.codes",
+      "relay.t3.codes",
+      "reviewed.example.com",
+      "t3.codes",
+      "us.i.posthog.com",
+      "vendor.js",
+      "www.w3.org"
+    ],
     "scripts/safe/dependency-registry.ts": ["registry.npmjs.org"],
     "scripts/safe/t3safe": ["api.github.com", "github.com"],
     "scripts/smoke-cli-archive.ts": ["127.0.0.1"],
@@ -13575,6 +13602,19 @@
     "scripts/npm-launcher/t3.mjs": [
       "https://github.com/pingdotgg/t3code/releases",
       "https://github.com/pingdotgg/t3code/releases/download"
+    ],
+    "scripts/safe/artifact-scan.test.ts": [
+      "http://www.w3.org/1999/xhtml",
+      "https://a.example.com",
+      "https://b.example.com",
+      "https://example.com/api",
+      "https://ingest.t3.codes",
+      "https://relay.t3.codes",
+      "https://reviewed.example.com",
+      "https://t3.codes",
+      "https://us.i.posthog.com",
+      "https://www.w3.org/2000/svg",
+      "https://www.w3.org/TR/SVG2/"
     ],
     "scripts/safe/dependency-registry.ts": ["https://registry.npmjs.org/"],
     "scripts/safe/t3safe": [

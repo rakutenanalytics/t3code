@@ -2,6 +2,10 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-10-23 — bounded artifact host diagnostics
+
+- baseline-update: security/network-baseline.json — Refreshes complete-file fingerprints for artifact host grouping, forbidden-domain checks, bounded desktop smoke diagnostics and their focused regression fixtures. Source inventory entries do not approve artifact hosts. security/artifact-hosts.json remains unchanged pending review.
+
 ## 2026-10-22 — formatted baseline output and packaged policy verification
 
 - baseline-update: security/network-baseline.json — Formats the generated inventory with the repository formatter and refreshes whole-file fingerprints for the baseline writer, dependency report writer, desktop smoke command and formatter regression fixture. The packaged-policy fix accepts the emitted server chunk and static web backtick strings; negative fixtures still reject missing policies. No host, URL or capability grants added.
