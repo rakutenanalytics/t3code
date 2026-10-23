@@ -3,7 +3,7 @@ import * as NodeFS from "node:fs";
 import * as NodeOS from "node:os";
 import * as NodePath from "node:path";
 import { afterEach, describe, expect, it } from "vite-plus/test";
-import { upstreamAppIdentity } from "@t3tools/shared/appIdentity";
+import { upstreamAppIdentity } from "@t3tools/shared/upstreamAppIdentity";
 import {
   bundleIdentityViolations,
   bundlePolicyViolations,

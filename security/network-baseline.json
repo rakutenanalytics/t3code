@@ -6287,7 +6287,7 @@
       "172023719de2ef1dbc46c391b5fd7be33e9088fda6526e7dfc0cf13136285704": 1
     },
     "packages/shared/package.json": {
-      "6da69b0022022dcb4c683df9165f46449883d40a19d4a4bf1cec7d5be38833bd": 1
+      "dfa26517357c20b90da82c15324b44272838bae8b858d554f7e0ea5b12068470": 1
     },
     "packages/shared/src/AgentScope.test.ts": {
       "723477ff3160dc23cbdf5dec4aafc92bdb25623621bbcc6790b059d22c6d8d18": 1
@@ -7154,7 +7154,7 @@
       "5ffcd54a5fe7bda86cc093bd9d24adcf3294ca406904873fd1785b4ca12740e5": 1
     },
     "scripts/safe/bundle-policy.test.ts": {
-      "3adb9b87835441b43ea5197e40b99c4b46bbe50f59d653fb5ff7bcef3e8e4d1d": 1
+      "07c6399565c8c4c5dd9b39bcab5aa66740c1fb12554ffa61a3b0a25f1d587b3e": 1
     },
     "scripts/safe/dependency-lockfile.ts": {
       "95e1b7cde70519e3075aefe71ac6f7777afd7cc50f11303efceeadf6f223119f": 1

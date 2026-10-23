@@ -515,6 +515,10 @@
       "types": "./src/appIdentity.ts",
       "import": "./src/appIdentity.ts"
     },
+    "./upstreamAppIdentity": {
+      "types": "./src/upstreamAppIdentity.ts",
+      "import": "./src/upstreamAppIdentity.ts"
+    },
     "./managedPolicy": {
       "types": "./src/managedPolicy.ts",
       "import": "./src/managedPolicy.ts"

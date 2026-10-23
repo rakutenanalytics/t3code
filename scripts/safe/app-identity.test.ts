@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vite-plus/test";
-import { upstreamAppIdentity } from "@t3tools/shared/appIdentity";
+import { upstreamAppIdentity } from "@t3tools/shared/upstreamAppIdentity";
 import { loadBakedAppIdentity } from "../lib/app-identity.ts";
 
 const safeIdentity = loadBakedAppIdentity();

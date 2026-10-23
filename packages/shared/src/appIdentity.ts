@@ -1,3 +1,5 @@
+import { upstreamAppIdentity } from "./upstreamAppIdentity.ts";
+
 /**
  * Who this build is: the names, directories and ports that must differ between
  * installs sharing one machine. Release builds from the company-safe fork bake
@@ -31,20 +33,6 @@ export interface AppIdentity {
   /** First port the desktop backend and standalone server try. */
   readonly defaultPort: number;
 }
-
-export const upstreamAppIdentity: AppIdentity = {
-  baseName: "T3 Code",
-  showStageLabel: true,
-  appId: "com.t3tools.t3code",
-  slug: "t3code",
-  homeDirName: ".t3",
-  homeEnvVar: "T3CODE_HOME",
-  userDataDirName: "t3code-v2",
-  legacyProfileNames: ["T3 Code (Alpha)", "t3code"],
-  cliCommand: "t3",
-  urlScheme: "t3code",
-  defaultPort: 3773,
-};
 
 /** Replaced by the reviewed identity in safe release bundles; absent in dev, tests and upstream builds. */
 declare const __T3CODE_APP_IDENTITY__: AppIdentity | undefined;

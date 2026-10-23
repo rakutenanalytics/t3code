@@ -54,3 +54,7 @@ Each change to a security file requires a new entry naming that exact path and t
 ## 2026-10-23 — isolated identity client chunk
 
 - baseline-update: security/artifact-hosts.json — Gates the two existing app.t3.codes call sites (auth return origin, prompt link fallback) in the renamed client chunk main-*.js for the DMG and CLI bundles. Contexts are unchanged apart from minifier identifier renames (gf→hf, rH→aH) caused by the isolated-identity change; user-initiated navigation only, no new host, URL or request.
+
+## 2026-10-23 — upstream identity out of the CLI bundle
+
+- baseline-update: security/network-baseline.json — Refreshes the packages/shared/package.json fingerprint (new `./upstreamAppIdentity` subpath export) and the scripts/safe/bundle-policy.test.ts fingerprint (import path only). The upstream identity literal moves to its own module so the single-file CLI bundle, which dynamic-imports `appIdentity`, no longer retains it; no host, URL or network statement changed.

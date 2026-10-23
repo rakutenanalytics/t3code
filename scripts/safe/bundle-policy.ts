@@ -1,7 +1,8 @@
 // @effect-diagnostics nodeBuiltinImport:off - Inspect built files without executing their application code.
 import * as NodeFS from "node:fs";
 import * as NodePath from "node:path";
-import { type AppIdentity, upstreamAppIdentity } from "@t3tools/shared/appIdentity";
+import type { AppIdentity } from "@t3tools/shared/appIdentity";
+import { upstreamAppIdentity } from "@t3tools/shared/upstreamAppIdentity";
 import { jsonFile } from "./repository.ts";
 
 export function bundlePolicyViolations(bundleRoot: string) {
