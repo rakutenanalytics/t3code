@@ -2,6 +2,15 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-10-23 — version-stable gated literal fingerprints
+
+- baseline-update: security/artifact-hosts.json — Gated-literal context now normalizes the embedded build version (`N.N.N-safe.N` → `0.0.0-safe.*`) before hashing, so releases no longer break the ledger. Replaces the per-version `runtime-*.js` `https://t3.codes/download` entries (safe.0 and safe.1, DMG and CLI forms) with one normalized entry per form (S6, user-initiated navigation only, no automatic request). Recomputed from the real extracted safe.0 and safe.1 bundles: both hash to the same value, each scan passes with 0 unapproved, and no other ledger entry contains a version in its context. Any other change near a literal still changes the fingerprint. No runtime capability change.
+- baseline-update: security/network-baseline.json — Refreshes whole-file fingerprints for the artifact host review and its test (version normalization and focused regression cases). Dependency inputs unchanged; no capability grants change.
+
+## 2026-10-23 — release-version literal context
+
+- baseline-update: security/artifact-hosts.json — Adds the DMG and CLI-mirror gated contexts for the `runtime-*.js` chunk's `https://t3.codes/download` anchor (S6, user-initiated navigation only, no automatic request). The 80-character context embeds the build version, so release 0.1.0-safe.1 hashes differently from the 0.1.0-safe.0 entry; code is otherwise identical (verified by diffing contexts). Release run 39910806296 failed on it while PR run 39909638426 (safe.0) passed. No runtime capability change.
+
 ## 2026-10-23 — provider SDK trust and accepted CI literals
 
 - baseline-update: security/artifact-hosts.json — Trusts telemetry only in listed disk-backed Cursor/Statsig SDK directories. Accepts 25 DMG and 15 stable CLI source/client T3 contexts from real CI extraction, traced to S2-S8 in 11-gated-literals.md. Navigation is explicitly maintainer-accepted as user-initiated, with no automatic request. CLI source recovered without execution matches the original CI report SHA-256; its staged policy is verified. New hosts and changed contexts still fail. No runtime capability change.
