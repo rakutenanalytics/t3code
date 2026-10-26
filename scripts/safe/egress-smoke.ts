@@ -9,7 +9,7 @@ const executable = process.argv[2];
 if (!executable) throw new Error("Usage: node scripts/safe/egress-smoke.ts <built-t3>");
 const isolatedHome = NodeFS.mkdtempSync(NodePath.join(NodeOS.tmpdir(), "t3safe-smoke-"));
 
-function runBuiltCommand(command: string): unknown {
+function runBuiltExecutable(command: string): string {
   const result = NodeChildProcess.spawnSync(NodePath.resolve(executable!), [command], {
     cwd: isolatedHome,
     env: {
@@ -27,7 +27,11 @@ function runBuiltCommand(command: string): unknown {
   if (result.error) throw result.error;
   if (result.status !== 0)
     throw new Error(`${command} command exited ${result.status}: ${result.stderr}`);
-  return JSON.parse(result.stdout);
+  return result.stdout;
+}
+
+function runBuiltCommand(command: string): unknown {
+  return JSON.parse(runBuiltExecutable(command));
 }
 
 function sortedKeys(value: unknown) {
@@ -42,6 +46,10 @@ try {
   const expectedIdentity = jsonFile<unknown>("security/app-identity.json");
   if (sortedKeys(runBuiltCommand("app-identity")) !== sortedKeys(expectedIdentity))
     violations.push("built executable app identity differs from reviewed source identity");
+  // Offline `home` must resolve the isolated default, never the decoy official home.
+  const expectedHome = `Home: ${NodePath.join(isolatedHome, jsonFile<{ homeDirName: string }>("security/app-identity.json").homeDirName)}\nSource: default\n`;
+  if (runBuiltExecutable("home") !== expectedHome)
+    violations.push("built executable `home` does not report the isolated default home");
   finishScan(
     "baked policy and identity smoke",
     violations,

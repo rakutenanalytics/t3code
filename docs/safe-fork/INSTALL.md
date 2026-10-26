@@ -58,7 +58,24 @@ The safe build has its own identity, so it can run beside the official T3 Code a
 | Deep link scheme                                         | `t3code://`                                | `t3safe://`                                   |
 | Terminal command                                         | `t3`                                       | `t3safe`                                      |
 
-The safe build never reads, copies, locks or migrates anything from `~/.t3`, the official Electron profile or `T3CODE_HOME`. Nothing is imported automatically: sign in to providers and add projects again in the safe app. To move a project, open its folder in the safe app; do not copy the official database. An ambient `T3CODE_HOME` is ignored. Set `T3SAFE_HOME` only to place safe state somewhere else. The desktop app and `t3safe` share `~/.t3-safe`, so run only one server for it at a time.
+By default the safe build never reads, copies, locks or migrates anything from `~/.t3`, the official Electron profile or `T3CODE_HOME`; it only touches `~/.t3` after you opt in (see below). Nothing is imported automatically: sign in to providers and add projects again in the safe app. To move a project, open its folder in the safe app; do not copy the official database. An ambient `T3CODE_HOME` is ignored. Set `T3SAFE_HOME` only to place safe state somewhere else. The desktop app and `t3safe` share `~/.t3-safe`, so run only one server for it at a time.
+
+## Use your official T3 data
+
+To work in your existing projects and threads instead of a separate copy, opt in. The choice is saved outside both homes, so the desktop app (launched from Finder) and `t3safe` follow it:
+
+```sh
+t3safe home              # show the home in use and why
+t3safe home use-official # switch to ~/.t3
+t3safe home use-isolated # back to ~/.t3-safe (the default)
+```
+
+Quit the app and any `t3safe` server, then start again. `T3SAFE_HOME`, when set, still wins over the saved choice. Before you switch:
+
+- Both apps then share one database. Only one server can use a home at a time; the second one refuses to start and names the home.
+- A database upgraded by one build may not open in an older build of the other. Keep both current.
+- Provider sign-ins stay in each app's own Electron profile, so you may sign in again.
+- The safe app also writes its `t3safe` launcher into `~/.t3/bin`.
 
 ## Verify and update
 
@@ -68,7 +85,7 @@ t3safe doctor
 t3safe update
 ```
 
-Doctor prints the installed version, release policy, data directory (and warns if it points inside `~/.t3`), effective CLI policy when installed, a warning for any legacy `t3` link left by an earlier safe install, and quarantine status. `t3safe` runs any other command through the bundled T3 CLI (CLI installs only), for example `t3safe pair`. App-only installs report the release policy; they do not introspect a running app. Update resolves the selected release, downloads its installer and SHA256SUMS, verifies the installer before execution, and preserves app-only or CLI-only selection. It never executes the installer from main. Use `t3safe update --version vX.Y.Z-safe.N` for a specific version. Use this updater for safe releases. `npx t3` installs a separate upstream distribution and is outside this installer’s policy boundary.
+Doctor prints the installed version, release policy, effective data directory and where it came from (it notes when that is the official home, and warns for any other path inside `~/.t3`), effective CLI policy when installed, a warning for any legacy `t3` link left by an earlier safe install, and quarantine status. `t3safe` runs any other command through the bundled T3 CLI (CLI installs only), for example `t3safe pair`. App-only installs report the release policy; they do not introspect a running app. Update resolves the selected release, downloads its installer and SHA256SUMS, verifies the installer before execution, and preserves app-only or CLI-only selection. It never executes the installer from main. Use `t3safe update --version vX.Y.Z-safe.N` for a specific version. Use this updater for safe releases. `npx t3` installs a separate upstream distribution and is outside this installer’s policy boundary.
 
 SHA256 detects a mismatched download. The release and checksums share GitHub trust; they do not provide independent publisher authentication. Release builds also publish GitHub provenance: `gh attestation verify <asset> --repo rakutenanalytics/t3code`.
 

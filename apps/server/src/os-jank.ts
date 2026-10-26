@@ -12,6 +12,7 @@ import * as FileSystem from "effect/FileSystem";
 import * as Path from "effect/Path";
 import * as NodeOS from "node:os";
 import { appIdentity } from "@t3tools/shared/appIdentity";
+import { resolveHomeFromHost } from "@t3tools/shared/homeChoice";
 
 function logPathHydrationWarning(message: string, error?: unknown): void {
   process.stderr.write(
@@ -118,9 +119,14 @@ export const expandHomePath = Effect.fn(function* (input: string) {
 });
 
 export const resolveBaseDir = Effect.fn(function* (raw: string | undefined) {
-  const { join, resolve } = yield* Path.Path;
+  const { resolve } = yield* Path.Path;
   if (!raw || raw.trim().length === 0) {
-    return join(yield* HostProcess.HomeDirectory, appIdentity.homeDirName);
+    return resolveHomeFromHost({
+      identity: appIdentity,
+      platform: yield* HostProcess.Platform,
+      homeDirectory: yield* HostProcess.HomeDirectory,
+      env: yield* HostProcess.Environment,
+    }).dir;
   }
   return resolve(yield* expandHomePath(raw.trim()));
 });

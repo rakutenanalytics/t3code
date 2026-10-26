@@ -189,6 +189,10 @@ describe("server ownership", () => {
             Effect.flip,
           );
           assert.equal(refused._tag, "ServerAlreadyRunningError");
+          assert.include(
+            refused.message,
+            `Another T3 Code instance (official or safe) is using ${root}`,
+          );
           assert.equal(yield* fs.readFileString(statePath), before);
         }),
       );

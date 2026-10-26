@@ -67,3 +67,7 @@ Each change to a security file requires a new entry naming that exact path and t
 ## 2026-10-23 — upstream identity out of the CLI bundle
 
 - baseline-update: security/network-baseline.json — Refreshes the packages/shared/package.json fingerprint (new `./upstreamAppIdentity` subpath export) and the scripts/safe/bundle-policy.test.ts fingerprint (import path only). The upstream identity literal moves to its own module so the single-file CLI bundle, which dynamic-imports `appIdentity`, no longer retains it; no host, URL or network statement changed.
+
+## 2026-10-26 — opt-in use of the official T3 home
+
+- baseline-update: security/network-baseline.json — Refreshes fingerprints of files that gain the opt-in home choice (`t3safe home use-official`, saved in the safe Electron profile, off by default): DesktopEnvironment, DesktopStatePaths, DesktopBackendPool (clearer "another instance" dialog), serverOwnership (message only), bin.ts (offline `home` command), the t3safe wrapper (doctor reports the effective home), packages/shared/package.json (new `./homeChoice` subpath export) and the affected tests. The default home stays ~/.t3-safe and app-identity.json is unchanged; no host, URL or network statement added.

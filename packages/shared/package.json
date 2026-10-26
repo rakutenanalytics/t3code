@@ -511,6 +511,10 @@
       "types": "./src/markdownMath.ts",
       "import": "./src/markdownMath.ts"
     },
+    "./homeChoice": {
+      "types": "./src/homeChoice.ts",
+      "import": "./src/homeChoice.ts"
+    },
     "./appIdentity": {
       "types": "./src/appIdentity.ts",
       "import": "./src/appIdentity.ts"

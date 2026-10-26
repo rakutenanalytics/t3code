@@ -35,8 +35,8 @@ describe("safe-bound desktop", () => {
 
     const baseDir = resolveDesktopBaseDir({
       homeDirectory: "/Users/alice",
-      joinPath: NodePath.posix.join,
       t3Home: Option.none(),
+      savedChoice: undefined,
     });
     const stateDir = resolveDesktopStateDir({
       baseDir,

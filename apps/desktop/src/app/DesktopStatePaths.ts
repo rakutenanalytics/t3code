@@ -1,4 +1,5 @@
 import { appIdentity } from "@t3tools/shared/appIdentity";
+import { resolveHome, type HomeChoice } from "@t3tools/shared/homeChoice";
 import * as Option from "effect/Option";
 
 export type JoinPath = (first: string, ...segments: string[]) => string;
@@ -13,12 +14,15 @@ function normalizeConfiguredBaseDir(t3Home: Option.Option<string>): Option.Optio
 
 export function resolveDesktopBaseDir(input: {
   readonly homeDirectory: string;
-  readonly joinPath: JoinPath;
   readonly t3Home: Option.Option<string>;
+  readonly savedChoice: HomeChoice | undefined;
 }): string {
-  return Option.getOrElse(normalizeConfiguredBaseDir(input.t3Home), () =>
-    input.joinPath(input.homeDirectory, appIdentity.homeDirName),
-  );
+  return resolveHome({
+    identity: appIdentity,
+    homeDirectory: input.homeDirectory,
+    env: { [appIdentity.homeEnvVar]: Option.getOrUndefined(input.t3Home) },
+    savedChoice: input.savedChoice,
+  }).dir;
 }
 
 export function resolveDesktopStateDir(input: {

@@ -45,7 +45,7 @@ export class ServerAlreadyRunningError extends Schema.TaggedError<ServerAlreadyR
   override readonly [Runtime.errorExitCode] = SERVER_EXIT_CODE_STATE_DIR_OWNED;
 
   override get message(): string {
-    return `A T3 Code server already owns ${this.stateDir}. Stop that server, or use a separate T3 home and pair with it, then retry. No server was stopped.`;
+    return `Another T3 Code instance (official or safe) is using ${this.stateDir}. Quit it first, or use a separate T3 home and pair with it, then retry. No server was stopped.`;
   }
 }
 
