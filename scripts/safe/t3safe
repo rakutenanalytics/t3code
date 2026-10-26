@@ -79,7 +79,7 @@ case "${1:-help}" in
         data_dir="$HOME/$home_dir_name"; home_source=default
         if [[ "$saved_choice" == isolated ]]; then home_source='saved choice'; fi
       fi
-      printf 'Data directory: %s (source: %s; override with %s or `t3safe home`)\n' "$data_dir" "$home_source" "$home_env_var"
+      printf 'Data directory: %s (source: %s; override with %s or "t3safe home")\n' "$data_dir" "$home_source" "$home_env_var"
       if [[ "$data_dir" == "$HOME/.t3" ]]; then
         printf 'Note: shares data with official T3 Code.\n'
       elif [[ "$data_dir" == "$HOME/.t3/"* ]]; then
