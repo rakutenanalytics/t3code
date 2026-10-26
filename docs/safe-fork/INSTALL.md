@@ -20,20 +20,27 @@ The app installs next to the official T3 Code without replacing it, and keeps it
 
 ## Optional: install with curl
 
-Use this for a CLI-only install or scripted setup. Select a reviewed tag from [Releases](https://github.com/rakutenanalytics/t3code/releases), then download its installer and checksums into an empty directory:
+For a CLI-only install or scripted setup, run the installer from the newest release:
 
 ```sh
-tag=vX.Y.Z-safe.N # replace with the reviewed release tag
-base="https://github.com/rakutenanalytics/t3code/releases/download/$tag"
-curl -fSL --proto '=https' --proto-redir '=https' "$base/install.sh" -o install.sh
-curl -fSL --proto '=https' --proto-redir '=https' "$base/SHA256SUMS" -o SHA256SUMS
-awk '$2 == "install.sh" || $2 == "./install.sh"' SHA256SUMS > INSTALLER-SHA256
-[ "$(wc -l < INSTALLER-SHA256 | tr -d ' ')" = 1 ] && shasum -a 256 --check INSTALLER-SHA256 && bash install.sh --version "$tag"
+curl -fsSL https://github.com/rakutenanalytics/t3code/releases/latest/download/install.sh | bash
+```
+
+Pass options after `bash -s --`, for example `bash -s -- --cli-only`. Options: `--dry-run`, `--cli-only`, `--app-only`, `--prefix DIR`, `--version vX.Y.Z-safe.N`.
+
+The installer checks every asset it downloads against the release's `SHA256SUMS`. The script itself arrives over HTTPS from GitHub without a separate check, so you trust GitHub and this repository's release.
+
+Inspect first (optional): download the script, read it, then run it.
+
+```sh
+curl -fsSL https://github.com/rakutenanalytics/t3code/releases/latest/download/install.sh -o install.sh
+less install.sh
+bash install.sh
 ```
 
 The installer verifies each asset before extraction, copies `T3 Code Safe.app` to `/Applications` when writable or `~/Applications` otherwise, and puts only `t3safe` in `~/.local/bin`. It never creates a `t3` command, so the official CLI keeps working. If an earlier safe install left a `t3` symlink pointing into `~/.local/share/t3safe`, the installer removes that symlink and says so; any other `t3` file or link is left alone. Add `~/.local/bin` to PATH if needed. It removes quarantine metadata. A failed Developer ID signature is rejected; only absent or ad-hoc signatures may be repaired. Quit the app before updating.
 
-Add `--cli-only` or `--app-only` to select one component. Inspect the plan with `--dry-run`. `--prefix /path` installs command files and the app below that directory; relative prefixes are normalized. Repeating an install is supported. Installing a lower version requires explicit `--allow-downgrade`, even with `--version`.
+`--cli-only` or `--app-only` select one component. `--dry-run` prints the plan. `--prefix /path` installs command files and the app below that directory; relative prefixes are normalized. Repeating an install is supported. Installing a lower version requires explicit `--allow-downgrade`, even with `--version`.
 
 The `t3safe doctor` and `t3safe update` commands come from this installer; a DMG-only install has the Settings launcher without them.
 
