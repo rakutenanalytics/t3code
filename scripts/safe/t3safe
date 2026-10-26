@@ -67,10 +67,23 @@ case "${1:-help}" in
     if [[ -f "$identity" ]]; then
       home_dir_name=$(plutil -extract homeDirName raw -o - "$identity")
       home_env_var=$(plutil -extract homeEnvVar raw -o - "$identity")
-      data_dir="${!home_env_var:-$HOME/$home_dir_name}"
-      printf 'Data directory: %s (override with %s)\n' "$data_dir" "$home_env_var"
-      if [[ "$data_dir" == "$HOME/.t3" || "$data_dir" == "$HOME/.t3/"* ]]; then
-        printf 'WARNING: data directory is inside the official T3 home (~/.t3); safe and official T3 would share state.\n'
+      profile_dir=$(plutil -extract userDataDirName raw -o - "$identity")
+      choice_file="$HOME/Library/Application Support/$profile_dir/home-choice.json"
+      saved_choice=$(plutil -extract home raw -o - "$choice_file" 2>/dev/null || true)
+      # Same precedence as `t3safe home`: environment, then saved choice, then default.
+      if [[ -n "${!home_env_var:-}" ]]; then
+        data_dir=${!home_env_var}; home_source=environment
+      elif [[ "$saved_choice" == official ]]; then
+        data_dir="$HOME/.t3"; home_source='saved choice'
+      else
+        data_dir="$HOME/$home_dir_name"; home_source=default
+        if [[ "$saved_choice" == isolated ]]; then home_source='saved choice'; fi
+      fi
+      printf 'Data directory: %s (source: %s; override with %s or `t3safe home`)\n' "$data_dir" "$home_source" "$home_env_var"
+      if [[ "$data_dir" == "$HOME/.t3" ]]; then
+        printf 'Note: shares data with official T3 Code.\n'
+      elif [[ "$data_dir" == "$HOME/.t3/"* ]]; then
+        printf 'WARNING: data directory is inside the official T3 home; safe and official T3 would share state.\n'
         status=1
       fi
     else
@@ -102,7 +115,7 @@ case "${1:-help}" in
     exit "$status"
     ;;
   help|--help|-h)
-    printf '%s\n' 'Usage: t3safe update [installer options] | version | doctor | <bundled T3 CLI command>'
+    printf '%s\n' 'Usage: t3safe update [installer options] | version | doctor | home [use-official|use-isolated] | <bundled T3 CLI command>'
     printf '%s\n' 'Any other command runs the bundled T3 CLI (CLI installs only), e.g. t3safe pair.'
     ;;
   *)

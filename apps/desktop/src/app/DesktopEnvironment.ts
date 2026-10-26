@@ -17,6 +17,7 @@ import { resolveLinuxDesktopEntryName } from "./DesktopEarlyElectronStartup.ts";
 import { resolveDesktopBaseDir, resolveDesktopStateDir } from "./DesktopStatePaths.ts";
 import { isNightlyDesktopVersion } from "../updates/updateChannels.ts";
 import { appIdentity } from "@t3tools/shared/appIdentity";
+import { readSavedHomeChoice } from "@t3tools/shared/homeChoice";
 import type { OtlpProtocol } from "@t3tools/shared/observability";
 
 export interface MakeDesktopEnvironmentInput {
@@ -159,8 +160,16 @@ const make = Effect.fn("desktop.environment.make")(function* (
         : Option.getOrElse(config.xdgConfigHome, () => path.join(homeDirectory, ".config"));
   const baseDir = resolveDesktopBaseDir({
     homeDirectory,
-    joinPath: path.join,
     t3Home: config.t3Home,
+    // Development keeps its own `dev` state; the opt-in applies to installed builds only.
+    savedChoice: isDevelopment
+      ? undefined
+      : readSavedHomeChoice({
+          identity: appIdentity,
+          platform: input.platform,
+          homeDirectory,
+          env: process.env,
+        }),
   });
   const rootDir = path.resolve(input.dirname, "../../..");
   const appRoot = input.isPackaged ? input.appPath : rootDir;

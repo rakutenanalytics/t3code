@@ -1,4 +1,5 @@
 import { appIdentity } from "@t3tools/shared/appIdentity";
+import { readSavedHomeChoice } from "@t3tools/shared/homeChoice";
 import { fromLenientJson } from "@t3tools/shared/schemaJson";
 import * as Option from "effect/Option";
 import * as Schema from "effect/Schema";
@@ -56,14 +57,23 @@ function resolveEarlyDesktopSettingsPath(input: {
   readonly joinPath: JoinPath;
 }): string {
   const t3Home = Option.fromUndefinedOr(input.env[appIdentity.homeEnvVar]);
+  const isDevelopment = isDevelopmentEnvironment(input.env);
   const baseDir = resolveDesktopBaseDir({
     homeDirectory: input.homeDirectory,
-    joinPath: input.joinPath,
     t3Home,
+    savedChoice: isDevelopment
+      ? undefined
+      : readSavedHomeChoice({
+          identity: appIdentity,
+          // These early options are only resolved on Linux, before Electron is ready.
+          platform: "linux",
+          homeDirectory: input.homeDirectory,
+          env: input.env,
+        }),
   });
   const stateDir = resolveDesktopStateDir({
     baseDir,
-    isDevelopment: isDevelopmentEnvironment(input.env),
+    isDevelopment,
     joinPath: input.joinPath,
     t3Home,
   });

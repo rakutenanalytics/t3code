@@ -23,6 +23,19 @@ if (
   } else if (command === "app-identity") {
     const { appIdentity } = await import("@t3tools/shared/appIdentity");
     process.stdout.write(`${JSON.stringify(appIdentity)}\n`);
+  } else if (command === "home") {
+    // Offline and instant: choosing a home must not need a server or the CLI module graph.
+    const { runHomeCommand } = await import("./cli/home.ts");
+    const { appIdentity } = await import("@t3tools/shared/appIdentity");
+    const os = await import("node:os");
+    const { output, exitCode } = runHomeCommand(process.argv.slice(3), {
+      identity: appIdentity,
+      platform: os.platform(),
+      homeDirectory: os.homedir(),
+      env: process.env,
+    });
+    (exitCode === 0 ? process.stdout : process.stderr).write(`${output}\n`);
+    process.exitCode = exitCode;
   } else if (command === "acp-mcp-bridge" || command === "acp-mcp-call") {
     const { runAcpMcpCliFastPath } = await import("./mcp/AcpMcpStdioBridge.ts");
     await runAcpMcpCliFastPath(command, process.argv.slice(3));
