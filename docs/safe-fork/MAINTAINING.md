@@ -14,7 +14,7 @@ vp test run scripts/safe/managed-policy.test.ts apps/server/src/telemetry/Manage
 node scripts/safe/touched-checks.ts origin/main
 ```
 
-Typecheck contracts, shared, client-runtime, server, desktop, web and scripts with `vp exec --filter <package-name> -- tsc-rs --noEmit`. Do not run repository-wide checks. The PR workflow runs the browser presentation case and builds both artifacts on macos-14 ARM64. Full local desktop builds and browsers are unnecessary for ordinary sync preparation.
+Typecheck contracts, shared, client-runtime, server, desktop, web and scripts with `vp exec --filter <package-name> -- tsc --noEmit`. Do not run repository-wide checks. The PR workflow runs the browser presentation case and builds both artifacts on macos-14 ARM64. Full local desktop builds and browsers are unnecessary for ordinary sync preparation.
 
 The egress baseline binds the complete contents of each network-related source file, including wrapped arguments, generated files, fixtures and tests. It also lists literal hosts by file for readable review. Scanning covers app/package/script/native/workflow source and root configuration, including HTML/CSS/plist/TOML/XML/Gradle/Python and npm hooks; vendored `.repos` references stay outside the repository inventory. Detection includes low-level Node transports, browser resources, dynamic imports, process spawning, network tools and common telemetry/feature-flag SDKs. Computed destinations are caught as source changes, not resolved into hosts. A baseline refresh records a review decision; it does not prove runtime safety.
 

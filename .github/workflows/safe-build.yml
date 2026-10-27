@@ -23,7 +23,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: "24.13.1"
+          node-version: "26.12.1"
       - name: Verify runner and dependency baseline before install
         run: |
           test "$(uname -m)" = arm64
@@ -32,7 +32,7 @@ jobs:
           node scripts/safe/dependency-scan.ts
       - uses: voidzero-dev/setup-vp@250f29ce396baf5e8f24498e17c0dfdebabc26eb # v1
         with:
-          node-version: "24.13.1"
+          node-version: "26.12.1"
           run-install: false
           cache: false
       - run: vp install --frozen-lockfile

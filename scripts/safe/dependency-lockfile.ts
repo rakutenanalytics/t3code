@@ -24,6 +24,10 @@ export function compareDependencyPackages(
 }
 
 export function parseDependencyLockfile(lockfile: string) {
+  // pnpm 12 separates toolchain and application locks; this parser would scan only the first.
+  const documents = lockfile.split(/^---\s*$/m).filter((document) => document.trim());
+  if (documents.length !== 1)
+    throw new Error("Unsupported lockfile with multiple YAML documents; review every document");
   if (!/^lockfileVersion: ['"]?9\.0['"]?$/m.test(lockfile))
     throw new Error("Unsupported lockfile version; review the dependency scanner");
   const packageBlocks = lockfileBlocks(lockfile, "packages");

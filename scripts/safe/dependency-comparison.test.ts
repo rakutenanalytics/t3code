@@ -1,5 +1,25 @@
 import { describe, expect, it } from "vite-plus/test";
-import { compareDependencyPackages } from "./dependency-lockfile.ts";
+import { compareDependencyPackages, parseDependencyLockfile } from "./dependency-lockfile.ts";
+
+describe("dependency lockfile parsing", () => {
+  it("rejects a multi-document lockfile instead of omitting the application dependencies", () => {
+    const document = `lockfileVersion: '9.0'
+
+importers:
+  .: {}
+
+packages:
+  first@1.0.0:
+    resolution: {integrity: first}
+
+snapshots:
+  first@1.0.0: {}
+`;
+    const lockfile = `---\n${document}\n---\n${document}`;
+
+    expect(() => parseDependencyLockfile(lockfile)).toThrow("multiple YAML documents");
+  });
+});
 
 describe("dependency baseline comparison", () => {
   it("reports every added version and its previous versions", () => {
