@@ -1,6 +1,8 @@
 # Choose allowed capabilities
 
-Edit `security/managed-policy.json`, review the change, and rebuild:
+The policy is fixed when a release is built. An installed app or CLI has no runtime override: environment variables, saved settings and CLI flags cannot enable a denied capability, and the `managed-policy.json` shipped beside an install is a record for `t3safe doctor`, not an input. `t3safe doctor` shows the release policy and, for a CLI install, the effective CLI policy (`t3safe managed-policy` prints the latter).
+
+To change it, edit `security/managed-policy.json`, review the change, and build a new release:
 
 ```json
 { "allow": ["remoteAccess.network"] }
@@ -23,7 +25,9 @@ The low-level `allowsManagedCapability(null, capability)` and `createManagedPoli
 | `providerMetadata`     | Denied  | Upstream model-manifest refresh, provider maintenance lookups and web npm release probes; bundled model data remains available                                                  |
 | `providerTelemetry`    | Denied  | T3’s provider-process environment: strips inherited OTEL settings and sets supported telemetry/error-reporting opt-outs; provider-owned traffic remains outside a host firewall |
 
-To enable Connect, for example, add `t3Connect` to `allow`. Also update `security/allowlist.json` so `deniedCapabilities` matches the intended policy, and review its destinations in the egress inventory. A host entry documents a review decision; it does not grant a capability or filter traffic.
+To enable Connect, for example, add `t3Connect` to `allow` and remove it from `deniedCapabilities` in `security/allowlist.json`; `node scripts/safe/policy-verify.ts` fails if the two disagree. Review the destinations in the [egress inventory](../../security/egress-inventory.md). Every changed `security/**` file also needs a line in `security/CHANGELOG.md` (see [MAINTAINING.md](MAINTAINING.md)).
+
+Releases are built by this repository's release workflow, which runs only for `rakutenanalytics/t3code`; `install.sh` and `t3safe update` also fetch only from that repository. A different policy therefore ships as a reviewed change to this repository. A separate fork must change those repository names to publish its own builds. A host entry documents a review decision; it does not grant a capability or filter traffic.
 
 Controls with policy-aware presentation remain visible and disabled with "Disabled by managed policy"; blocked remote media shows a placeholder. The npm launcher refuses both downloads and cached upstream execution and directs users to `t3safe update`. Server commands enforce denial even if another client sends a request. Some direct endpoint tests return their existing unreachable result. Policy does not delete old credentials or revoke remote resources.
 
