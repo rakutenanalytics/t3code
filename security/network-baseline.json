@@ -89,10 +89,10 @@
       "4596367d4ad6697da348ba19ab795ba7f0d1c27bd5524aede888be17cdab7583": 1
     },
     "apps/desktop/scripts/verify-preload-bundle.mjs": {
-      "29a8ed85dfd8d12655bb59826df59cee007f02412ec7b2184dfa4288e5688d70": 1
+      "fa96d457a2514ea9b391f46f9f686dce78cea993cdee03cd6206ff78b78b97ef": 1
     },
     "apps/desktop/scripts/verify-preload-bundle.test.mjs": {
-      "824c61aaba6987a15630174829b14462beb4a1793d518ebcb7a3b8e02a0ddeb1": 1
+      "0e3627c17d952bf3ab01e19d9b37b26a52774a4af5a4512613fd94b0d867487e": 1
     },
     "apps/desktop/scripts/wait-for-resources.mjs": {
       "eaf5417c3e7c9dab15ea40504c2318aa438b403bb04a0f18e16c18cfcc4b0665": 1
@@ -299,7 +299,7 @@
       "4ef55a107d34ccdb1e30d46d4ce3a300a73dcad2985ba72ef5a4a274d5a2e390": 1
     },
     "apps/desktop/src/preload.ts": {
-      "14809c607217956e4191f104b753b4047f9321ef05350bae581d751bcd555092": 1
+      "94c79204abc1f7d7f02bd5fb66f2cabc6412ff06b2e6d8fbd48703ac3e1c2f47": 1
     },
     "apps/desktop/src/preview/Annotation.css": {
       "a8097f41800e6ee531fadbaf68e8ee89f76fffb2d51c01449a68a090d86f1072": 1
@@ -590,7 +590,7 @@
       "a46247494e075c3e09a7b363db6a551dc84c7262e509e17d21338f6ab21de211": 1
     },
     "apps/desktop/vite.config.ts": {
-      "4dedcf0c10008c0ef7b0731f9054cacba2a9f48188d65f3c0373acf8aa0402be": 1
+      "60b46c9e9939695f2e2d8ed9d0b7450022bb6f243d12c908b862adaa91484706": 1
     },
     "apps/marketing/astro.config.mjs": {
       "4af44ceb02efb4697d22ca8b1328384e70665366dc8047f19884eff591effcd8": 1

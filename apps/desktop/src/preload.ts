@@ -1,4 +1,3 @@
-import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import type {
   DesktopBridge,
   DesktopPreviewOpenLinkEvent,
@@ -13,6 +12,14 @@ import { contextBridge, ipcRenderer, webFrame, webUtils } from "electron";
 
 import * as IpcChannels from "./ipc/channels.ts";
 import { mergeLegacyLocalStorage } from "./legacyLocalStorageMerge.ts";
+
+declare const __T3CODE_MANAGED_POLICY__: { readonly allow: readonly string[] } | null;
+
+// Not `managedPolicy` from @t3tools/shared: it bundles Effect, whose top-level
+// `const setImmediate` collides with Electron's sandboxed-preload wrapper and aborts the preload.
+// A null policy allows everything, as in `allowsManagedCapability`.
+const isT3ConnectAllowed =
+  __T3CODE_MANAGED_POLICY__ === null || __T3CODE_MANAGED_POLICY__.allow.includes("t3Connect");
 
 const SNAP_SHOT_EVENT_TYPES = new Set([
   "requested",
@@ -31,7 +38,7 @@ function isSnapShotEvent(value: unknown): value is DesktopSnapShotEvent {
   );
 }
 
-if (managedPolicy.allows("t3Connect")) {
+if (isT3ConnectAllowed) {
   exposeClerkBridge({ passkeys: true });
 }
 

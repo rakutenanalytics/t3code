@@ -2,6 +2,10 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-10-27 — desktop preload no longer bundles Effect
+
+- baseline-update: security/network-baseline.json — Refreshes whole-file fingerprints for `apps/desktop/src/preload.ts`, `apps/desktop/vite.config.ts` and the preload bundle verifier with its test. The preload reads the baked managed policy constant directly instead of importing Effect, the verifier now runs the bundle inside an Electron-like function wrapper and the desktop build runs it. No network statement, host or capability grant changes; the baked policy still denies `t3Connect`.
+
 ## 2026-10-23 — version-stable gated literal fingerprints
 
 - baseline-update: security/artifact-hosts.json — Gated-literal context now normalizes the embedded build version (`N.N.N-safe.N` → `0.0.0-safe.*`) before hashing, so releases no longer break the ledger. Replaces the per-version `runtime-*.js` `https://t3.codes/download` entries (safe.0 and safe.1, DMG and CLI forms) with one normalized entry per form (S6, user-initiated navigation only, no automatic request). Recomputed from the real extracted safe.0 and safe.1 bundles: both hash to the same value, each scan passes with 0 unapproved, and no other ledger entry contains a version in its context. Any other change near a literal still changes the fingerprint. No runtime capability change.

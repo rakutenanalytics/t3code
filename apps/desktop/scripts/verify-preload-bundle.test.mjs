@@ -103,3 +103,31 @@ describe("desktop preload bundle verifier", () => {
     );
   });
 });
+
+describe("preload bundle gate", () => {
+  it("should fail when the bundle declares a top-level [setImmediate] const as Effect's scheduler does", () => {
+    const bundleWithEffectScheduler = `${validPreload}\nconst setImmediate = (callback) => callback();`;
+
+    assert.throws(
+      () => verifyPreloadBundle(bundleWithEffectScheduler, { t3ConnectAllowed: true }),
+      /already been declared/,
+    );
+  });
+
+  it("should pass for a bundle that only imports [electron]", () => {
+    assert.doesNotThrow(() => verifyPreloadBundle(validPreload, { t3ConnectAllowed: true }));
+  });
+
+  it("should not require the clerk passkeys global when the managed policy denies [t3Connect]", () => {
+    const bundleWithoutClerk = validPreload.replace(
+      'electron.contextBridge.exposeInMainWorld("__clerk_internal_electron_passkeys", {});',
+      "",
+    );
+
+    assert.doesNotThrow(() => verifyPreloadBundle(bundleWithoutClerk, { t3ConnectAllowed: false }));
+    assert.throws(
+      () => verifyPreloadBundle(bundleWithoutClerk, { t3ConnectAllowed: true }),
+      /__clerk_internal_electron_passkeys exposure/,
+    );
+  });
+});
