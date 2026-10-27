@@ -1,13 +1,69 @@
 # Install and update
 
-Requires macOS on Apple Silicon. Releases and downloads are public; no GitHub login, Node, or compiler required.
+Requires macOS on Apple Silicon. Releases and downloads are public; no GitHub login, Node or compiler required.
 
-## Install the app (DMG)
+## Install
+
+```sh
+curl -fsSL https://github.com/rakutenanalytics/t3code/releases/latest/download/install.sh | bash
+```
+
+Installs the app and the `t3safe` command from the newest release:
+
+| What               | Where                                                             |
+| ------------------ | ----------------------------------------------------------------- |
+| `T3 Code Safe.app` | `/Applications` if writable, otherwise `~/Applications`           |
+| `t3safe` command   | `~/.local/bin` (add it to `PATH` if needed); never creates a `t3` |
+| Release files      | `~/.local/share/t3safe/versions/<tag>`                            |
+| Data               | `~/.t3-safe`                                                      |
+
+The installer checks every asset it downloads against the release `SHA256SUMS` before extraction and removes quarantine metadata. The script itself arrives over HTTPS from GitHub without a separate check, so you trust GitHub and this repository's release. Open the app, then install and sign in to a provider CLI such as Codex or Claude Code.
+
+## Update
+
+Quit the app, then run the install command again. Repeating an install is supported. Installing a lower version requires `--allow-downgrade`.
+
+```sh
+t3safe update                          # same result, from an installed CLI
+t3safe update --version v0.1.0-safe.3  # a specific release
+```
+
+`t3safe update` downloads the selected release's installer, verifies it against `SHA256SUMS`, then runs it with your existing app-only or CLI-only selection. The desktop app does not update itself.
+
+## Options
+
+Pass options after `bash -s --`:
+
+```sh
+curl -fsSL https://github.com/rakutenanalytics/t3code/releases/latest/download/install.sh | bash -s -- --cli-only
+```
+
+| Option                      | Effect                                                             |
+| --------------------------- | ------------------------------------------------------------------ |
+| `--dry-run`                 | Print the plan, change nothing                                     |
+| `--cli-only` / `--app-only` | Install one component                                              |
+| `--prefix DIR`              | Put command files and the app below `DIR` (relative paths resolve) |
+| `--version vX.Y.Z-safe.N`   | Install a specific release                                         |
+| `--allow-downgrade`         | Permit installing a lower version than the installed one           |
+
+Read the script first:
+
+```sh
+curl -fsSL https://github.com/rakutenanalytics/t3code/releases/latest/download/install.sh -o install.sh
+less install.sh
+bash install.sh
+```
+
+If an earlier safe install left a `t3` symlink pointing into `~/.local/share/t3safe`, the installer removes it and says so; any other `t3` file or link is left alone. An invalid Developer ID signature is rejected; only absent or ad-hoc signatures may be repaired.
+
+The `t3safe doctor` and `t3safe update` commands come from this installer; a DMG-only install has the Settings launcher without them.
+
+## Manual install (DMG)
 
 1. Download the `*-darwin-arm64.dmg` and `SHA256SUMS` from [Releases](https://github.com/rakutenanalytics/t3code/releases).
 2. Verify: compare `shasum -a 256 <downloaded.dmg>` with its line in `SHA256SUMS`.
 3. Open the DMG and drag `T3 Code Safe.app` anywhere (for example `/Applications` or `~/Applications`).
-4. The build is unsigned. Remove quarantine, adjusting the path to where you put it:
+4. The build is unsigned. Remove quarantine, adjusting the path:
 
    ```sh
    xattr -dr com.apple.quarantine "/Applications/T3 Code Safe.app"
@@ -16,33 +72,13 @@ Requires macOS on Apple Silicon. Releases and downloads are public; no GitHub lo
 5. Open the app. If macOS still blocks it, use System Settings → Privacy & Security → Open Anyway. Device policy may prohibit unsigned apps.
 6. Optional terminal command: in the app, open Settings and press **Install** on the CLI command row. It creates `t3safe` only (never `t3`), using the installed app.
 
-The app installs next to the official T3 Code without replacing it, and keeps its data in `~/.t3-safe`.
+## Troubleshooting
 
-## Optional: install with curl
-
-For a CLI-only install or scripted setup, run the installer from the newest release:
-
-```sh
-curl -fsSL https://github.com/rakutenanalytics/t3code/releases/latest/download/install.sh | bash
-```
-
-Pass options after `bash -s --`, for example `bash -s -- --cli-only`. Options: `--dry-run`, `--cli-only`, `--app-only`, `--prefix DIR`, `--version vX.Y.Z-safe.N`.
-
-The installer checks every asset it downloads against the release's `SHA256SUMS`. The script itself arrives over HTTPS from GitHub without a separate check, so you trust GitHub and this repository's release.
-
-Inspect first (optional): download the script, read it, then run it.
-
-```sh
-curl -fsSL https://github.com/rakutenanalytics/t3code/releases/latest/download/install.sh -o install.sh
-less install.sh
-bash install.sh
-```
-
-The installer verifies each asset before extraction, copies `T3 Code Safe.app` to `/Applications` when writable or `~/Applications` otherwise, and puts only `t3safe` in `~/.local/bin`. It never creates a `t3` command, so the official CLI keeps working. If an earlier safe install left a `t3` symlink pointing into `~/.local/share/t3safe`, the installer removes that symlink and says so; any other `t3` file or link is left alone. Add `~/.local/bin` to PATH if needed. It removes quarantine metadata. A failed Developer ID signature is rejected; only absent or ad-hoc signatures may be repaired. Quit the app before updating.
-
-`--cli-only` or `--app-only` select one component. `--dry-run` prints the plan. `--prefix /path` installs command files and the app below that directory; relative prefixes are normalized. Repeating an install is supported. Installing a lower version requires explicit `--allow-downgrade`, even with `--version`.
-
-The `t3safe doctor` and `t3safe update` commands come from this installer; a DMG-only install has the Settings launcher without them.
+- **macOS blocks the app:** run the `xattr` command above, or use Open Anyway.
+- **`t3safe: command not found`:** add `~/.local/bin` to `PATH`.
+- **Provider (`codex`, `claude`) not detected:** an app launched from Finder finds provider CLIs by running your login shell (`zsh -ilc`, 5 second limit). If the shell startup is slow or the CLI is elsewhere, set Settings → Providers → the provider → Binary path.
+- **Checksum mismatch:** stop and download the same release again; do not bypass verification.
+- **`403` from the GitHub API:** an anonymous rate limit. Retry later, or pass `--version` to skip the latest-release lookup.
 
 ## Coexists with official T3
 
@@ -77,20 +113,17 @@ Quit the app and any `t3safe` server, then start again. `T3SAFE_HOME`, when set,
 - Provider sign-ins stay in each app's own Electron profile, so you may sign in again.
 - The safe app also writes its `t3safe` launcher into `~/.t3/bin`.
 
-## Verify and update
+## Verify and update with `t3safe`
 
 ```sh
 t3safe version
 t3safe doctor
-t3safe update
 ```
 
-Doctor prints the installed version, release policy, effective data directory and where it came from (it notes when that is the official home, and warns for any other path inside `~/.t3`), effective CLI policy when installed, a warning for any legacy `t3` link left by an earlier safe install, and quarantine status. `t3safe` runs any other command through the bundled T3 CLI (CLI installs only), for example `t3safe pair`. App-only installs report the release policy; they do not introspect a running app. Update resolves the selected release, downloads its installer and SHA256SUMS, verifies the installer before execution, and preserves app-only or CLI-only selection. It never executes the installer from main. Use `t3safe update --version vX.Y.Z-safe.N` for a specific version. Use this updater for safe releases. `npx t3` installs a separate upstream distribution and is outside this installer’s policy boundary.
+Doctor prints the installed version, release policy, effective data directory and where it came from (it notes when that is the official home, and warns for any other path inside `~/.t3`), effective CLI policy when installed, a warning for any legacy `t3` link left by an earlier safe install, and quarantine status. `t3safe` runs any other command through the bundled T3 CLI (CLI installs only), for example `t3safe pair`. App-only installs report the release policy; they do not introspect a running app. Update never executes an installer from main. `npx t3` installs a separate upstream distribution and is outside this installer’s policy boundary.
 
 SHA256 detects a mismatched download. The release and checksums share GitHub trust; they do not provide independent publisher authentication. Release builds also publish GitHub provenance: `gh attestation verify <asset> --repo rakutenanalytics/t3code`.
 
 ## Uninstall
 
 Remove the app at the path printed by doctor, then remove `~/.local/bin/t3safe` and `~/.local/share/t3safe`. For a custom prefix, use those paths under the prefix. Never remove `~/.local/bin/t3` unless it is a symlink into `~/.local/share/t3safe` left by an earlier safe install; otherwise it belongs to the official CLI. Safe application data (`~/.t3-safe` and `~/Library/Application Support/t3code-safe`) is retained. Delete it only when you intend to lose the safe app's conversations and credentials; uninstalling never touches official T3 data.
-
-If a command is missing, check `~/.local/bin` is on PATH. On a checksum mismatch, stop and download the same release again; do not bypass verification. A `403` from the public GitHub API can be an anonymous rate limit; retry later or choose `--version` to avoid latest-release lookup.
