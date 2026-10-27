@@ -834,6 +834,11 @@
       "file": "third-party-licenses.config.json",
       "host": "sindresorhus.com",
       "justification": "Attribution and license source metadata for explicit license-generation tooling; no runtime telemetry grant."
+    },
+    {
+      "file": "scripts/lib/windows-jsign.ts",
+      "host": "timestamp.acs.microsoft.com",
+      "justification": "Explicit Windows signing on a non-Windows build host with configured Azure account/profile. jsign sends an RFC3161 executable digest to the existing Microsoft timestamp endpoint and uses the configured Azure signing service with build credentials. Binary comes from maintainer-controlled T3CODE_JSIGN or PATH. Safe macOS-only workflow does not invoke this Windows path; no runtime traffic grant."
     }
   ]
 }

@@ -12,6 +12,7 @@
         // CodeRabbit loads its configuration by filename.
         ".coderabbit.config.ts",
         ".github/scripts/thread-transfer-report.cjs",
+        ".github/scripts/mirror-play-apk.cjs",
       ],
       "vite": { "entry": [".github/**/*.test.cjs"] },
       "vitest": { "entry": [".github/**/*.test.cjs"] },
@@ -27,6 +28,9 @@
         "knip-schemas.ts",
         "mobile-native-client.ts",
         "setup-worktree.ts",
+        // Release tools invoked as commands rather than imported.
+        "resolve-nightly-release.ts",
+        "smoke-cli-archive.ts",
         "sign-macos.ts",
         "verify-windows-desktop-artifact.ts",
       ],

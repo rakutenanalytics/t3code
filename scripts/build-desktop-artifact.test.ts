@@ -221,7 +221,6 @@ it.layer(NodeServices.layer)("build-desktop-artifact", (it) => {
 
   it("installs production dependencies with the reviewed frozen lockfile", () => {
     assert.deepStrictEqual(STAGE_INSTALL_ARGS, ["install", "--prod", "--frozen-lockfile"]);
-
   });
 
   it.effect("rejects overlapping builds from another process until restoration finishes", () =>

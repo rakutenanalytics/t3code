@@ -1,11 +1,51 @@
 import { assert, it } from "@effect/vitest";
 import { RunId, ThreadId } from "@t3tools/contracts";
 import * as Effect from "effect/Effect";
+import * as FileSystem from "effect/FileSystem";
+import * as Layer from "effect/Layer";
+import * as NodeServices from "@effect/platform-node/NodeServices";
+import * as NetService from "@t3tools/shared/Net";
+import { Command } from "effect/cli";
+import { vi } from "vite-plus/test";
 
-import { type ThreadTools, waitForRun } from "./thread.ts";
+import { cli } from "../binCli.ts";
+import * as ServerConfig from "../config.ts";
+import * as RuntimeState from "../serverRuntimeState.ts";
+import * as McpBridge from "../mcp/AcpMcpStdioBridge.ts";
+import { ThreadServerNotRunningError, type ThreadTools, waitForRun } from "./thread.ts";
 
 const threadId = ThreadId.make("thread-1");
 const runId = RunId.make("run-1");
+
+it.effect(
+  "thread list rejects stale server state before opening an authenticated MCP connection",
+  () =>
+    Effect.gen(function* () {
+      using _process = vi.spyOn(RuntimeState, "isProcessAlive").mockReturnValue(false);
+      using transport = vi
+        .spyOn(McpBridge, "mcpToolSession")
+        .mockReturnValue(Effect.die("authenticated connection escaped the stale-server check"));
+      const fs = yield* FileSystem.FileSystem;
+      const baseDir = yield* fs.makeTempDirectoryScoped({ prefix: "t3-thread-stale-server-" });
+      const paths = yield* ServerConfig.deriveServerPaths(baseDir, undefined);
+      yield* fs.makeDirectory(paths.stateDir, { recursive: true });
+      const state = yield* RuntimeState.makePersistedServerRuntimeState({
+        config: { host: "127.0.0.1", devUrl: undefined },
+        port: 3773,
+      });
+      yield* RuntimeState.persistServerRuntimeState({ path: paths.serverRuntimeStatePath, state });
+
+      const error = yield* Command.runWith(cli, { version: "0.0.0" })([
+        "thread",
+        "list",
+        "--base-dir",
+        baseDir,
+      ]).pipe(Effect.flip);
+
+      assert.instanceOf(error, ThreadServerNotRunningError);
+      assert.strictEqual(transport.mock.calls.length, 0);
+    }).pipe(Effect.provide(Layer.mergeAll(NodeServices.layer, NetService.layer))),
+);
 
 /** Answers each tool call with the next scripted response for that tool. */
 const scriptedTools = (script: Record<string, Array<unknown>>) => {

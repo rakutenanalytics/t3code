@@ -64,7 +64,9 @@ const unescapeXmlText = (value: string) =>
   value.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&amp;", "&");
 
 export function bootServiceBaseDirOf(contents: string): string | undefined {
-  const systemd = new RegExp(`^Environment=${appIdentity.homeEnvVar}=(.*)$`, "m").exec(contents)?.[1];
+  const systemd = new RegExp(`^Environment=${appIdentity.homeEnvVar}=(.*)$`, "m").exec(
+    contents,
+  )?.[1];
   if (systemd !== undefined) return unquoteSystemdValue(systemd.trim());
   const plist = new RegExp(`<key>${appIdentity.homeEnvVar}</key>\\s*<string>([^<]*)</string>`).exec(
     contents,

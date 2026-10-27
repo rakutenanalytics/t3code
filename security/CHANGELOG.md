@@ -2,6 +2,16 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-10-27 — v0.1.2 security review
+
+- baseline-update: security/egress-inventory.md — Records Muse metadata lookup gating for both normal and fresh requests, attachment transfers before Send to selected authenticated environments, diagram URL filtering and escaped/image-function rejection before mount in SVG/MathML attributes, mobile native icon loaders constrained to fixed bundled assets or the development asset server, Electron installer mirror/remote-checksum build-host inputs and separate fallback checksum verification, explicit Windows signing authority and thread CLI bearer sessions. Thread CLI rejects a dead recorded process before token issuance; local runtime state and owner-level auth storage remain trusted. The CLI does not inherit provider thread ceilings; provider shell sandboxing is outside the existing threat model. Repository identity URLs strip HTTP(S) userinfo and query tokens before crossing environments; explicit clone retries preserve the selected host and use target-side Git credentials.
+- baseline-update: security/allowlist.json — Reviews scripts/lib/windows-jsign.ts specifically: configured Windows signing uses the existing Microsoft RFC3161 timestamp endpoint and configured Azure signing service. Safe macOS-only builds do not invoke it; no runtime capability grant.
+
+- baseline-update: security/dependency-baseline.json — Reviews the v0.1.2 lockfile/manifests, local react-native-screens archive and NSIS patch, preserving the 4320-minute age floor, strict trust checks and exact lifecycle grants. All 120 changed registry releases meet the floor; no new package exceptions. The compiler's renamed exact build grant retains its reviewed own-bin version rewrite.
+- baseline-update: security/stage-lock-baseline.json — Updates deterministic desktop and CLI projections from the reviewed root lockfile; staged installs remain frozen and version checked.
+- baseline-update: security/network-baseline.json — Records the reviewed upstream runtime/build diff and preserved fork gates, including Muse metadata denial, diagram resource filtering, HTTP repository identity redaction, dead-process CLI rejection and checksum-verified Electron fallback. Scanner changes accept age-qualified registry upgrades and leave unknown/young ages unresolved; source and build permissions remain diff reviewed.
+- baseline-update: security/last-approved-upstream — Records the reviewed v0.1.2 target 044f07257c9684ae4543bd1e1ebf9c394e9e3830 and sync count 1.
+
 ## 2026-10-27 — desktop preload no longer bundles Effect
 
 - baseline-update: security/network-baseline.json — Refreshes whole-file fingerprints for `apps/desktop/src/preload.ts`, `apps/desktop/vite.config.ts` and the preload bundle verifier with its test. The preload reads the baked managed policy constant directly instead of importing Effect, the verifier now runs the bundle inside an Electron-like function wrapper and the desktop build runs it. No network statement, host or capability grant changes; the baked policy still denies `t3Connect`.

@@ -74,7 +74,9 @@ export function registryReview(
     if (/https?:|\bcurl\b|\bwget\b|download|prebuild|node-gyp|\bnpm\b|\bpnpm\b/i.test(command))
       reasons.push(`possible install-time network in ${stage}: ${command}`);
   }
+  const requiresAgeReview = ageMinutes === null || ageMinutes < minimumAgeMinutes;
   return {
+    requiresAgeReview,
     ageMinutes,
     publishedAt,
     lifecycleScripts,

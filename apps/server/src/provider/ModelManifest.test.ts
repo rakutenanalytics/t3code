@@ -328,11 +328,7 @@ it.effect(
   "should return the bundled catalog for refresh and forceRefresh without requesting upstream metadata when providerMetadata is denied",
   () => {
     vi.mocked(managedPolicy.allows).mockReturnValue(false);
-    const requests: string[] = [];
-    const transport = HttpClient.make((request) => {
-      requests.push(request.url);
-      return Effect.die("upstream metadata request escaped managed policy");
-    });
+    const response = vi.fn(() => Response.json(REMOTE_MANIFEST));
 
     return Effect.gen(function* () {
       const manifest = yield* ModelManifest.make;
@@ -345,13 +341,12 @@ it.effect(
         [current, refreshed, forced],
         Array(3).fill(ModelManifest.BUNDLED_MODEL_MANIFEST),
       );
-      assert.deepStrictEqual(requests, []);
+      assert.strictEqual(response.mock.calls.length, 0);
     }).pipe(
-      Effect.provideService(HttpClient.HttpClient, transport),
       Effect.provide(
         layerService({
           prefix: "managed-model-manifest",
-          response: () => Response.json(REMOTE_MANIFEST),
+          response,
         }),
       ),
       Effect.scoped,

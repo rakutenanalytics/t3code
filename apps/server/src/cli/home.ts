@@ -8,7 +8,7 @@ import {
   type HomeSource,
 } from "@t3tools/shared/homeChoice";
 
-export const SHARES_DATA_NOTE = "Shares data with official T3 Code.";
+const SHARES_DATA_NOTE = "Shares data with official T3 Code.";
 
 const USAGE = `Usage: ${appIdentity.cliCommand} home [use-official | use-isolated]`;
 
@@ -28,7 +28,7 @@ export function runHomeCommand(
   return { output: USAGE, exitCode: 1 };
 }
 
-export function describeHome(host: HomeChoiceHost): string {
+function describeHome(host: HomeChoiceHost): string {
   const home = resolveHomeFromHost(host);
   const lines = [`Home: ${home.dir}`, `Source: ${describeSource(home.source, host)}`];
   if (home.dir === officialHomeDir(host.homeDirectory)) lines.push(SHARES_DATA_NOTE);

@@ -153,11 +153,31 @@ const KATEX_MATHML_ATTRIBUTES = new Set([
 
 let purifier: ReturnType<typeof DOMPurify> | null = null;
 
+function createDiagramPurifier() {
+  const sanitizer = DOMPurify(window);
+  // DOMPurify permits CSS URLs in style and SVG presentation attributes, which can fetch on mount.
+  sanitizer.addHook("uponSanitizeAttribute", (_node, attribute) => {
+    // Reject escapes that hide URL names and image functions that load bare strings.
+    // https://www.w3.org/TR/css-syntax-3/#consume-an-escaped-code-point
+    // https://www.w3.org/TR/css-images-4/#image-set-notation
+    const hasCssEscape = attribute.attrValue.includes("\\");
+    const hasImageFunction = /\b(?:image|image-set|-webkit-image-set|src)\s*\(/i.test(
+      attribute.attrValue,
+    );
+    if (hasCssEscape || hasImageFunction) {
+      attribute.keepAttr = false;
+      return;
+    }
+    attribute.attrValue = attribute.attrValue.replace(/url\(\s*(?!['"]?#)[^)]*\)/gi, "none");
+  });
+  return sanitizer;
+}
+
 // Diagrams can come from untrusted PR descriptions. Pele escapes labels and
 // links and images are off, so this is defense in depth against anything that
 // could navigate, run script, or fetch remote content.
 function sanitizeDiagramSvg(svg: string): Node {
-  purifier ??= DOMPurify(window);
+  purifier ??= createDiagramPurifier();
   return purifier.sanitize(svg, {
     FORBID_ATTR: ["href", "xlink:href", "src", "srcset"],
     FORBID_TAGS: ["a", "image", "foreignObject", "style"],
@@ -168,7 +188,7 @@ function sanitizeDiagramSvg(svg: string): Node {
 
 // Pele puts MathML labels in a <foreignObject> with an HTML <div> around them.
 function sanitizeMathDiagramSvg(svg: string): Node {
-  purifier ??= DOMPurify(window);
+  purifier ??= createDiagramPurifier();
   return purifier.sanitize(svg, {
     // DOMPurify still only accepts <math> under an HTML parent and checks every
     // MathML child's namespace.

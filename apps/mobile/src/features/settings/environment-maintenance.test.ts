@@ -1,4 +1,5 @@
-import { AuthOrchestrationOperateScope } from "@t3tools/contracts";
+import { AuthEnvironmentMaintainScope } from "@t3tools/contracts";
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import { afterEach, describe, expect, it, vi } from "vite-plus/test";
 
 import { canMaintainEnvironment, findEnvironmentUpdate } from "./environment-maintenance";
@@ -6,7 +7,7 @@ import { canMaintainEnvironment, findEnvironmentUpdate } from "./environment-mai
 afterEach(() => vi.unstubAllGlobals());
 
 describe("environment maintenance access", () => {
-  it("requires a connected authenticated session with operate permission", () => {
+  it("requires a connected authenticated session with environment maintenance permission", () => {
     const session = {
       authenticated: true,
       auth: {
@@ -14,13 +15,17 @@ describe("environment maintenance access", () => {
         bootstrapMethods: [],
         sessionMethods: [],
         sessionCookieName: "session",
+        serverUpdateScope: AuthEnvironmentMaintainScope,
       },
-      scopes: [AuthOrchestrationOperateScope],
+      scopes: [AuthEnvironmentMaintainScope],
     };
     expect(canMaintainEnvironment(session, true)).toBe(true);
     expect(canMaintainEnvironment(session, false)).toBe(false);
     expect(canMaintainEnvironment({ ...session, authenticated: false }, true)).toBe(false);
     expect(canMaintainEnvironment({ ...session, scopes: [] }, true)).toBe(false);
+    expect(canMaintainEnvironment({ ...session, scopes: ["orchestration:operate"] }, true)).toBe(
+      false,
+    );
     const { scopes: _, ...legacy } = session;
     expect(canMaintainEnvironment(legacy, true)).toBe(false);
     expect(canMaintainEnvironment(null, true)).toBe(false);
@@ -63,7 +68,20 @@ describe("environment release checks", () => {
         .join("")}</feed>`,
     );
 
+  it("rejects an upstream release check without fetching when managed policy disables updates", async () => {
+    using _policy = vi.spyOn(managedPolicy, "allows").mockReturnValue(false);
+    const fetch = vi.fn();
+    vi.stubGlobal("fetch", fetch);
+
+    await expect(findEnvironmentUpdate("1.0.0", signal)).rejects.toThrow(
+      "Upstream updates are disabled by managed policy",
+    );
+
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
   it("keeps nightly and preview hosts on their channel without using the anonymous API quota", async () => {
+    using _policy = vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
     vi.stubGlobal(
       "fetch",
       vi.fn(async (url: string) =>
@@ -89,6 +107,7 @@ describe("environment release checks", () => {
   });
 
   it("finds a published preview beyond the ten-entry feed and first API page", async () => {
+    using _policy = vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
     const nightlies = Array.from({ length: 10 }, (_, i) => `v1.0.0-nightly.20260930.${i}`);
     vi.stubGlobal(
       "fetch",
@@ -112,6 +131,7 @@ describe("environment release checks", () => {
   });
 
   it("reports failed checks instead of claiming the server is current", async () => {
+    using _policy = vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
     for (const status of [403, 429]) {
       vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, { status })));
       await expect(findEnvironmentUpdate("1.0.0", signal)).rejects.toThrow(String(status));

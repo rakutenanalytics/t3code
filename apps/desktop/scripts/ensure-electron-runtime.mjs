@@ -4,6 +4,7 @@ import * as NodeOS from "node:os";
 import * as NodePath from "node:path";
 import * as NodeURL from "node:url";
 import * as NodeChildProcess from "node:child_process";
+import { assertElectronRuntimeArchiveIntegrity } from "./electron-runtime-integrity.mjs";
 
 const require = NodeModule.createRequire(import.meta.url);
 // oxlint-disable-next-line t3code/no-global-process-runtime -- Standalone repair script has no Effect runtime.
@@ -153,6 +154,7 @@ function downloadElectronRuntime(electronDir, version) {
       "-o",
       zipPath,
     ]);
+    assertElectronRuntimeArchiveIntegrity(zipPath, NodePath.join(electronDir, "checksums.json"));
     if (hostPlatform === "darwin") {
       runChecked("ditto", ["-x", "-k", zipPath, NodePath.join(electronDir, "dist")]);
     } else {

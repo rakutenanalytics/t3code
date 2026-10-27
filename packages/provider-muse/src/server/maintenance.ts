@@ -1,4 +1,6 @@
 import { ProviderDriverKind, type ServerProvider } from "@t3tools/contracts";
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { enforceManagedCapability } from "@t3tools/shared/managedPolicyHttpClient";
 import { compareSemverVersions } from "@t3tools/shared/semver";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
@@ -89,10 +91,11 @@ export const latestMuseVersion = Effect.fn("latestMuseVersion")(function* (
   environment: NodeJS.ProcessEnv,
   options?: { readonly fresh?: boolean },
 ) {
+  if (!managedPolicy.allows("providerMetadata")) return null;
   const channel = environment.MUSE_CHANNEL || "muse-stable";
   if (!MUSE_CHANNELS.has(channel)) return null;
   const channelUrl = `https://api.meta.ai/muse-code/channels/${channel}`;
-  const client = yield* HttpClient.HttpClient;
+  const client = enforceManagedCapability("providerMetadata")(yield* HttpClient.HttpClient);
   const latestVersions = yield* ProviderLatestVersions.ProviderLatestVersions;
   return yield* latestVersions.cached(
     `muse:${channelUrl}`,

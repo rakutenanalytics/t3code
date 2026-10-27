@@ -8,7 +8,7 @@ description: Sync an upstream T3 Code release or upstream-sync issue into the sa
 Run on the maintainer's laptop, in a fresh thread on `rakutenanalytics/t3code`. Read repository AGENTS.md, `security/threat-model.md`, `security/egress-inventory.md`, and `docs/safe-fork/MAINTAINING.md` first.
 
 ```text
-issue or stable tag → preflight → merge tag → egress + package reviews → checks
+issue or stable tag → preflight → merge tag → diff review + age check → checks
                                                                          ↓
                                   PAUSE: approve draft PR + remote commands
                                                                          ↓
@@ -49,7 +49,7 @@ For each new or changed outbound call, record its trigger (startup/timer/render/
 - Every `HttpClient` acquisition in server cloud, relay and telemetry code still uses `enforceManagedCapability` or a gated constructor.
 - Workflow Actions retain verified commit SHAs; privileged triggers and event interpolation into shell are rejected. Installer updates verify the release’s installer checksum, downgrades require `--allow-downgrade`, and publication rechecks main tip and monotonic tags.
 - Generated code and fixtures remain scanned. Review full-file network changes, all Cargo locks, hooks, patches and vendored archives. Stage installs use the projected reviewed lockfile with `--frozen-lockfile`; new lifecycle grants name exact locked versions.
-- Inspect artifact host candidates and the mounted DMG policy check in CI. Check main, preload, server and web bundles, updater feed ownership, staged dependency versions and the standalone CLI policy. Unknown bundled destinations block release until justified; never approve a generated candidate inventory wholesale.
+- Inspect artifact host candidates and the mounted DMG policy check in CI. Check main, preload, server and web bundles, updater feed ownership, staged dependency versions and the standalone CLI policy. Unknown bundled hosts are informational under the artifact policy; trace denied literals and changed source behavior. Do not turn the inventory into an audit of every dependency endpoint.
 - Recheck behavior coverage for CloudLink HTTP, cloudflared installation, relay tracing, Codex feedback, disabled Clerk, denied desktop exposure and update RPC denial. Adapt existing coverage and add focused regression cases only for demonstrated policy gaps.
 
 Use the selected upstream tag's tests as the base, including intentional removals. Identify fork-specific security and custom-policy assertions from the anchor-to-fork diff; preserve or adapt those assertions rather than combining both parents' suites. Upstream test imports and mechanical conflict/import/API adaptations proceed without a separate test-contract approval. Run affected tests and the required checks below. Ask only for unresolved behavior decisions, changes to an explicitly agreed contract, or removal/weakening of fork policy assertions; propose only the affected cases and continue independent work. Publication approval remains a separate required pause.
@@ -58,7 +58,7 @@ Read [review-brief.md](review-brief.md) and use its prompt for two separate work
 
 Review `git diff <previous-sha> <target-sha>` for newly introduced upstream behavior, then `git diff origin/main...HEAD` for the integrated fork result. Eagerly hunt NEW or UNKNOWN outbound/leaking capabilities beyond the known gates. Do not limit review to the six capability names. Resolve every finding as a policy gate/capability, a justified allowlist entry, or a release blocker. The parent owns patches and integration.
 
-Run a full audit every fifth sync and on every upstream major version change. Use `syncCount + 1`, not elapsed time. Re-inventory all runtime/build networking and dependency scripts using the threat model, reset baselines after review, and record why the audit was due.
+Keep routine syncs bounded to the upstream and integrated fork diffs. Do not start periodic whole-repository audits based on sync count or version number. Escalate only a concrete finding or a maintainer-requested audit, with a stated scope. Reuse completed review evidence when resuming.
 
 Before installing dependencies or refreshing the dependency baseline, run:
 
@@ -66,11 +66,22 @@ Before installing dependencies or refreshing the dependency baseline, run:
 node scripts/safe/dependency-scan.ts --online
 ```
 
-An exit of 1 means baseline drift or unresolved review, not permission to skip the scan. Registry failures stay unknown. Preserve `security/young-or-unknown.json` outside the repository before rerunning; each scan replaces it. For EACH entry in its `packages` array, spawn one bounded read-only subagent using [dependency-review-brief.md](dependency-review-brief.md). Discover an allowed inexpensive model through `model-picker`; run at most two package reviewers concurrently, with one package and an eight-minute budget per task. Cancel a reviewer at its deadline and keep that package unresolved. Reviewers may download tarballs and write scratch files only in fresh empty directories outside the repository. They never install dependencies or run package scripts. If delegation or registry access is unavailable, leave the package unresolved and stop before publication.
+The configured pnpm minimum release age is the normal dependency acceptance rule:
 
-The parent validates each SAFE / SUSPICIOUS / BLOCK verdict and its evidence. No push while any BLOCK, SUSPICIOUS, incomplete or missing verdict is unresolved. Age alone never proves safety. For accepted SAFE reviews, add an exact package approval to `security/dependency-exceptions.json` with `package` as `name@version`, `resolutionSha256` from the report, a substantive `reason` linking the evidence, and the review `date` as YYYY-MM-DD. Never blanket-approve the report. The fingerprint binds approval to the locked package block; a changed resolution needs another review. Record each verdict and evidence in the draft PR body, including approvals carried forward. These local approvals do not grant publication permission.
+| Changed input                                                         | Action                                                                                                                        |
+| --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Registry release at or above `minimumReleaseAge`                      | Accept by age; normal lockfile/source diff review and frozen install. No tarball audit, reviewer task or package exception.   |
+| Registry release below the floor                                      | Prefer waiting. If needed now, targeted review and explicit maintainer approval of the exact age exception before installing. |
+| Unknown registry publication time                                     | Retry/resolve metadata; do not infer eligibility or clear it with an old approval.                                            |
+| Changed local archive, patch, hook, installer or lifecycle permission | Review that changed input and its observable effect. This is diff review, not an automatic audit of all transitive packages.  |
 
-The three-day pnpm age floor has no default exemptions. If a reviewed young version is required now, a maintainer may approve a matching exact `minimumReleaseAgeExclude` entry with the package review; never restore wildcard exemptions or use `--trust-lockfile`. The JSON approval alone clears scanner review, not pnpm's independent install policy. Preserve exact-version `allowBuilds` grants and explicit denials. New lifecycle builds need separate review before changing permissions. Refresh the dependency baseline only after package verdicts and policy changes are accepted, then rerun the online scan. Keep the original report and verdicts for the PR even when the refreshed scan has no changes.
+An exit of 1 can mean baseline drift or unresolved age checks. Review the reported diff before refreshing its baseline. Preserve reports in scratch before rerunning; scans replace them. Existing exact lifecycle grants, explicit denials, trust checks and integrity checks remain enforced. A concrete suspicious change warrants a bounded investigation regardless of age; ordinary lifecycle metadata or a native platform build alone does not.
+
+Only when a below-age exception is actually needed, use [dependency-review-brief.md](dependency-review-brief.md). Group packages sharing a verified release/source revision into one task; share source evidence and retain exact artifact integrity checks and a verdict for each exception. Use `model-picker`, at most two inexpensive reviewers concurrently, eight minutes per task. Reviewers work read-only in scratch, never install or execute package scripts. Stop at the deadline and report the unresolved exception; do not restart completed sibling reviews.
+
+For a young release, validate the SAFE / SUSPICIOUS / BLOCK evidence and present only the required exact exceptions for maintainer approval. After explicit approval, record `name@version`, report `resolutionSha256`, evidence-backed `reason` and YYYY-MM-DD `date` in `security/dependency-exceptions.json`, plus the exact `minimumReleaseAgeExclude` entry. No wildcard exclusions or `--trust-lockfile`. JSON review alone does not grant approval to bypass pnpm. Unknown ages and suspicious or blocked exceptions remain unresolved. Do not add exception records for ordinary age-qualified upgrades.
+
+New lifecycle build grants still require review of the changed script before adding an exact locked-version permission. Refresh the dependency baseline after the input diff and any required exceptions are resolved, then rerun the scan. Report the age floor, unresolved/approved exceptions and actual findings concisely in the PR; no per-package review ledger for age-qualified releases.
 
 After review and patching:
 
@@ -90,7 +101,7 @@ Update `last-approved-upstream` with target tag, peeled SHA and incremented sync
 
 ## 3. PAUSE: approve publication
 
-Show the draft PR title/body and exact planned remote-write commands. The body states upstream tag/SHA, new egress findings and decisions, validation, full-audit status and remaining gaps. Include every dependency review as package/version, previous version, age or unknown, dependency path, verdict, evidence and approved exception reason/date. Report online CI failures explicitly; its advisory status never resolves a package review. When starting from an issue, include `Closes #N` with its actual number. End it with model and harness. Wait for explicit user approval before ANY push or gh write. Explain this pause is required by this skill and the public-fork rule in AGENTS.md.
+Show the draft PR title/body and exact planned remote-write commands. The body states upstream tag/SHA, new egress findings and decisions, validation and remaining gaps. Summarize age eligibility and list only required age exceptions or concrete supply-chain findings with their evidence and approval. Report online CI failures explicitly; its advisory status never resolves an unknown age or unapproved exception. When starting from an issue, include `Closes #N` with its actual number. End it with model and harness. Wait for explicit user approval before ANY push or gh write. Explain this pause is required by this skill and the public-fork rule in AGENTS.md.
 
 After approval, push only `sync/<tag>` to the fork and create the PR:
 

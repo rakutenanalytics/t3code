@@ -57,7 +57,25 @@ if (base) {
       ".github/",
       "install.sh",
     );
-    const summary = `\n## Security baseline source changes\n\nReview security/CHANGELOG.md against these source changes.\n\n\`\`\`diff\n${sourceDiff}\n\`\`\`\n`;
+    // GitHub rejects job summaries above 1 MiB; full upstream syncs exceed that limit.
+    const exceedsSummaryLimit = Buffer.byteLength(sourceDiff) > 900 * 1024;
+    const reviewDiff = exceedsSummaryLimit
+      ? git(
+          "diff",
+          "--stat",
+          base,
+          "--",
+          "apps/",
+          "packages/",
+          "scripts/",
+          ".github/",
+          "install.sh",
+        )
+      : sourceDiff;
+    const reviewInstruction = exceedsSummaryLimit
+      ? `Full source diff exceeds the job-summary limit. Review it locally with git diff ${base} -- apps/ packages/ scripts/ .github/ install.sh. The summary below is only a file overview.`
+      : "Review security/CHANGELOG.md against these source changes.";
+    const summary = `\n## Security baseline source changes\n\n${reviewInstruction}\n\n\`\`\`diff\n${reviewDiff}\n\`\`\`\n`;
     if (process.env.GITHUB_STEP_SUMMARY)
       NodeFS.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
     else
@@ -73,5 +91,10 @@ finishScan(
 );
 
 function git(...args: string[]) {
-  return NodeChildProcess.execFileSync("git", args, { cwd: root, encoding: "utf8" });
+  return NodeChildProcess.execFileSync("git", args, {
+    cwd: root,
+    encoding: "utf8",
+    // An upstream sync includes the full imported test diff, beyond Node's 1 MiB default.
+    maxBuffer: 64 * 1024 * 1024,
+  });
 }

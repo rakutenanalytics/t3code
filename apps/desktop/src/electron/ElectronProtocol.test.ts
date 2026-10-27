@@ -153,74 +153,76 @@ describe("ElectronProtocol", () => {
       assert.equal(netFetchMock.mock.calls.length, 0);
     }).pipe(Effect.provide(layerProtocol)),
   );
-  it.effect("keeps executable sources host-restricted while allowing runtime network resources", () =>
-    Effect.gen(function* () {
-      let handler: ((request: Request) => Promise<Response>) | undefined;
-      handleMock.mockImplementation((_scheme, nextHandler) => {
-        handler = nextHandler;
-      });
-      netFetchMock.mockResolvedValue(new Response("ok"));
-      const policy = yield* Effect.scoped(
-        Effect.gen(function* () {
-          const protocol = yield* ElectronProtocol.ElectronProtocol;
-          yield* protocol.registerDesktopProtocol({
-            scheme: "t3code",
-            targetOrigin: new URL("http://127.0.0.1:3773/"),
-            clerkFrontendApiHostname: "clerk.t3.codes",
-          });
-          const response = yield* Effect.promise(() => handler!(new Request("t3code://app/")));
-          return response.headers.get("content-security-policy") ?? "";
-        }),
-      );
-    const directives = Object.fromEntries(
-      policy.split("; ").map((directive) => {
-        const [name, ...sources] = directive.split(" ");
-        return [name, sources];
-      }),
-    );
+  it.effect(
+    "keeps executable sources host-restricted while allowing runtime network resources",
+    () =>
+      Effect.gen(function* () {
+        let handler: ((request: Request) => Promise<Response>) | undefined;
+        handleMock.mockImplementation((_scheme, nextHandler) => {
+          handler = nextHandler;
+        });
+        netFetchMock.mockResolvedValue(new Response("ok"));
+        const policy = yield* Effect.scoped(
+          Effect.gen(function* () {
+            const protocol = yield* ElectronProtocol.ElectronProtocol;
+            yield* protocol.registerDesktopProtocol({
+              scheme: "t3code",
+              targetOrigin: new URL("http://127.0.0.1:3773/"),
+              clerkFrontendApiHostname: "clerk.t3.codes",
+            });
+            const response = yield* Effect.promise(() => handler!(new Request("t3code://app/")));
+            return response.headers.get("content-security-policy") ?? "";
+          }),
+        );
+        const directives = Object.fromEntries(
+          policy.split("; ").map((directive) => {
+            const [name, ...sources] = directive.split(" ");
+            return [name, sources];
+          }),
+        );
 
-    assert.deepEqual(directives["script-src"], [
-      "'self'",
-      "'unsafe-inline'",
-      "'wasm-unsafe-eval'",
-      "https://clerk.t3.codes",
-      "https://challenges.cloudflare.com",
-    ]);
-    assert.deepEqual(directives["connect-src"], [
-      "'self'",
-      "blob:",
-      "http:",
-      "https:",
-      "ws:",
-      "wss:",
-    ]);
-    assert.deepEqual(directives["img-src"], [
-      "'self'",
-      "t3code:",
-      "blob:",
-      "data:",
-      "http://localhost:*",
-      "https://localhost:*",
-      "http://127.0.0.1:*",
-      "https://127.0.0.1:*",
-      "http://[::1]:*",
-      "https://[::1]:*",
-    ]);
-    assert.deepEqual(directives["media-src"], [
-      "'self'",
-      "t3code:",
-      "blob:",
-      "data:",
-      "http://localhost:*",
-      "https://localhost:*",
-      "http://127.0.0.1:*",
-      "https://127.0.0.1:*",
-      "http://[::1]:*",
-      "https://[::1]:*",
-    ]);
-    assert.deepEqual(directives["frame-src"], ["'self'", "blob:", "http:", "https:"]);
-    assert.deepEqual(directives["object-src"], ["'self'", "blob:", "http:", "https:"]);
-    assert.deepEqual(directives["font-src"], ["'self'", "t3code:", "data:"]);
-    }).pipe(Effect.provide(layerProtocol)),
+        assert.deepEqual(directives["script-src"], [
+          "'self'",
+          "'unsafe-inline'",
+          "'wasm-unsafe-eval'",
+          "https://clerk.t3.codes",
+          "https://challenges.cloudflare.com",
+        ]);
+        assert.deepEqual(directives["connect-src"], [
+          "'self'",
+          "blob:",
+          "http:",
+          "https:",
+          "ws:",
+          "wss:",
+        ]);
+        assert.deepEqual(directives["img-src"], [
+          "'self'",
+          "t3code:",
+          "blob:",
+          "data:",
+          "http://localhost:*",
+          "https://localhost:*",
+          "http://127.0.0.1:*",
+          "https://127.0.0.1:*",
+          "http://[::1]:*",
+          "https://[::1]:*",
+        ]);
+        assert.deepEqual(directives["media-src"], [
+          "'self'",
+          "t3code:",
+          "blob:",
+          "data:",
+          "http://localhost:*",
+          "https://localhost:*",
+          "http://127.0.0.1:*",
+          "https://127.0.0.1:*",
+          "http://[::1]:*",
+          "https://[::1]:*",
+        ]);
+        assert.deepEqual(directives["frame-src"], ["'self'", "blob:", "http:", "https:"]);
+        assert.deepEqual(directives["object-src"], ["'self'", "blob:", "http:", "https:"]);
+        assert.deepEqual(directives["font-src"], ["'self'", "t3code:", "data:"]);
+      }).pipe(Effect.provide(layerProtocol)),
   );
 });

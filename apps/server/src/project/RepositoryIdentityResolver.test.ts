@@ -267,6 +267,38 @@ it.layer(NodeServices.layer)("RepositoryIdentityResolverLive", (it) => {
     }).pipe(Effect.provide(RepositoryIdentityResolver.layer)),
   );
 
+  it.effect(
+    "removes HTTPS credentials and token queries from upstream and fork identity URLs",
+    () =>
+      Effect.gen(function* () {
+        const fileSystem = yield* FileSystem.FileSystem;
+        const cwd = yield* fileSystem.makeTempDirectoryScoped({
+          prefix: "t3-repository-identity-credentials-test-",
+        });
+        yield* git(cwd, ["init"]);
+        yield* git(cwd, [
+          "remote",
+          "add",
+          "origin",
+          "https://user:fork-token@github.com/julius/t3code-fork.git?access_token=secret",
+        ]);
+        yield* git(cwd, [
+          "remote",
+          "add",
+          "upstream",
+          "https://user:upstream-token@github.com/T3Tools/t3code.git?access_token=secret",
+        ]);
+        const resolver = yield* RepositoryIdentityResolver.RepositoryIdentityResolver;
+
+        const identity = yield* resolver.resolve(cwd);
+
+        expect(identity?.locator.remoteUrl).toBe("https://github.com/T3Tools/t3code.git");
+        expect(identity?.origin?.remoteUrl).toBe("https://github.com/julius/t3code-fork.git");
+        expect(identity?.canonicalKey).toBe("github.com/t3tools/t3code");
+        expect(identity?.origin?.canonicalKey).toBe("github.com/julius/t3code-fork");
+      }).pipe(Effect.provide(RepositoryIdentityResolver.layer)),
+  );
+
   it.effect("uses the last remote path segment as the repository name for nested groups", () =>
     Effect.gen(function* () {
       const fileSystem = yield* FileSystem.FileSystem;

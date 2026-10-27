@@ -1,10 +1,10 @@
 # Sync report template
 
 - Previous reviewed tag/SHA → target tag/SHA:
-- Sync count; full audit due/performed and why:
+- Sync count; diff scope and any explicitly requested audit:
 - Local commits and integrated PR/head SHA:
 - Reviewers/models and inspected diff ranges:
-- New outbound/dependency findings → gate or justified exception:
+- New outbound findings; age floor and required dependency exceptions:
 - Baseline changes and removed exceptions:
 - Local checks with commands/results:
 - CI run/artifacts and checksum evidence:
