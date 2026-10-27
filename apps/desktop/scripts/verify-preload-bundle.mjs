@@ -14,10 +14,18 @@ const expectedDesktopBridgeApis = [
 ];
 const clerkPasskeysGlobal = "__clerk_internal_electron_passkeys";
 const preloadExecutionTimeoutMs = 1_000;
+const bakedManagedPolicyFile = new URL("../../../security/managed-policy.json", import.meta.url);
 const desktopPackage = JSON.parse(
   NodeFS.readFileSync(new URL("../package.json", import.meta.url), "utf8"),
 );
 const electronVersion = desktopPackage.dependencies.electron;
+
+// Mirrors preload.ts: no baked policy file (upstream) allows every capability.
+const readBakedT3ConnectAllowed = () => {
+  if (!NodeFS.existsSync(bakedManagedPolicyFile)) return true;
+  const policy = JSON.parse(NodeFS.readFileSync(bakedManagedPolicyFile, "utf8"));
+  return policy.allow.includes("t3Connect");
+};
 
 const isSyntaxNode = (value) =>
   typeof value === "object" && value !== null && "type" in value && typeof value.type === "string";
@@ -69,6 +77,9 @@ const createSandboxModules = (exposedGlobals) => {
       exposeInMainWorld: (name, api) => exposedGlobals.set(name, api),
     },
     ipcRenderer,
+    webFrame: {
+      getZoomFactor: () => 1,
+    },
     webUtils: {
       getPathForFile: () => "",
     },
@@ -103,11 +114,20 @@ const executeBundle = (source, sandboxModules) => {
     return sandboxModules.get(moduleName);
   };
 
+  // Electron runs a sandboxed preload as the body of a function that already binds these names,
+  // so a bundled top-level `const setImmediate` is a SyntaxError that drops the whole preload.
+  const wrappedSource = `(function (require, process, Buffer, global, setImmediate, clearImmediate, exports, module) {\n${source}\n})(require, process, Buffer, globalThis, setImmediate, clearImmediate, {}, { exports: {} });`;
+
   NodeVM.runInNewContext(
-    source,
+    wrappedSource,
     {
+      Buffer,
+      clearImmediate,
       process: sandboxProcess,
       require: requireSandboxModule,
+      setImmediate,
+      // The preload registers renderer listeners on macOS; the verifier never dispatches them.
+      window: { addEventListener: () => undefined },
     },
     {
       filename: "desktop-preload.cjs",
@@ -116,7 +136,10 @@ const executeBundle = (source, sandboxModules) => {
   );
 };
 
-export const verifyPreloadBundle = (source) => {
+export const verifyPreloadBundle = (
+  source,
+  { t3ConnectAllowed = readBakedT3ConnectAllowed() } = {},
+) => {
   const runtimeImports = inspectBundle(source);
   const exposedGlobals = new Map();
   const sandboxModules = createSandboxModules(exposedGlobals);
@@ -137,7 +160,9 @@ export const verifyPreloadBundle = (source) => {
     (api) => typeof desktopBridge?.[api] !== "function",
   );
   if (!exposedGlobals.has("desktopBridge")) missingApis.unshift("desktopBridge exposure");
-  if (!exposedGlobals.has(clerkPasskeysGlobal)) missingApis.push(`${clerkPasskeysGlobal} exposure`);
+  if (t3ConnectAllowed && !exposedGlobals.has(clerkPasskeysGlobal)) {
+    missingApis.push(`${clerkPasskeysGlobal} exposure`);
+  }
 
   if (missingApis.length > 0) {
     throw new Error(`Desktop preload bundle is missing executable APIs: ${missingApis.join(", ")}`);

@@ -27,7 +27,7 @@ export default defineConfig({
     tasks: {
       build: {
         command:
-          "node scripts/build-browser-secret.mjs && node scripts/build-preview-annotation-css.mjs && vp pack",
+          "node scripts/build-browser-secret.mjs && node scripts/build-preview-annotation-css.mjs && vp pack && node scripts/verify-preload-bundle.mjs",
         dependsOn: ["t3#build"],
         cache: false,
       },
@@ -110,7 +110,7 @@ export default defineConfig({
       entry: ["src/preload.ts"],
       deps: {
         // Sandboxed preloads cannot resolve arbitrary packages from the ASAR, so
-        // the Clerk bridge and its managed-policy dependencies must be bundled.
+        // the Clerk bridge must be bundled. Keep Effect out: see preload.ts.
         alwaysBundle: (id) =>
           !id.startsWith("node:") && id !== "electron" && !id.startsWith("electron/"),
       },
