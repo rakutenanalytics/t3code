@@ -2,6 +2,10 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-10-28 — Bash 3.2 update argument forwarding (#11)
+
+- baseline-update: security/network-baseline.json — Reviews only `scripts/safe/t3safe`, its new offline `scripts/safe/t3safe.test.ts` regression and the macOS CI invocation in `.github/workflows/pr-checks.yml`. Guarded array expansion preserves zero arguments under Bash 3.2 nounset without changing installer checksum verification, mode selection or options. The new www.gnu.org literal is a Bash manual comment only; fixture GitHub URLs are served by a local curl stub. No runtime network grant, dependency or scanner policy changes.
+
 ## 2026-10-28 — v0.1.2 packaged client contexts
 
 - baseline-update: security/artifact-hosts.json — Reviews six changed client literal contexts from CI run 40617280141 and their identical-byte CLI path mirrors. Auth-return validation, prompt URLs, hosted pairing, download navigation and inert project schema/help text retain previously accepted behavior; only minified context changed. The actual DMG and ZIP app.asar match SHA-256 e3e9079bee17557a62f9cc1911456f7e58e4da410e2a84559083e95561811c80, packaged policy/identity verification passes, and scanning then reports zero unapproved literals. No scanner relaxation or runtime network grant. New informational host pele.run occurs only in third-party license metadata.
