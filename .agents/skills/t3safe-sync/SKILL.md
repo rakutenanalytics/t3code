@@ -1,6 +1,6 @@
 ---
 name: t3safe-sync
-description: Sync an upstream T3 Code release or upstream-sync issue into the safe fork, review new outbound capabilities, and prepare a PR for maintainer-approved automatic release.
+description: Sync an upstream T3 Code release or upstream-sync issue into the safe fork, review new outbound capabilities, and create and babysit its PR until ready for maintainer review and merge.
 ---
 
 # t3safe-sync
@@ -10,9 +10,9 @@ Run on the maintainer's laptop, in a fresh thread on `rakutenanalytics/t3code`. 
 ```text
 issue or stable tag → preflight → merge tag → diff review + age check → checks
                                                                          ↓
-                                  PAUSE: approve draft PR + remote commands
+                                  push → fork PR → fix CI/review findings
                                                                          ↓
-                                  push → fork PR → CI green → hand to maintainer
+                                  mergeable, reviewed head → hand to maintainer
                                                                          ↓
                                   maintainer merges = release approval
                                                                          ↓
@@ -26,7 +26,7 @@ issue or stable tag → preflight → merge tag → diff review + age check → 
 - Pass `--repo rakutenanalytics/t3code` to every repository-scoped `gh` command. In particular, fork `gh pr create` otherwise defaults to the upstream parent. Auth-only `gh auth status` has no `--repo` flag; use public curl for upstream API reads; keep all repository-scoped gh operations on the fork.
 - Never skip scanners or regenerate baselines merely to make them pass. Every new destination and network action needs a gate or a justified review entry.
 - No dev servers, browsers, real credentials or live T3 data. Use focused tests and isolated fixture state. Keep scratch material outside the repository.
-- Before the publication approval pause, finish the local work and show the draft and concrete commands. Invoking this skill grants no remote-write approval.
+- Invoking this skill authorizes pushing `sync/<tag>` to the fork, creating/updating its PR, and in-scope fix commits, pushes, review requests, replies and thread resolutions until it is ready for maintainer review and merge. Do not ask for a separate draft, push or PR approval. This standing authorization is specific to this workflow; unrelated remote actions remain outside scope.
 - Never merge for the user. Hand the green PR to the maintainer; their merge approves the automatic public release. Never advise merging with failing or skipped required checks.
 
 ## 1. Preflight and target
@@ -52,7 +52,7 @@ For each new or changed outbound call, record its trigger (startup/timer/render/
 - Inspect artifact host candidates and the mounted DMG policy check in CI. Check main, preload, server and web bundles, updater feed ownership, staged dependency versions and the standalone CLI policy. Unknown bundled hosts are informational under the artifact policy; trace denied literals and changed source behavior. Do not turn the inventory into an audit of every dependency endpoint.
 - Recheck behavior coverage for CloudLink HTTP, cloudflared installation, relay tracing, Codex feedback, disabled Clerk, denied desktop exposure and update RPC denial. Adapt existing coverage and add focused regression cases only for demonstrated policy gaps.
 
-Use the selected upstream tag's tests as the base, including intentional removals. Identify fork-specific security and custom-policy assertions from the anchor-to-fork diff; preserve or adapt those assertions rather than combining both parents' suites. Upstream test imports and mechanical conflict/import/API adaptations proceed without a separate test-contract approval. Run affected tests and the required checks below. Ask only for unresolved behavior decisions, changes to an explicitly agreed contract, or removal/weakening of fork policy assertions; propose only the affected cases and continue independent work. Publication approval remains a separate required pause.
+Use the selected upstream tag's tests as the base, including intentional removals. Identify fork-specific security and custom-policy assertions from the anchor-to-fork diff; preserve or adapt those assertions rather than combining both parents' suites. Upstream test imports and mechanical conflict/import/API adaptations proceed without a separate test-contract approval. Run affected tests and the required checks below. Ask only for unresolved behavior decisions, changes to an explicitly agreed contract, or removal/weakening of fork policy assertions; propose only the affected cases and continue independent work. PR creation and in-scope babysitting are already authorized by invocation; maintainer review and merge remain the final handoff.
 
 Read [review-brief.md](review-brief.md) and use its prompt for two separate worker subagents. Apply the maintainer's available `model-picker` rules. Discover live allowed inexpensive models; use those for bounded diff reviews. Never select Opus without explicit approval. Each worker owns one read-only review: one runtime/client egress, one dependencies/installers/workflows. They are not alone in the codebase; they must not revert others' changes or edit files. Include the exact anchor, target and fork diff in both briefs. If delegation is unavailable, report it and obtain an equivalent human review before publication.
 
@@ -99,18 +99,20 @@ For an intentional reviewed change, first update the host justification/inventor
 
 Update `last-approved-upstream` with target tag, peeled SHA and incremented sync count. Update inventory, threat model and baselines to describe the actual boundaries. Remove stale exceptions. Commit logical changes with conventional titles. Done when findings are resolved, focused local checks pass, and the full diff is ready for a human.
 
-## 3. PAUSE: approve publication
+## 3. Create the PR and babysit it
 
-Show the draft PR title/body and exact planned remote-write commands. The body states upstream tag/SHA, new egress findings and decisions, validation and remaining gaps. Summarize age eligibility and list only required age exceptions or concrete supply-chain findings with their evidence and approval. Report online CI failures explicitly; its advisory status never resolves an unknown age or unapproved exception. When starting from an issue, include `Closes #N` with its actual number. End it with model and harness. Wait for explicit user approval before ANY push or gh write. Explain this pause is required by this skill and the public-fork rule in AGENTS.md.
-
-After approval, push only `sync/<tag>` to the fork and create the PR:
+Finish the local review and focused checks, then push only `sync/<tag>` to the fork and create its PR without asking again. Reuse an existing PR for that head if present. Write the body to a temporary file: upstream tag/SHA, concrete findings and decisions, validation and remaining CI work. Summarize age eligibility and list only required exceptions with their evidence and approval. Include `Closes #N` when started from that issue. End with model and harness.
 
 ```sh
 git push -u origin 'sync/<tag>'
-gh pr create --repo rakutenanalytics/t3code --base main --head 'sync/<tag>' --title '<approved title>' --body-file '<reviewed temporary body file>'
+gh pr create --repo rakutenanalytics/t3code --base main --head 'sync/<tag>' --title '<sync title>' --body-file '<temporary body file>'
 ```
 
-If T3 PR linking is available, register the returned PR URL immediately. Watch checks using the app's PR watcher when available; otherwise `gh pr checks --repo rakutenanalytics/t3code <number> --watch` or `gh run watch --repo rakutenanalytics/t3code <run-id>`. Investigate failures and fix locally. Approval covers fixes to this reviewed scope, not new external actions. Do not merge with failing/skipped required checks. Changes that expand the approved scope require a new draft approval.
+Register the returned PR URL with T3 immediately. Use `babysit-pr` when available, carrying this invocation's authorization across every round. Fix in-scope CI failures and real review findings, run relevant checks, commit/push fixes, reply to and resolve addressed or evidence-backed dismissed threads, and request review of the changed head. No renewed permission for those operations. Escalate only a genuine behavior/policy decision, a required young-release exception, or an out-of-scope action; continue independent work.
+
+With the app PR watcher, handle existing findings, call `watch_pull_request`, and end the turn. Resume on its events; no polling, sleeps or watcher subagent. Do not hand the PR back merely because it was created or checks are running. If the app watcher is unavailable, use `gh pr checks --repo rakutenanalytics/t3code <number> --watch` for checks and inspect review state on completion.
+
+Done when the latest head has passed every required check, is conflict-free, has completed the requested automated reviews, and has no unresolved material finding. Verify exact head/check/review state; do not describe pending, failing or skipped required checks as mergeable. Then unwatch and tell the maintainer to review and merge. Never merge for them.
 
 ## 4. Hand off the PR and verify the automatic release
 
@@ -122,4 +124,4 @@ When the maintainer resumes after merging, inspect the automatic release run usi
 
 Download that release’s install.sh and SHA256SUMS with public curl into a temporary directory and verify the installer’s exact checksum before executing it. Run `bash install.sh --version <safe-tag> --dry-run --prefix <temporary-directory>`. Download selected assets/checksums separately and verify SHA256 without installing. Dry-run confirms the plan, not launch/Gatekeeper behavior. Do not claim a real installation was tested. Stop on a mismatch or failed release; show the failure before considering a replacement tag.
 
-Finish with [final-report.md](final-report.md), including publication approval, maintainer handoff, PR/release URLs, exact validation and remaining limits. At pre-merge handoff, mark release verification as pending. Unwatch the PR when handing it back if the app supports it.
+Finish with [final-report.md](final-report.md), including invocation authorization, maintainer handoff, PR/release URLs, exact validation and remaining limits. At pre-merge handoff, mark release verification as pending. Unwatch the PR when handing it back if the app supports it.

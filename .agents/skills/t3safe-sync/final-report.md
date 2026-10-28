@@ -8,7 +8,7 @@
 - Baseline changes and removed exceptions:
 - Local checks with commands/results:
 - CI run/artifacts and checksum evidence:
-- Publication approval and published commands:
+- Invocation authorization; branch/PR writes and babysitting fixes:
 - Maintainer handoff; merge SHA and automatic release run, or pending:
 - PR URL, safe release tag/URL:
 - Temporary-directory installer dry-run and asset checksum results:

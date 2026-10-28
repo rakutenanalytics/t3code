@@ -39,14 +39,15 @@ jobs:
         run: |
           vp test run scripts/safe/managed-policy.test.ts apps/server/src/telemetry/ManagedGates.test.ts apps/desktop/src/updates/ManagedUpdates.test.ts
           vp test run scripts/safe/artifact-scan.test.ts scripts/safe/desktop-smoke-command.test.ts
-          vp test run scripts/safe/dependency-comparison.test.ts
+          vp test run scripts/safe/dependency-comparison.test.ts scripts/safe/dependency-registry.test.ts
+          vp test run apps/mobile/src/features/settings/environment-maintenance.test.ts apps/server/src/cli/thread.test.ts apps/server/src/project/RepositoryIdentityResolver.test.ts apps/server/src/provider/ModelManifest.test.ts packages/provider-muse/src/server/maintenance.test.ts apps/desktop/scripts/electron-runtime-integrity.test.mjs
           vp test run scripts/build-npm-launcher.test.ts
           vp test run scripts/build-desktop-artifact.test.ts -t "installs production dependencies with the reviewed frozen lockfile"
       - name: Install test browser and verify disabled action
         run: |
           node apps/web/node_modules/playwright/cli.js install --only-shell chromium
           cd apps/web
-          vp test run src/components/ManagedPolicyDisabledAction.browser.test.tsx --project browser
+          vp test run src/components/ManagedPolicyDisabledAction.browser.test.tsx src/components/chat/MermaidDiagram.browser.test.tsx --project browser
       - name: Typecheck managed packages and consumers
         run: |
           vp exec --filter @t3tools/contracts -- tsc --noEmit

@@ -2,6 +2,10 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-10-28 — sync PR creation and regression checks
+
+- baseline-update: security/network-baseline.json — Refreshes the PR workflow fingerprint after adding the reviewed age-floor and affected policy regression tests, including the diagram browser case, to CI. Action pins, install policy and runtime network permissions stay unchanged.
+
 ## 2026-10-27 — v0.1.2 security review
 
 - baseline-update: security/egress-inventory.md — Records Muse metadata lookup gating for both normal and fresh requests, attachment transfers before Send to selected authenticated environments, diagram URL filtering and escaped/image-function rejection before mount in SVG/MathML attributes, mobile native icon loaders constrained to fixed bundled assets or the development asset server, Electron installer mirror/remote-checksum build-host inputs and separate fallback checksum verification, explicit Windows signing authority and thread CLI bearer sessions. Thread CLI rejects a dead recorded process before token issuance; local runtime state and owner-level auth storage remain trusted. The CLI does not inherit provider thread ceilings; provider shell sandboxing is outside the existing threat model. Repository identity URLs strip HTTP(S) userinfo and query tokens before crossing environments; explicit clone retries preserve the selected host and use target-side Git credentials.

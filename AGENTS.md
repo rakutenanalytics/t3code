@@ -98,7 +98,8 @@ An empty database is a bad test. Seed your worktree's `.t3` with a copy of real 
 
 ## Verifying
 
-- Before you push, run `vp run check:changed`. It runs CI's fast checks for changed files: format, lint, knip, typecheck of affected packages and dependents, and tests beside changes. CI still runs the full test suites.
+- For `t3safe-sync` bulk upstream merges, use the skill’s focused local checks; imported browser suites and full artifact validation run in CI before handoff.
+- Before you push other changes, run `vp run check:changed`. It runs CI's fast checks for changed files: format, lint, knip, typecheck of affected packages and dependents, and tests beside changes. CI still runs the full test suites.
 - While you iterate, run `vp test run <files>`. For big files, add `-t "<name>"`.
 - Use `vp run typecheck`, not `npx tsc`; it caches per package. Both run tsc-rs (`typescript` is the `@tsc-rs/typescript` drop-in).
 - Run `node -e` snippets from `apps/server` or the owning package. `effect` does not resolve from the repo root.
@@ -138,7 +139,8 @@ For authorized mobile verification, a missing or outdated native client is a bui
 
 ## Pull requests
 
-- Never make a PR unless the developer explicitly asks you to do so.
+- Invoking `t3safe-sync` authorizes its sync-branch push, PR creation and in-scope babysitting fixes, pushes, review requests, replies and thread resolutions. Do not ask again; hand off only when ready for maintainer review and merge. This is the workflow-specific exception to generic remote-write approval rules; never merge or publish releases for the maintainer.
+- Otherwise, never make a PR unless the developer explicitly asks you to do so.
 - Conventional commit titles, plain language: `fix(web): new threads no longer spike CPU`.
 - Body: the problem in a sentence or two, then how you fixed it. End with the model and harness that did the work.
 - UI changes need before/after images. Motion or timing needs a short video.
