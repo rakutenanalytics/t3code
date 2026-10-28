@@ -176,6 +176,10 @@ const stageRuntimeExternals = Effect.fn("stageRuntimeExternals")(function* (inpu
       nodeLinker: "hoisted",
     }),
   );
+  yield* fs.copy(
+    path.join(input.repoRoot, ".pnpmfile.cjs"),
+    path.join(input.stageDir, ".pnpmfile.cjs"),
+  );
   yield* fs.writeFileString(path.join(input.stageDir, "pnpm-lock.yaml"), lockedFiles.lockfile);
   yield* fs.writeFileString(
     path.join(input.stageDir, "pnpm-workspace.yaml"),
@@ -209,6 +213,7 @@ const stageRuntimeExternals = Effect.fn("stageRuntimeExternals")(function* (inpu
     "package.json",
     "pnpm-workspace.yaml",
     "pnpm-lock.yaml",
+    ".pnpmfile.cjs",
     "patches",
     "node_modules/.pnpm",
     "node_modules/.modules.yaml",

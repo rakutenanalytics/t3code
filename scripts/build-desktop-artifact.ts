@@ -3223,6 +3223,10 @@ export const stageWindowsServerSidecar = Effect.fn("stageWindowsServerSidecar")(
       nodeLinker: "hoisted",
     }),
   );
+  yield* fs.copy(
+    path.join(input.repoRoot, ".pnpmfile.cjs"),
+    path.join(serverStageDir, ".pnpmfile.cjs"),
+  );
   yield* fs.writeFileString(
     path.join(serverStageDir, "pnpm-lock.yaml"),
     sidecarLockedFiles.lockfile,
@@ -3990,6 +3994,7 @@ const buildDesktopArtifactUnlocked = Effect.fn("buildDesktopArtifactUnlocked")(f
       supportedArchitectures: stageWorkspaceConfig.supportedArchitectures,
     }),
   );
+  yield* fs.copy(path.join(repoRoot, ".pnpmfile.cjs"), path.join(stageAppDir, ".pnpmfile.cjs"));
   yield* fs.writeFileString(path.join(stageAppDir, "pnpm-lock.yaml"), stageLockedFiles.lockfile);
   const stageWorkspaceConfigString = stageLockedFiles.workspace;
   yield* fs.writeFileString(

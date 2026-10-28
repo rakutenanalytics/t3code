@@ -2,6 +2,10 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-10-28 — preserve the reviewed pnpm hook in install stages
+
+- baseline-update: security/network-baseline.json — Desktop, Windows sidecar and CLI staging copy the exact reviewed root `.pnpmfile.cjs` before their frozen installs. This preserves the lockfile's hook checksum rather than deleting it or resolving new dependencies; CLI cleanup removes the hook after installation. Root hook contents, locked resolutions and lifecycle permissions are unchanged.
+
 ## 2026-10-28 — separate online age checks from baseline drift
 
 - baseline-update: security/network-baseline.json — Reviews an explicit non-writing `--online --age-only` scanner mode and its CLI regression test. The advisory job checks changed registry release ages against the PR base without treating reviewed manifest/lockfile drift as an age failure. The required full scanner still enforces baseline drift, hooks, archives and exact build grants. Young/unknown releases remain unresolved.

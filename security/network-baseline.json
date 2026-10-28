@@ -6392,13 +6392,13 @@
       "ddcb164bc911bf875d6affb374fb90ce3c06dd81786538c2acd90148662f526a": 1
     },
     "scripts/build-cli-archive.ts": {
-      "2fc1495e5c72e67fe366041795073f283302c9cfaef6a83f01016606a9aaed00": 1
+      "a7cb9231d4e0303fd1d35ff1aed452d8d1c3c79aab0723afdc7954a8215277e3": 1
     },
     "scripts/build-desktop-artifact.test.ts": {
       "da5bf50a2c9f838652768a67c322f1c3637d45410ab622846918d2fd813f4805": 1
     },
     "scripts/build-desktop-artifact.ts": {
-      "20f75e4b3775b7209e687c2be3055c3297a2a832cffab3d0015ba1767705a743": 1
+      "44860c0df937cb29353d5bbb53023f72b9da73512e9141b8a087ab6fcbbfe8df": 1
     },
     "scripts/build-npm-launcher.test.ts": {
       "9237acb2d4e8079067a638a712cdef9a987202908dd2e4c8120fcad6e1e0fb14": 1
