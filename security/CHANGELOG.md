@@ -2,6 +2,10 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-10-28 — reject commented YAML document separators
+
+- baseline-update: security/network-baseline.json — Reviews the dependency lockfile parser separator regex change to recognize space/tab-separated trailing comments. Multiple documents are rejected before package extraction, preventing later-document dependencies from being omitted from release-age scanning. The existing regression now covers bare and commented separators; no host, dependency or capability changes.
+
 ## 2026-10-28 — preserve the reviewed pnpm hook in install stages
 
 - baseline-update: security/network-baseline.json — Desktop, Windows sidecar and CLI staging copy the exact reviewed root `.pnpmfile.cjs` before their frozen installs. This preserves the lockfile's hook checksum rather than deleting it or resolving new dependencies; CLI cleanup removes the hook after installation. Root hook contents, locked resolutions and lifecycle permissions are unchanged.
