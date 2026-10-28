@@ -2,6 +2,10 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-10-28 — separate online age checks from baseline drift
+
+- baseline-update: security/network-baseline.json — Reviews an explicit non-writing `--online --age-only` scanner mode and its CLI regression test. The advisory job checks changed registry release ages against the PR base without treating reviewed manifest/lockfile drift as an age failure. The required full scanner still enforces baseline drift, hooks, archives and exact build grants. Young/unknown releases remain unresolved.
+
 ## 2026-10-28 — sync PR creation and regression checks
 
 - baseline-update: security/network-baseline.json — Refreshes the PR workflow fingerprint after adding the reviewed age-floor and affected policy regression tests, including the diagram browser case, to CI. Action pins, install policy and runtime network permissions stay unchanged.

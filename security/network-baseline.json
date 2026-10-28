@@ -38,7 +38,7 @@
       "d1d840b6a2dae8762b64f15b480d4c5b7826104b5895dcba3a2ab87cd75d4758": 1
     },
     ".github/workflows/pr-checks.yml": {
-      "ec812c09b5720a620486ec12465aa9d78d8d8519fa6679e54bdc5d652db3d264": 1
+      "67f154b3ad570c0a14515b7025a417de9636295da2e44118e08fcc1678f3f939": 1
     },
     ".github/workflows/release.yml": {
       "5077642be3be7295de057901b0d87745551b2333d9baf37d5429d32b100215a2": 1
@@ -6553,8 +6553,11 @@
     "scripts/safe/dependency-registry.ts": {
       "fa66d38d41b552c89a214c325a5f57cbad7c5fb09f4b9a03d6c225f744f290f1": 1
     },
+    "scripts/safe/dependency-scan.test.ts": {
+      "03a1b2302235fc22caf839afdb2c4531f97494dd3bd9b200a088bb9774c4a308": 1
+    },
     "scripts/safe/dependency-scan.ts": {
-      "4ab332affcd30fc38d2e4f322c1b48d6261f727b0dc8f6183d28c4a10b0af936": 1
+      "223d0f9a28b5bc232df76ec9172deac87c0cd20431aa8dbf73d36041df3e47d4": 1
     },
     "scripts/safe/desktop-smoke-command.ts": {
       "bf943d453c1b780925a936c70d3fadaffca7a8f96f826f21b2ff265bc09a0cd2": 1

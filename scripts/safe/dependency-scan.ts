@@ -39,6 +39,9 @@ interface ReviewedException {
 
 const online = process.argv.includes("--online");
 const write = process.argv.includes("--write-baseline");
+const ageOnly = process.argv.includes("--age-only");
+if (ageOnly && (!online || write))
+  throw new Error("--age-only requires --online and cannot write a baseline");
 const baselinePath = argumentValue("--baseline", "security/dependency-baseline.json");
 const reportPath = argumentValue("--report", "security/young-or-unknown.json");
 const lockfile = sourceText("pnpm-lock.yaml");
@@ -191,6 +194,18 @@ writeJsonFile(reportPath, {
 process.stdout.write(
   `Review report: ${reportPath}; ${reviews.length} package(s) need age resolution or approved exceptions\n`,
 );
+
+if (ageOnly) {
+  const unresolvedAges = reviews.map(
+    (review) => `${review.name}@${review.version}: ${review.reasons.join("; ")}`,
+  );
+  finishScan(
+    "dependency release age",
+    unresolvedAges,
+    "changed registry releases meet the age policy or have exact approved exceptions",
+  );
+  process.exit(process.exitCode ?? 0);
+}
 
 const violations: string[] = [];
 for (const match of workspace.matchAll(/^  ["']?([^"'\n]+?)["']?: true\s*$/gm)) {

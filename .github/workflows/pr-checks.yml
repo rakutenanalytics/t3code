@@ -39,7 +39,7 @@ jobs:
         run: |
           vp test run scripts/safe/managed-policy.test.ts apps/server/src/telemetry/ManagedGates.test.ts apps/desktop/src/updates/ManagedUpdates.test.ts
           vp test run scripts/safe/artifact-scan.test.ts scripts/safe/desktop-smoke-command.test.ts
-          vp test run scripts/safe/dependency-comparison.test.ts scripts/safe/dependency-registry.test.ts
+          vp test run scripts/safe/dependency-comparison.test.ts scripts/safe/dependency-registry.test.ts scripts/safe/dependency-scan.test.ts
           vp test run apps/mobile/src/features/settings/environment-maintenance.test.ts apps/server/src/cli/thread.test.ts apps/server/src/project/RepositoryIdentityResolver.test.ts apps/server/src/provider/ModelManifest.test.ts packages/provider-muse/src/server/maintenance.test.ts apps/desktop/scripts/electron-runtime-integrity.test.mjs
           vp test run scripts/build-npm-launcher.test.ts
           vp test run scripts/build-desktop-artifact.test.ts -t "installs production dependencies with the reviewed frozen lockfile"
@@ -86,7 +86,7 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           git show "$BASE_SHA:security/dependency-baseline.json" > "$RUNNER_TEMP/dependency-base.json"
-          node scripts/safe/dependency-scan.ts --online --baseline "$RUNNER_TEMP/dependency-base.json"
+          node scripts/safe/dependency-scan.ts --online --age-only --baseline "$RUNNER_TEMP/dependency-base.json"
       - name: Upload dependency review report
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
