@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: "24.13.1"
+          node-version: "26.12.1"
       - name: Scan source and dependencies before install
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -28,7 +28,7 @@ jobs:
           node scripts/safe/dependency-scan.ts
       - uses: voidzero-dev/setup-vp@250f29ce396baf5e8f24498e17c0dfdebabc26eb # v1
         with:
-          node-version: "24.13.1"
+          node-version: "26.12.1"
           run-install: false
           cache: false
       - run: vp install --frozen-lockfile
@@ -39,23 +39,24 @@ jobs:
         run: |
           vp test run scripts/safe/managed-policy.test.ts apps/server/src/telemetry/ManagedGates.test.ts apps/desktop/src/updates/ManagedUpdates.test.ts
           vp test run scripts/safe/artifact-scan.test.ts scripts/safe/desktop-smoke-command.test.ts
-          vp test run scripts/safe/dependency-comparison.test.ts
+          vp test run scripts/safe/dependency-comparison.test.ts scripts/safe/dependency-registry.test.ts scripts/safe/dependency-scan.test.ts
+          vp test run apps/mobile/src/features/settings/environment-maintenance.test.ts apps/server/src/cli/thread.test.ts apps/server/src/project/RepositoryIdentityResolver.test.ts apps/server/src/provider/ModelManifest.test.ts packages/provider-muse/src/server/maintenance.test.ts apps/desktop/scripts/electron-runtime-integrity.test.mjs
           vp test run scripts/build-npm-launcher.test.ts
           vp test run scripts/build-desktop-artifact.test.ts -t "installs production dependencies with the reviewed frozen lockfile"
       - name: Install test browser and verify disabled action
         run: |
           node apps/web/node_modules/playwright/cli.js install --only-shell chromium
           cd apps/web
-          vp test run src/components/ManagedPolicyDisabledAction.browser.test.tsx --project browser
+          vp test run src/components/ManagedPolicyDisabledAction.browser.test.tsx src/components/chat/MermaidDiagram.browser.test.tsx --project browser
       - name: Typecheck managed packages and consumers
         run: |
-          vp exec --filter @t3tools/contracts -- tsc-rs --noEmit
-          vp exec --filter @t3tools/shared -- tsc-rs --noEmit
-          vp exec --filter @t3tools/client-runtime -- tsc-rs --noEmit
-          vp exec --filter t3 -- tsc-rs --noEmit
-          vp exec --filter @t3tools/desktop -- tsc-rs --noEmit
-          vp exec --filter @t3tools/web -- tsc-rs --noEmit
-          vp exec --filter @t3tools/scripts -- tsc-rs --noEmit
+          vp exec --filter @t3tools/contracts -- tsc --noEmit
+          vp exec --filter @t3tools/shared -- tsc --noEmit
+          vp exec --filter @t3tools/client-runtime -- tsc --noEmit
+          vp exec --filter t3 -- tsc --noEmit
+          vp exec --filter @t3tools/desktop -- tsc --noEmit
+          vp exec --filter @t3tools/web -- tsc --noEmit
+          vp exec --filter @t3tools/scripts -- tsc --noEmit
       - name: Lint and format touched files
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -77,7 +78,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
-          node-version: "24.13.1"
+          node-version: "26.12.1"
       - name: Check registry metadata against the PR base
         id: scan
         continue-on-error: true
@@ -85,7 +86,7 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           git show "$BASE_SHA:security/dependency-baseline.json" > "$RUNNER_TEMP/dependency-base.json"
-          node scripts/safe/dependency-scan.ts --online --baseline "$RUNNER_TEMP/dependency-base.json"
+          node scripts/safe/dependency-scan.ts --online --age-only --baseline "$RUNNER_TEMP/dependency-base.json"
       - name: Upload dependency review report
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7

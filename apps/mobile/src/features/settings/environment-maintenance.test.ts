@@ -1,46 +1,13 @@
+import { AuthEnvironmentMaintainScope } from "@t3tools/contracts";
 import { managedPolicy } from "@t3tools/shared/managedPolicy";
-import { AuthOrchestrationOperateScope, ServerProvider } from "@t3tools/contracts";
-import * as Schema from "effect/Schema";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import { afterEach, describe, expect, it, vi } from "vite-plus/test";
 
-import {
-  canMaintainEnvironment,
-  canUpdateEnvironmentProvider,
-  findEnvironmentUpdate,
-  supportsEnvironmentUpdate,
-} from "./environment-maintenance";
+import { canMaintainEnvironment, findEnvironmentUpdate } from "./environment-maintenance";
 
-const provider = Schema.decodeUnknownSync(ServerProvider)({
-  instanceId: "codex-personal",
-  driver: "codex",
-  enabled: true,
-  installed: true,
-  version: "1.0.0",
-  status: "ready",
-  auth: { status: "authenticated" },
-  checkedAt: "2026-09-23T00:00:00.000Z",
-  models: [],
-  versionAdvisory: {
-    status: "behind_latest",
-    currentVersion: "1.0.0",
-    latestVersion: "1.1.0",
-    canUpdate: true,
-    updateCommand: null,
-    checkedAt: null,
-    message: null,
-  },
-});
-
-beforeEach(() => {
-  vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
-});
-afterEach(() => {
-  vi.unstubAllGlobals();
-  vi.restoreAllMocks();
-});
+afterEach(() => vi.unstubAllGlobals());
 
 describe("environment maintenance access", () => {
-  it("requires a connected authenticated session with operate permission", () => {
+  it("requires a connected authenticated session with environment maintenance permission", () => {
     const session = {
       authenticated: true,
       auth: {
@@ -48,39 +15,20 @@ describe("environment maintenance access", () => {
         bootstrapMethods: [],
         sessionMethods: [],
         sessionCookieName: "session",
+        serverUpdateScope: AuthEnvironmentMaintainScope,
       },
-      scopes: [AuthOrchestrationOperateScope],
+      scopes: [AuthEnvironmentMaintainScope],
     };
     expect(canMaintainEnvironment(session, true)).toBe(true);
     expect(canMaintainEnvironment(session, false)).toBe(false);
     expect(canMaintainEnvironment({ ...session, authenticated: false }, true)).toBe(false);
     expect(canMaintainEnvironment({ ...session, scopes: [] }, true)).toBe(false);
+    expect(canMaintainEnvironment({ ...session, scopes: ["orchestration:operate"] }, true)).toBe(
+      false,
+    );
     const { scopes: _, ...legacy } = session;
     expect(canMaintainEnvironment(legacy, true)).toBe(false);
     expect(canMaintainEnvironment(null, true)).toBe(false);
-  });
-
-  it.each([
-    { scopes: ["environment:maintain"], expected: true },
-    { scopes: ["orchestration:operate"], expected: false },
-    { scopes: ["providers:manage"], expected: false },
-  ] as const)("uses the advertised update permission for $scopes", ({ scopes, expected }) => {
-    expect(
-      canMaintainEnvironment(
-        {
-          authenticated: true,
-          auth: {
-            policy: "remote-reachable",
-            bootstrapMethods: [],
-            sessionMethods: [],
-            sessionCookieName: "session",
-            serverUpdateScope: "environment:maintain",
-          },
-          scopes,
-        },
-        true,
-      ),
-    ).toBe(expected);
   });
 
   it.each([
@@ -109,59 +57,6 @@ describe("environment maintenance access", () => {
       ).toBe(expected);
     },
   );
-
-  it("requires remote desktop update support for desktop hosts", () => {
-    expect(supportsEnvironmentUpdate({})).toBe(false);
-    expect(supportsEnvironmentUpdate({ serverSelfUpdate: "respawn" })).toBe(true);
-    expect(supportsEnvironmentUpdate({ serverSelfUpdate: "desktop-managed" })).toBe(false);
-    expect(
-      supportsEnvironmentUpdate({ serverSelfUpdate: "desktop-managed", desktopAppUpdate: true }),
-    ).toBe(true);
-  });
-
-  it("excludes unavailable, manual, busy, and incompatible provider updates", () => {
-    expect(canUpdateEnvironmentProvider(provider)).toBe(true);
-    expect(canUpdateEnvironmentProvider({ ...provider, installed: false })).toBe(false);
-    expect(canUpdateEnvironmentProvider({ ...provider, availability: "unavailable" })).toBe(false);
-    expect(canUpdateEnvironmentProvider({ ...provider, versionAdvisory: undefined })).toBe(false);
-    for (const latestVersionStatus of ["broken", "unsupported"] as const) {
-      expect(
-        canUpdateEnvironmentProvider({
-          ...provider,
-          compatibilityAdvisory: {
-            status: "supported",
-            latestVersionStatus,
-            message: null,
-            recommendedVersion: null,
-            recommendedRange: null,
-          },
-        }),
-      ).toBe(false);
-    }
-    for (const status of ["queued", "running"] as const) {
-      expect(
-        canUpdateEnvironmentProvider({
-          ...provider,
-          updateState: {
-            status,
-            startedAt: null,
-            finishedAt: null,
-            message: null,
-            output: null,
-          },
-        }),
-      ).toBe(false);
-    }
-    expect(
-      canUpdateEnvironmentProvider({
-        ...provider,
-        versionAdvisory: {
-          ...provider.versionAdvisory!,
-          canUpdate: false,
-        },
-      }),
-    ).toBe(false);
-  });
 });
 
 describe("environment release checks", () => {
@@ -173,22 +68,20 @@ describe("environment release checks", () => {
         .join("")}</feed>`,
     );
 
-  it("checks stable updates as JSON without using the anonymous API quota", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async (url: string, init?: RequestInit) =>
-        url === "https://github.com/pingdotgg/t3code/releases/latest" &&
-        new Headers(init?.headers).get("Accept") === "application/json"
-          ? Response.json({ tag_name: "v1.1.0" })
-          : new Response(null, { status: 403 }),
-      ),
+  it("rejects an upstream release check without fetching when managed policy disables updates", async () => {
+    using _policy = vi.spyOn(managedPolicy, "allows").mockReturnValue(false);
+    const fetch = vi.fn();
+    vi.stubGlobal("fetch", fetch);
+
+    await expect(findEnvironmentUpdate("1.0.0", signal)).rejects.toThrow(
+      "Upstream updates are disabled by managed policy",
     );
-    expect(await findEnvironmentUpdate("1.0.0", signal)).toBe("1.1.0");
-    expect(await findEnvironmentUpdate("1.1.0", signal)).toBeNull();
-    expect(await findEnvironmentUpdate("1.3.0", signal)).toBeNull();
+
+    expect(fetch).not.toHaveBeenCalled();
   });
 
   it("keeps nightly and preview hosts on their channel without using the anonymous API quota", async () => {
+    using _policy = vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
     vi.stubGlobal(
       "fetch",
       vi.fn(async (url: string) =>
@@ -214,6 +107,7 @@ describe("environment release checks", () => {
   });
 
   it("finds a published preview beyond the ten-entry feed and first API page", async () => {
+    using _policy = vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
     const nightlies = Array.from({ length: 10 }, (_, i) => `v1.0.0-nightly.20260930.${i}`);
     vi.stubGlobal(
       "fetch",
@@ -237,6 +131,7 @@ describe("environment release checks", () => {
   });
 
   it("reports failed checks instead of claiming the server is current", async () => {
+    using _policy = vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
     for (const status of [403, 429]) {
       vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, { status })));
       await expect(findEnvironmentUpdate("1.0.0", signal)).rejects.toThrow(String(status));
@@ -253,22 +148,4 @@ describe("environment release checks", () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(Response.json({ error: "invalid" })));
     await expect(findEnvironmentUpdate("1.0.0", signal)).rejects.toThrow();
   });
-
-  it.each(["1.0.0", "1.0.0-nightly.20260923.1", "1.0.0-preview.20260923.1"])(
-    "cancels the release request for %s, including the API fallback",
-    async (currentVersion) => {
-      const controller = new AbortController();
-      const abort = new DOMException("Update check cancelled", "AbortError");
-      vi.stubGlobal(
-        "fetch",
-        vi.fn(async (url: string, init?: RequestInit) => {
-          if (currentVersion.includes("preview") && url.endsWith(".atom")) return feed("v1.0.0");
-          controller.abort(abort);
-          init?.signal?.throwIfAborted();
-          return new Response(null, { status: 500 });
-        }),
-      );
-      await expect(findEnvironmentUpdate(currentVersion, controller.signal)).rejects.toBe(abort);
-    },
-  );
 });

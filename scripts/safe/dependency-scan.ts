@@ -39,6 +39,9 @@ interface ReviewedException {
 
 const online = process.argv.includes("--online");
 const write = process.argv.includes("--write-baseline");
+const ageOnly = process.argv.includes("--age-only");
+if (ageOnly && (!online || write))
+  throw new Error("--age-only requires --online and cannot write a baseline");
 const baselinePath = argumentValue("--baseline", "security/dependency-baseline.json");
 const reportPath = argumentValue("--report", "security/young-or-unknown.json");
 const lockfile = sourceText("pnpm-lock.yaml");
@@ -85,6 +88,14 @@ if (Array.isArray(baseline.packages)) {
   baseline.packages = packages;
 }
 const changes = compareDependencyPackages(baseline.packages, packages);
+const registryChanges = changes.filter((change) => {
+  const { version } = packageIdentity(change.id);
+  const packageBlock = packageBlocks.get(change.id)!;
+  return (
+    /^\d+\.\d+\.\d+(?:[-+][\w.+-]+)?$/.test(version) &&
+    !/\b(?:tarball|directory|repo|commit|type):/.test(packageBlock)
+  );
+});
 const exceptions = jsonFile<ReviewedException[]>("security/dependency-exceptions.json");
 for (const exception of exceptions) {
   if (
@@ -97,7 +108,7 @@ for (const exception of exceptions) {
 
 const metadata = new Map<string, Awaited<ReturnType<typeof queryDependencyRegistry>> | null>();
 if (online) {
-  const names = [...new Set(changes.map((change) => packageIdentity(change.id).name))];
+  const names = [...new Set(registryChanges.map((change) => packageIdentity(change.id).name))];
   // Four bounded registry reads at a time; never execute package code or inherit npm credentials.
   for (let index = 0; index < names.length; index += 4) {
     await Promise.all(
@@ -106,7 +117,7 @@ if (online) {
           metadata.set(name, await queryDependencyRegistry(name));
         } catch {
           metadata.set(name, null);
-          process.stderr.write(`Registry lookup failed for ${name}; manual review required\n`);
+          process.stderr.write(`Registry lookup failed for ${name}; publication age unresolved\n`);
         }
       }),
     );
@@ -120,16 +131,11 @@ for (const change of changes) {
   process.stdout.write(
     `${change.kind} ${change.id}; previous: ${change.previousVersions.join(", ") || "none"}\n`,
   );
-  const reasons = ["lifecycle and install-time network behavior require tarball review"];
-  const packageBlock = packageBlocks.get(change.id)!;
-  if (
-    !/^\d+\.\d+\.\d+(?:[-+][\w.+-]+)?$/.test(version) ||
-    /\b(?:tarball|directory|repo|commit|type):/.test(packageBlock)
-  )
-    reasons.push("git/tarball/local/exotic dependency source");
-  if (/requiresBuild: true/.test(packageBlock)) reasons.push("lockfile requires lifecycle build");
-  if (change.kind === "changed")
-    reasons.push("locked metadata or resolution changed for the same version");
+  if (!registryChanges.includes(change)) {
+    process.stdout.write("  non-registry source: review changed supply-chain input in the diff\n");
+    continue;
+  }
+  const reasons: string[] = [];
   const registryMetadata = metadata.get(name);
   let registry = null;
   if (registryMetadata) {
@@ -140,6 +146,12 @@ for (const change of changes) {
       minimumAgeMinutes,
       now,
     );
+    if (!registry.requiresAgeReview) {
+      process.stdout.write(
+        `  accepted by age: ${registry.ageMinutes} minutes >= ${minimumAgeMinutes}\n`,
+      );
+      continue;
+    }
     reasons.push(...registry.reasons);
   } else if (online)
     reasons.push("unknown publish time and lifecycle metadata: registry lookup failed");
@@ -150,7 +162,7 @@ for (const change of changes) {
     (exception) =>
       exception.package === change.id && exception.resolutionSha256 === resolutionSha256,
   );
-  if (approved) {
+  if (approved && registry && registry.ageMinutes !== null) {
     process.stdout.write(`  reviewed exception: ${change.id}\n`);
     continue;
   }
@@ -180,8 +192,20 @@ writeJsonFile(reportPath, {
   packages: reviews,
 });
 process.stdout.write(
-  `Review report: ${reportPath}; ${reviews.length} package(s) need manual review\n`,
+  `Review report: ${reportPath}; ${reviews.length} package(s) need age resolution or approved exceptions\n`,
 );
+
+if (ageOnly) {
+  const unresolvedAges = reviews.map(
+    (review) => `${review.name}@${review.version}: ${review.reasons.join("; ")}`,
+  );
+  finishScan(
+    "dependency release age",
+    unresolvedAges,
+    "changed registry releases meet the age policy or have exact approved exceptions",
+  );
+  process.exit(process.exitCode ?? 0);
+}
 
 const violations: string[] = [];
 for (const match of workspace.matchAll(/^  ["']?([^"'\n]+?)["']?: true\s*$/gm)) {
@@ -211,7 +235,7 @@ if (current.workspaceSha256 !== baseline.workspaceSha256)
     "pnpm-workspace.yaml changed: review catalogs, supply-chain policy and allowed builds",
   );
 if (reviews.length > 0)
-  violations.push(`${reviews.length} dependency review(s) unresolved; see ${reportPath}`);
+  violations.push(`${reviews.length} dependency age check(s) unresolved; see ${reportPath}`);
 if (
   write &&
   reviews.length === 0 &&

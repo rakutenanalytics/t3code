@@ -2,6 +2,36 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-10-28 — v0.1.2 packaged client contexts
+
+- baseline-update: security/artifact-hosts.json — Reviews six changed client literal contexts from CI run 40617280141 and their identical-byte CLI path mirrors. Auth-return validation, prompt URLs, hosted pairing, download navigation and inert project schema/help text retain previously accepted behavior; only minified context changed. The actual DMG and ZIP app.asar match SHA-256 e3e9079bee17557a62f9cc1911456f7e58e4da410e2a84559083e95561811c80, packaged policy/identity verification passes, and scanning then reports zero unapproved literals. No scanner relaxation or runtime network grant. New informational host pele.run occurs only in third-party license metadata.
+
+## 2026-10-28 — reject commented YAML document separators
+
+- baseline-update: security/network-baseline.json — Reviews the dependency lockfile parser separator regex change to recognize space/tab-separated trailing comments. Multiple documents are rejected before package extraction, preventing later-document dependencies from being omitted from release-age scanning. The existing regression now covers bare and commented separators; no host, dependency or capability changes.
+
+## 2026-10-28 — preserve the reviewed pnpm hook in install stages
+
+- baseline-update: security/network-baseline.json — Desktop, Windows sidecar and CLI staging copy the exact reviewed root `.pnpmfile.cjs` before their frozen installs. This preserves the lockfile's hook checksum rather than deleting it or resolving new dependencies; CLI cleanup removes the hook after installation. Root hook contents, locked resolutions and lifecycle permissions are unchanged.
+
+## 2026-10-28 — separate online age checks from baseline drift
+
+- baseline-update: security/network-baseline.json — Reviews an explicit non-writing `--online --age-only` scanner mode and its CLI regression test. The advisory job checks changed registry release ages against the PR base without treating reviewed manifest/lockfile drift as an age failure. The required full scanner still enforces baseline drift, hooks, archives and exact build grants. Young/unknown releases remain unresolved.
+
+## 2026-10-28 — sync PR creation and regression checks
+
+- baseline-update: security/network-baseline.json — Refreshes the PR workflow fingerprint after adding the reviewed age-floor and affected policy regression tests, including the diagram browser case, to CI. Action pins, install policy and runtime network permissions stay unchanged.
+
+## 2026-10-27 — v0.1.2 security review
+
+- baseline-update: security/egress-inventory.md — Records Muse metadata lookup gating for both normal and fresh requests, attachment transfers before Send to selected authenticated environments, diagram URL filtering and escaped/image-function rejection before mount in SVG/MathML attributes, mobile native icon loaders constrained to fixed bundled assets or the development asset server, Electron installer mirror/remote-checksum build-host inputs and separate fallback checksum verification, explicit Windows signing authority and thread CLI bearer sessions. Thread CLI rejects a dead recorded process before token issuance; local runtime state and owner-level auth storage remain trusted. The CLI does not inherit provider thread ceilings; provider shell sandboxing is outside the existing threat model. Repository identity URLs strip HTTP(S) userinfo and query tokens before crossing environments; explicit clone retries preserve the selected host and use target-side Git credentials.
+- baseline-update: security/allowlist.json — Reviews scripts/lib/windows-jsign.ts specifically: configured Windows signing uses the existing Microsoft RFC3161 timestamp endpoint and configured Azure signing service. Safe macOS-only builds do not invoke it; no runtime capability grant.
+
+- baseline-update: security/dependency-baseline.json — Reviews the v0.1.2 lockfile/manifests, local react-native-screens archive and NSIS patch, preserving the 4320-minute age floor, strict trust checks and exact lifecycle grants. All 120 changed registry releases meet the floor; no new package exceptions. The compiler's renamed exact build grant retains its reviewed own-bin version rewrite.
+- baseline-update: security/stage-lock-baseline.json — Updates deterministic desktop and CLI projections from the reviewed root lockfile; staged installs remain frozen and version checked.
+- baseline-update: security/network-baseline.json — Records the reviewed upstream runtime/build diff and preserved fork gates, including Muse metadata denial, diagram resource filtering, HTTP repository identity redaction, dead-process CLI rejection and checksum-verified Electron fallback. Scanner changes accept age-qualified registry upgrades and leave unknown/young ages unresolved; source and build permissions remain diff reviewed.
+- baseline-update: security/last-approved-upstream — Records the reviewed v0.1.2 target 044f07257c9684ae4543bd1e1ebf9c394e9e3830 and sync count 1.
+
 ## 2026-10-27 — desktop preload no longer bundles Effect
 
 - baseline-update: security/network-baseline.json — Refreshes whole-file fingerprints for `apps/desktop/src/preload.ts`, `apps/desktop/vite.config.ts` and the preload bundle verifier with its test. The preload reads the baked managed policy constant directly instead of importing Effect, the verifier now runs the bundle inside an Electron-like function wrapper and the desktop build runs it. No network statement, host or capability grant changes; the baked policy still denies `t3Connect`.

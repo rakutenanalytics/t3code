@@ -54,6 +54,20 @@ function isLocalRemoteUrl(url: string): boolean {
   return colonIndex === -1 || (slashIndex !== -1 && slashIndex < colonIndex);
 }
 
+function repositoryUrlWithoutCredentials(remoteUrl: string): string | null {
+  if (!/^https?:\/\//i.test(remoteUrl)) return remoteUrl;
+  const url = URL.parse(remoteUrl);
+  if (!url) return null;
+  if (!url.username && !url.password && !url.search) return remoteUrl;
+
+  // AddProjectToMachineDialog forwards these URLs to another environment;
+  // authentication belongs to that machine's Git credential helper.
+  url.username = "";
+  url.password = "";
+  url.search = "";
+  return url.toString();
+}
+
 function parseRemoteFetchUrls(stdout: string): Map<string, string> {
   const remotes = new Map<string, string>();
   for (const line of stdout.split("\n")) {
@@ -71,7 +85,9 @@ function parseRemoteFetchUrls(stdout: string): Map<string, string> {
     ) {
       continue;
     }
-    remotes.set(remoteName, remoteUrl);
+    const publicRemoteUrl = repositoryUrlWithoutCredentials(remoteUrl);
+    if (!publicRemoteUrl) continue;
+    remotes.set(remoteName, publicRemoteUrl);
   }
   return remotes;
 }
@@ -105,7 +121,7 @@ function buildRepositoryOrigin(
   const originKey = normalizeGitRemoteUrl(originUrl);
   if (originKey === canonicalKey) return undefined;
   const displayName = repositoryPathOf(originKey, originUrl);
-  return { canonicalKey: originKey, ...(displayName ? { displayName } : {}) };
+  return { canonicalKey: originKey, remoteUrl: originUrl, ...(displayName ? { displayName } : {}) };
 }
 
 function buildRepositoryIdentity(input: {

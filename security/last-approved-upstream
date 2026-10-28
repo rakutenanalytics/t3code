@@ -1,7 +1,7 @@
 {
-  "tag": "v0.1.0",
-  "tagSha": "81493efb71e8e8244f95d3e9f71d8369654ab151",
-  "sha": "90c3f8350d777f09c7afdf643db63bf8135161e6",
-  "syncCount": 0,
-  "note": "Initial reviewed source anchor includes this stable tag plus subsequent upstream main changes."
+  "tag": "v0.1.2",
+  "tagSha": "044f07257c9684ae4543bd1e1ebf9c394e9e3830",
+  "sha": "044f07257c9684ae4543bd1e1ebf9c394e9e3830",
+  "syncCount": 1,
+  "note": "Upstream v0.1.2 merged; runtime and supply-chain input diffs reviewed. Registry upgrades meet the configured 4320-minute age floor; no new age exceptions."
 }
