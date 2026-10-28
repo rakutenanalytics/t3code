@@ -1433,6 +1433,90 @@
       "filePattern": "client/assets/runtime-*.js",
       "contextSha256": "fdba597b95a8ad7535a4926dc63338842f3adc2586b7a3e8e78fb3c069cfbebb",
       "note": "CLI mirror of apps/server/dist/client/assets/runtime-*.js entry: same chunk, same S6 download anchor; version-normalized fingerprint (0.0.0-safe.*) identical for 0.1.0-safe.0 and 0.1.0-safe.1 (not egress)"
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "apps/server/dist/client/assets/main-BSaV28lj.js",
+      "filePattern": "apps/server/dist/client/assets/main-*.js",
+      "contextSha256": "9e1401f05f93230f815e0147bebd687719430be40a3e3768ca85a7bfea7c914e",
+      "note": "v0.1.2 CI 40617280141; packaged policy/identity verified; app.asar SHA-256 e3e9079bee17557a62f9cc1911456f7e58e4da410e2a84559083e95561811c80. packages/shared/src/providerAuthReturnUrl.ts: origin validation, no automatic request. Previously accepted source behavior retained; reviewed minifier-context change only."
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "apps/server/dist/client/assets/main-BSaV28lj.js",
+      "filePattern": "apps/server/dist/client/assets/main-*.js",
+      "contextSha256": "68d467e71d59543e9f9efec3dea1c6742cb278b7da02b797ee9f9089e5c82df6",
+      "note": "v0.1.2 CI 40617280141; packaged policy/identity verified; app.asar SHA-256 e3e9079bee17557a62f9cc1911456f7e58e4da410e2a84559083e95561811c80. packages/shared/src/promptLinks.ts: /new navigation URL, no automatic request. Previously accepted source behavior retained; reviewed minifier-context change only."
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "apps/server/dist/client/assets/runtime-DASAUTKB.js",
+      "filePattern": "apps/server/dist/client/assets/runtime-*.js",
+      "contextSha256": "2d8a44be22a531ce0bc36d74ccd5626ebf892993e2b036bf480db832150a62ce",
+      "note": "v0.1.2 CI 40617280141; packaged policy/identity verified; app.asar SHA-256 e3e9079bee17557a62f9cc1911456f7e58e4da410e2a84559083e95561811c80. packages/shared/src/connectAuth.ts: hosted pairing default, user-initiated navigation only. Previously accepted source behavior retained; reviewed minifier-context change only."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/server/dist/client/assets/runtime-DASAUTKB.js",
+      "filePattern": "apps/server/dist/client/assets/runtime-*.js",
+      "contextSha256": "11c88f22717004bc67fbdaba5245bd332ea2293e057038053e807db145328499",
+      "note": "v0.1.2 CI 40617280141; packaged policy/identity verified; app.asar SHA-256 e3e9079bee17557a62f9cc1911456f7e58e4da410e2a84559083e95561811c80. apps/web/src/branding.ts: download anchor, user-initiated navigation only. Previously accepted source behavior retained; reviewed minifier-context change only."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/server/dist/client/assets/utils-C-QyED05.js",
+      "filePattern": "apps/server/dist/client/assets/utils-*.js",
+      "contextSha256": "7a246eeff86ea3241340a0d21c9bab5703f0ac0977dec056ad72963b020a631a",
+      "note": "v0.1.2 CI 40617280141; packaged policy/identity verified; app.asar SHA-256 e3e9079bee17557a62f9cc1911456f7e58e4da410e2a84559083e95561811c80. packages/contracts/src/t3ProjectFile.ts: inert project schema URL, no fetch. Previously accepted source behavior retained; reviewed minifier-context change only."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/server/dist/client/assets/utils-C-QyED05.js",
+      "filePattern": "apps/server/dist/client/assets/utils-*.js",
+      "contextSha256": "e683a42cdd0ed9f9ab125efde2d7f29950347463c6c24a92c36d318b8a2e3226",
+      "note": "v0.1.2 CI 40617280141; packaged policy/identity verified; app.asar SHA-256 e3e9079bee17557a62f9cc1911456f7e58e4da410e2a84559083e95561811c80. packages/contracts/src/t3ProjectFile.ts: inert documentation prose, no fetch. Previously accepted source behavior retained; reviewed minifier-context change only."
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "client/assets/main-BSaV28lj.js",
+      "filePattern": "client/assets/main-*.js",
+      "contextSha256": "9e1401f05f93230f815e0147bebd687719430be40a3e3768ca85a7bfea7c914e",
+      "note": "v0.1.2 CI 40617280141; packaged policy/identity verified; app.asar SHA-256 e3e9079bee17557a62f9cc1911456f7e58e4da410e2a84559083e95561811c80. packages/shared/src/providerAuthReturnUrl.ts: origin validation, no automatic request. Previously accepted source behavior retained; reviewed minifier-context change only. CLI mirror of exact reviewed client bytes copied by safe-build.yml without rebuilding web."
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "client/assets/main-BSaV28lj.js",
+      "filePattern": "client/assets/main-*.js",
+      "contextSha256": "68d467e71d59543e9f9efec3dea1c6742cb278b7da02b797ee9f9089e5c82df6",
+      "note": "v0.1.2 CI 40617280141; packaged policy/identity verified; app.asar SHA-256 e3e9079bee17557a62f9cc1911456f7e58e4da410e2a84559083e95561811c80. packages/shared/src/promptLinks.ts: /new navigation URL, no automatic request. Previously accepted source behavior retained; reviewed minifier-context change only. CLI mirror of exact reviewed client bytes copied by safe-build.yml without rebuilding web."
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "client/assets/runtime-DASAUTKB.js",
+      "filePattern": "client/assets/runtime-*.js",
+      "contextSha256": "2d8a44be22a531ce0bc36d74ccd5626ebf892993e2b036bf480db832150a62ce",
+      "note": "v0.1.2 CI 40617280141; packaged policy/identity verified; app.asar SHA-256 e3e9079bee17557a62f9cc1911456f7e58e4da410e2a84559083e95561811c80. packages/shared/src/connectAuth.ts: hosted pairing default, user-initiated navigation only. Previously accepted source behavior retained; reviewed minifier-context change only. CLI mirror of exact reviewed client bytes copied by safe-build.yml without rebuilding web."
+    },
+    {
+      "host": "t3.codes",
+      "file": "client/assets/runtime-DASAUTKB.js",
+      "filePattern": "client/assets/runtime-*.js",
+      "contextSha256": "11c88f22717004bc67fbdaba5245bd332ea2293e057038053e807db145328499",
+      "note": "v0.1.2 CI 40617280141; packaged policy/identity verified; app.asar SHA-256 e3e9079bee17557a62f9cc1911456f7e58e4da410e2a84559083e95561811c80. apps/web/src/branding.ts: download anchor, user-initiated navigation only. Previously accepted source behavior retained; reviewed minifier-context change only. CLI mirror of exact reviewed client bytes copied by safe-build.yml without rebuilding web."
+    },
+    {
+      "host": "t3.codes",
+      "file": "client/assets/utils-C-QyED05.js",
+      "filePattern": "client/assets/utils-*.js",
+      "contextSha256": "7a246eeff86ea3241340a0d21c9bab5703f0ac0977dec056ad72963b020a631a",
+      "note": "v0.1.2 CI 40617280141; packaged policy/identity verified; app.asar SHA-256 e3e9079bee17557a62f9cc1911456f7e58e4da410e2a84559083e95561811c80. packages/contracts/src/t3ProjectFile.ts: inert project schema URL, no fetch. Previously accepted source behavior retained; reviewed minifier-context change only. CLI mirror of exact reviewed client bytes copied by safe-build.yml without rebuilding web."
+    },
+    {
+      "host": "t3.codes",
+      "file": "client/assets/utils-C-QyED05.js",
+      "filePattern": "client/assets/utils-*.js",
+      "contextSha256": "e683a42cdd0ed9f9ab125efde2d7f29950347463c6c24a92c36d318b8a2e3226",
+      "note": "v0.1.2 CI 40617280141; packaged policy/identity verified; app.asar SHA-256 e3e9079bee17557a62f9cc1911456f7e58e4da410e2a84559083e95561811c80. packages/contracts/src/t3ProjectFile.ts: inert documentation prose, no fetch. Previously accepted source behavior retained; reviewed minifier-context change only. CLI mirror of exact reviewed client bytes copied by safe-build.yml without rebuilding web."
     }
   ]
 }
