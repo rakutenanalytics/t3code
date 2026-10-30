@@ -40,11 +40,5 @@
     "resolutionSha256": "11bb9e74cb23b0ee2f9a32b2bbe7a8f210e5ebc2363bc4763da4c8ab2a2c6be8",
     "reason": "SAFE exact-tarball review against 0.7.40 and earlier-published attested 2.0.4: parser matching updates, unchanged CLI, no dependencies or install hooks; minified browser AST matches readable source after equivalent property-key normalization. Publisher/repository unchanged. Accept missing provenance for these inspected legacy bytes only. Evidence: 08-package-review.md.",
     "date": "2026-10-22"
-  },
-  {
-    "package": "uniwind@1.13.0",
-    "resolutionSha256": "dd87c52e82fa54223b2d3d692d401b95214a8f78d406662e99455d4804d06058",
-    "reason": "SAFE exact-tarball review against 1.12.2: CSS cascade/media and Metro tracking updates; unchanged dependencies, CLI, trusted publisher and repository. Existing CSS Function evaluation and local artifact I/O reviewed; no install hooks or downloads. Exact age exception permits this required locked release before 72 hours. Evidence: 08-package-review.md.",
-    "date": "2026-10-22"
   }
 ]

@@ -109,3 +109,10 @@ Each change to a security file requires a new entry naming that exact path and t
 ## 2026-10-26 — opt-in use of the official T3 home
 
 - baseline-update: security/network-baseline.json — Refreshes fingerprints of files that gain the opt-in home choice (`t3safe home use-official`, saved in the safe Electron profile, off by default): DesktopEnvironment, DesktopStatePaths, DesktopBackendPool (clearer "another instance" dialog), serverOwnership (message only), bin.ts (offline `home` command), the t3safe wrapper (doctor reports the effective home), packages/shared/package.json (new `./homeChoice` subpath export) and the affected tests. The default home stays ~/.t3-safe and app-identity.json is unchanged; no host, URL or network statement added.
+
+## Upstream v0.1.5 preparation
+
+- baseline-update: security/egress-inventory.md — Reviewed new peer, device gateway, GitCafe/OAuth, source build upload and mobile crash-reporting boundaries; peer MCP redirects disabled and automatic cache/symbol uploads disconnected.
+- baseline-update: security/threat-model.md — Preserve selected peer origins and record source-tooling upload opt-in plus excluded mobile crash reporting.
+- baseline-update: security/dependency-exceptions.json — Remove the expired uniwind@1.13.0 age exception; retain exact trust exceptions. Electron@44.10.0 waits for the existing age floor.
+- baseline-update: security/network-baseline.json — Record reviewed v0.1.2-to-v0.1.5 network source changes and literal inventory; preserve denied capability gates, reject peer redirects, disconnect remote task caching and automatic EAS symbols, and document explicit source tools plus excluded mobile traffic.

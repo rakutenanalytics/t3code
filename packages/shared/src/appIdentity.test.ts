@@ -46,4 +46,19 @@ describe("app identity", () => {
       defaultPort: 3873,
     });
   });
+
+  it("should create and open [t3safe://pair] links when the safe identity is baked", async () => {
+    vi.stubGlobal(
+      "__T3CODE_APP_IDENTITY__",
+      JSON.parse(NodeFS.readFileSync(safeIdentityFile, "utf8")),
+    );
+    const pairingUrl = "https://example.test/pair#token=fixed-token";
+    const { buildPairingAppLink, readPairingAppLink } = await import("./remote.ts");
+
+    const appLink = buildPairingAppLink(pairingUrl);
+
+    expect(appLink).toBe(`t3safe://pair?pairingUrl=${encodeURIComponent(pairingUrl)}`);
+    expect(readPairingAppLink(appLink)).toBe(pairingUrl);
+  });
+
 });
