@@ -37,6 +37,7 @@ jobs:
           node scripts/safe/stage-lock-scan.ts
       - name: Run focused managed policy tests
         run: |
+          vp test run scripts/safe/t3safe.test.ts
           vp test run scripts/safe/managed-policy.test.ts apps/server/src/telemetry/ManagedGates.test.ts apps/desktop/src/updates/ManagedUpdates.test.ts
           vp test run scripts/safe/artifact-scan.test.ts scripts/safe/desktop-smoke-command.test.ts
           vp test run scripts/safe/dependency-comparison.test.ts scripts/safe/dependency-registry.test.ts scripts/safe/dependency-scan.test.ts

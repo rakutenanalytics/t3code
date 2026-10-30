@@ -38,7 +38,7 @@
       "d1d840b6a2dae8762b64f15b480d4c5b7826104b5895dcba3a2ab87cd75d4758": 1
     },
     ".github/workflows/pr-checks.yml": {
-      "67f154b3ad570c0a14515b7025a417de9636295da2e44118e08fcc1678f3f939": 1
+      "94a79e4320500a5da08b582188ebb170ab49ec026184a29746ffc4b670c4a143": 1
     },
     ".github/workflows/release.yml": {
       "5077642be3be7295de057901b0d87745551b2333d9baf37d5429d32b100215a2": 1
@@ -6590,7 +6590,10 @@
       "74bc4cbc35d4fb135f3d4ce68e1667e86e091f5148af70d3b11a372348b09f8a": 1
     },
     "scripts/safe/t3safe": {
-      "913ab5a7344e5380ce24b20c41af6ed8036db18c640302feadf4ae941fcf2cba": 1
+      "b3ffc6296a225082c7bd1206d4b7a6a32d2f7129c5b845a7cb7f4caf2c5cfc66": 1
+    },
+    "scripts/safe/t3safe.test.ts": {
+      "257294e35575942ecb099b3dd233ace8642499131a6caa0df75fd9fd88ff693b": 1
     },
     "scripts/safe/touched-checks.ts": {
       "296ebd752e8f8a6bc1c71b8a44eb57a35d9eeff219aea4edb4ff653941c1e822": 1
@@ -8376,7 +8379,8 @@
       "www.w3.org"
     ],
     "scripts/safe/dependency-registry.ts": ["registry.npmjs.org"],
-    "scripts/safe/t3safe": ["api.github.com", "github.com"],
+    "scripts/safe/t3safe": ["api.github.com", "github.com", "www.gnu.org"],
+    "scripts/safe/t3safe.test.ts": ["api.github.com", "github.com"],
     "scripts/smoke-cli-archive.ts": ["127.0.0.1"],
     "scripts/sync-reference-repos.test.ts": ["github.com"],
     "t3.json": ["t3.codes"],
@@ -11739,7 +11743,14 @@
     "scripts/safe/dependency-registry.ts": ["https://registry.npmjs.org/"],
     "scripts/safe/t3safe": [
       "https://api.github.com/repos/rakutenanalytics/t3code/releases/latest",
-      "https://github.com/rakutenanalytics/t3code/releases/download/"
+      "https://github.com/rakutenanalytics/t3code/releases/download/",
+      "https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html"
+    ],
+    "scripts/safe/t3safe.test.ts": [
+      "https://*",
+      "https://api.github.com/repos/rakutenanalytics/t3code/releases/latest",
+      "https://github.com/rakutenanalytics/t3code/releases/download/v0.1.2-safe.[12]/SHA256SUMS",
+      "https://github.com/rakutenanalytics/t3code/releases/download/v0.1.2-safe.[12]/install.sh"
     ],
     "scripts/smoke-cli-archive.ts": ["http://127.0.0.1:"],
     "scripts/sync-reference-repos.test.ts": ["https://github.com/Effect-TS/effect.git"],

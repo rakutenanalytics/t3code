@@ -54,7 +54,9 @@ case "${1:-help}" in
     # A normal install keeps the app in /Applications or ~/Applications.
     if [[ "$prefix" == "$HOME/.local" ]]; then args=(); fi
     if [[ -n "$mode" ]]; then args+=("$mode"); fi
-    bash "$installer" --version "$version" "${args[@]}" "${forwarded[@]}"
+    # [#11] Bash 3.2 nounset rejects empty arrays; alternate-value expansion preserves zero arguments.
+    # https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
+    bash "$installer" --version "$version" ${args[@]+"${args[@]}"} ${forwarded[@]+"${forwarded[@]}"}
     ;;
   doctor)
     status=0
