@@ -3,8 +3,10 @@ import * as ConfigProvider from "effect/ConfigProvider";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as OtlpResource from "effect/observability/OtlpResource";
+import { vi } from "vite-plus/test";
 
 import * as OtelEnvironment from "./otelEnvironment.ts";
+import { managedPolicy } from "./managedPolicy.ts";
 
 const load = (env: Record<string, string>) =>
   OtelEnvironment.load.pipe(Effect.provide(ConfigProvider.layer(ConfigProvider.fromEnv({ env }))));
@@ -321,6 +323,8 @@ describe("OtelEnvironment", () => {
         },
       },
     ])("$name", ({ otel, t3Url, bootstrapUrl = "", expected }) => {
+      using _policy = vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
+
       assert.deepStrictEqual(
         OtelEnvironment.resolveSignalEndpoint(
           otel,
@@ -335,6 +339,7 @@ describe("OtelEnvironment", () => {
 
   it.effect("an exporter of none keeps the Settings endpoint from re-enabling its signal", () =>
     Effect.gen(function* () {
+      using _policy = vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
       const otel = yield* load({ OTEL_LOGS_EXPORTER: "none" });
       const t3 = {
         url: undefined,

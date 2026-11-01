@@ -131,29 +131,29 @@ export const make = Effect.gen(function* () {
     if (handleOpenUrl(url)) event.preventDefault();
   });
 
-  if (!managedPolicy.allows("t3Connect")) return DesktopClerk.of({ configure: Effect.void });
-
-  yield* Effect.acquireRelease(
-    Effect.try({
-      try: () => createDesktopClerkBridge(environment.stateDir, environment.isDevelopment),
-      catch: (cause) =>
-        new DesktopClerkBridgeInitializationError({
-          stateDir: environment.stateDir,
-          isDevelopment: environment.isDevelopment,
-          cause,
-        }),
-    }),
-    (bridge) =>
+  if (managedPolicy.allows("t3Connect")) {
+    yield* Effect.acquireRelease(
       Effect.try({
-        try: () => bridge.cleanup(),
+        try: () => createDesktopClerkBridge(environment.stateDir, environment.isDevelopment),
         catch: (cause) =>
-          new DesktopClerkBridgeCleanupError({
+          new DesktopClerkBridgeInitializationError({
             stateDir: environment.stateDir,
             isDevelopment: environment.isDevelopment,
             cause,
           }),
-      }).pipe(Effect.orDie),
-  );
+      }),
+      (bridge) =>
+        Effect.try({
+          try: () => bridge.cleanup(),
+          catch: (cause) =>
+            new DesktopClerkBridgeCleanupError({
+              stateDir: environment.stateDir,
+              isDevelopment: environment.isDevelopment,
+              cause,
+            }),
+        }).pipe(Effect.orDie),
+    );
+  }
 
   return DesktopClerk.of({
     configure: Effect.gen(function* () {

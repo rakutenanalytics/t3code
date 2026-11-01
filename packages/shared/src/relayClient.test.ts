@@ -1,3 +1,5 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { beforeEach, afterEach, vi } from "vite-plus/test";
 import { sha256 } from "@noble/hashes/sha2";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import { describe, expect, it } from "@effect/vitest";
@@ -18,6 +20,11 @@ import * as HostProcess from "./HostProcess.ts";
 import * as RelayClient from "./relayClient.ts";
 
 // POSIX exec-bit checks do not apply on NTFS.
+beforeEach(() => {
+  vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
+});
+afterEach(() => vi.restoreAllMocks());
+
 const windowsHost = HostProcess.Platform.defaultValue() === "win32";
 
 const layerHostRuntime = (env: Record<string, string> = {}, platform: NodeJS.Platform = "linux") =>
@@ -144,6 +151,37 @@ const layerInstallRuntime = (platform: NodeJS.Platform) =>
   );
 
 describe("RelayClient", () => {
+  it.effect(
+    "rejects cloudflared installation before transport or spawn when Connect is denied",
+    () =>
+      Effect.gen(function* () {
+        using _policy = vi.spyOn(managedPolicy, "allows").mockReturnValue(false);
+        const fs = yield* FileSystem.FileSystem;
+        const baseDir = yield* fs.makeTempDirectoryScoped({ prefix: "t3safe-cloudflared-" });
+        const manager = yield* RelayClient.makeCloudflaredRelayClient({ baseDir });
+
+        const error = yield* manager.install.pipe(Effect.flip);
+
+        expect(error.message).toBe("Disabled by managed policy");
+      }).pipe(
+        Effect.scoped,
+        Effect.provide(
+          Layer.mergeAll(
+            NodeServices.layer,
+            layerHostRuntime({ PATH: "" }),
+            Layer.succeed(
+              HttpClient.HttpClient,
+              HttpClient.make(() => Effect.die("denied install reached transport")),
+            ),
+            Layer.succeed(
+              ChildProcessSpawner.ChildProcessSpawner,
+              ChildProcessSpawner.make(() => Effect.die("denied install reached the spawner")),
+            ),
+          ),
+        ),
+      ),
+  );
+
   it.effect("cancels a contended install without removing the other installer's lock", () =>
     Effect.gen(function* () {
       const fileSystem = yield* FileSystem.FileSystem;

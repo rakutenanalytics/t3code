@@ -1,7 +1,7 @@
 {
-  "tag": "v0.1.2",
-  "tagSha": "044f07257c9684ae4543bd1e1ebf9c394e9e3830",
-  "sha": "044f07257c9684ae4543bd1e1ebf9c394e9e3830",
-  "syncCount": 1,
-  "note": "Upstream v0.1.2 merged; runtime and supply-chain input diffs reviewed. Registry upgrades meet the configured 4320-minute age floor; no new age exceptions."
+  "tag": "v0.1.5",
+  "tagSha": "6d450a4284852af137b2f3407fddd89eb76e7644",
+  "sha": "6d450a4284852af137b2f3407fddd89eb76e7644",
+  "syncCount": 2,
+  "note": "Upstream v0.1.5 merged; runtime and supply-chain diffs reviewed for desktop/server/web. Registry upgrades meet the 4320-minute floor after waiting for Electron 44.10.0; no age exceptions. Focused tests, scoped typechecks and source/dependency/stage checks passed. Mobile remains excluded; packaged artifacts require CI review."
 }

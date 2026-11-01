@@ -159,11 +159,25 @@ export const make = Effect.gen(function* () {
     const shadowedBy = yield* foreignFirstOnPath;
     const shadow = Option.isSome(shadowedBy) ? { shadowedBy: shadowedBy.value } : {};
     if (Option.isNone(installed)) {
-      return { supported: true, command, installedPath: null, onPath: false, launcherPath, ...shadow };
+      return {
+        supported: true,
+        command,
+        installedPath: null,
+        onPath: false,
+        launcherPath,
+        ...shadow,
+      };
     }
     const first = yield* firstOnPath;
     const onPath = windows || (Option.isSome(first) && (yield* isOurLink(first.value)));
-    return { supported: true, command, installedPath: installed.value, onPath, launcherPath, ...shadow };
+    return {
+      supported: true,
+      command,
+      installedPath: installed.value,
+      onPath,
+      launcherPath,
+      ...shadow,
+    };
   }).pipe(
     Effect.orElseSucceed(() => ({
       supported: false,

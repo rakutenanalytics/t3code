@@ -63,18 +63,33 @@ describe("managed gates", () => {
 
     return Effect.gen(function* () {
       const otel = yield* OtelEnvironment.load;
-      const traces = OtelEnvironment.resolveSignalEndpoint(otel, "traces", {
-        url: "https://collector.example.com/traces",
-        export: { protocol: "http/protobuf", headers: undefined, exportIntervalMs: 1000 },
-      }, { bootstrapUrl: undefined, settingsUrl: undefined });
-      const metrics = OtelEnvironment.resolveSignalEndpoint(otel, "metrics", {
-        url: undefined,
-        export: { protocol: "http/protobuf", headers: undefined, exportIntervalMs: 1000 },
-      }, { bootstrapUrl: undefined, settingsUrl: undefined });
-      const logs = OtelEnvironment.resolveSignalEndpoint(otel, "logs", {
-        url: undefined,
-        export: { protocol: "http/protobuf", headers: undefined, exportIntervalMs: 1000 },
-      }, { bootstrapUrl: undefined, settingsUrl: undefined });
+      const traces = OtelEnvironment.resolveSignalEndpoint(
+        otel,
+        "traces",
+        {
+          url: "https://collector.example.com/traces",
+          export: { protocol: "http/protobuf", headers: undefined, exportIntervalMs: 1000 },
+        },
+        { bootstrapUrl: undefined, settingsUrl: undefined },
+      );
+      const metrics = OtelEnvironment.resolveSignalEndpoint(
+        otel,
+        "metrics",
+        {
+          url: undefined,
+          export: { protocol: "http/protobuf", headers: undefined, exportIntervalMs: 1000 },
+        },
+        { bootstrapUrl: undefined, settingsUrl: undefined },
+      );
+      const logs = OtelEnvironment.resolveSignalEndpoint(
+        otel,
+        "logs",
+        {
+          url: undefined,
+          export: { protocol: "http/protobuf", headers: undefined, exportIntervalMs: 1000 },
+        },
+        { bootstrapUrl: undefined, settingsUrl: undefined },
+      );
 
       expect([traces, metrics, logs]).toEqual([undefined, undefined, undefined]);
     }).pipe(Effect.provide(ConfigProvider.layer(environment)));

@@ -1,3 +1,5 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { beforeEach, afterEach, vi } from "vite-plus/test";
 import { describe, expect, it } from "@effect/vitest";
 import * as Deferred from "effect/Deferred";
 import * as Duration from "effect/Duration";
@@ -18,6 +20,11 @@ import * as RelayClient from "@t3tools/shared/relayClient";
 
 import * as ServerSecretStore from "../auth/ServerSecretStore.ts";
 import * as ManagedEndpointRuntime from "./ManagedEndpointRuntime.ts";
+
+beforeEach(() => {
+  vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
+});
+afterEach(() => vi.restoreAllMocks());
 
 const layerRelayClientAvailable = Layer.succeed(
   RelayClient.RelayClient,
@@ -208,6 +215,18 @@ describe("CloudManagedEndpointRuntime", () => {
     connectorToken: "token",
     tunnelId: "tunnel-1",
   };
+  it.effect("keeps a saved tunnel disabled without spawning when Connect is denied", () =>
+    Effect.gen(function* () {
+      using _policy = vi.spyOn(managedPolicy, "allows").mockReturnValue(false);
+      const runtime = yield* buildCloudManagedEndpointRuntime(
+        ChildProcessSpawner.make(() => Effect.die("denied tunnel reached the spawner")),
+      );
+
+      const status = yield* runtime.applyConfig(tunnelConfig);
+
+      expect(status).toEqual({ status: "disabled" });
+    }),
+  );
   const quicDialWarning =
     '2026-10-16T20:29:43Z ERR Failed to dial a quic connection error="failed to dial to edge with quic: timeout: no recent network activity" connIndex=1\n';
   const quicDatagramWarning =

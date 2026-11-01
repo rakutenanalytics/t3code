@@ -1,3 +1,5 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { beforeEach, afterEach, vi } from "vite-plus/test";
 import { EnvironmentId } from "@t3tools/contracts";
 import { assert, it } from "@effect/vitest";
 import * as Effect from "effect/Effect";
@@ -24,6 +26,11 @@ import {
   RELAY_ENVIRONMENT_CREDENTIAL_SECRET,
   RELAY_URL_SECRET,
 } from "./config.ts";
+
+beforeEach(() => {
+  vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
+});
+afterEach(() => vi.restoreAllMocks());
 
 const encode = (value: string) => new TextEncoder().encode(value);
 
@@ -118,6 +125,21 @@ const withService = <A, E>(
       Effect.provideService(FetchHttpClient.Fetch, fetch),
     );
   });
+
+it.effect("rejects preference changes without contacting the relay when Connect is denied", () =>
+  withService({}, ({ preferences, relayCalls }) =>
+    Effect.gen(function* () {
+      using _policy = vi.spyOn(managedPolicy, "allows").mockReturnValue(false);
+
+      const error = yield* preferences
+        .update({ publishAgentActivity: true, holdWebhooksWhileOffline: true })
+        .pipe(Effect.flip);
+
+      assert.deepInclude(error, { _tag: "CloudLinkInternalError", operation: "managed-policy" });
+      assert.deepEqual(relayCalls, []);
+    }),
+  ),
+);
 
 it.effect("tells the relay before saving the hold setting locally", () =>
   withService({}, ({ preferences, stored, relayCalls }) =>

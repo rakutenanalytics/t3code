@@ -191,7 +191,9 @@ export function promptLinkAppPath(
 ): string | null {
   if (!URL.canParse(value)) return null;
   const url = new URL(value);
-  if (APP_SCHEME.test(url.protocol)) {
+  const isAppProtocol =
+    url.protocol === `${appIdentity.urlScheme}:` || APP_SCHEME.test(url.protocol);
+  if (isAppProtocol) {
     if (url.host === "new" && (url.pathname === "" || url.pathname === "/")) {
       return `/new${url.search}`;
     }

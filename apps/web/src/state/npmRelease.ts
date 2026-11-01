@@ -16,7 +16,7 @@ export interface NpmRelease {
 export const npmReleaseAtom = Atom.family((spec: string) =>
   Atom.make(
     Effect.gen(function* () {
-      if (!managedPolicy.allows("providerMetadata")) return false;
+      if (!managedPolicy.allows("providerMetadata")) return null;
       const response = yield* HttpClient.get(
         `https://registry.npmjs.org/t3/${encodeURIComponent(spec)}`,
       );

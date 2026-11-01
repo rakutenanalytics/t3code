@@ -35,7 +35,10 @@ export function usePullRequestMediaUrl(url: string) {
   const allowed = allowsRemoteContentUrl(url);
   const fetchUrl = allowed ? sourceControlClients.mediaUrl(url)?.fetchUrl : null;
   const resource = useMemo<AssetResource | null>(
-    () => (context && fetchUrl ? { _tag: SOURCE_CONTROL_MEDIA_ASSET, cwd: context.cwd, url: fetchUrl } : null),
+    () =>
+      context && fetchUrl
+        ? { _tag: SOURCE_CONTROL_MEDIA_ASSET, cwd: context.cwd, url: fetchUrl }
+        : null,
     [context, fetchUrl],
   );
   const asset = useAssetUrlState(context?.environmentId ?? null, resource);

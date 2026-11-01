@@ -357,7 +357,11 @@ function AboutVersionSection() {
                 size="sm"
                 className="w-full sm:w-40"
                 aria-label="Update track"
-                disabled={!managedPolicy.allows("desktopAutoUpdate") || switchChannel !== null || updateRun !== null}
+                disabled={
+                  !managedPolicy.allows("desktopAutoUpdate") ||
+                  switchChannel !== null ||
+                  updateRun !== null
+                }
               >
                 <SelectValue>{channelSwitchLabel(selectedUpdateChannel)}</SelectValue>
               </SelectTrigger>

@@ -318,54 +318,70 @@ it.effect("never follows a peer's redirect with the pairing code", () =>
   ).pipe(Effect.provide(NodeHttpServer.layerTest)),
 );
 
-it.effect("should reject a peer MCP 307 redirect without forwarding [private message] to another origin", () =>
-  Effect.scoped(
-    Effect.gen(function* () {
-      const b = yield* serveB(box);
-      const a = yield* makeA(laptop);
-      const pairing = yield* b.auth.issuePairingCredential();
-      const link = yield* a.links.link({ url: b.url, pairingCode: pairing.credential, access: "auto" });
-      const received = yield* Ref.make<ReadonlyArray<string>>([]);
-      const elsewhere = yield* serveRaw((request) =>
-        request.text.pipe(
-          Effect.flatMap((body) => Ref.update(received, (seen) => [...seen, body])),
-          Effect.as(HttpServerResponse.empty({ status: 404 })),
-        ),
-      );
-      const front = yield* serveRaw((request) =>
-        request.text.pipe(
-          Effect.map((body) => {
-            const { method } = JSON.parse(body);
-            if (method === "initialize") {
-              return HttpServerResponse.jsonUnsafe({}, { headers: { "mcp-session-id": "fixed-session" } });
-            }
-            if (method === "notifications/initialized") return HttpServerResponse.empty();
-            return HttpServerResponse.empty({ status: 307, headers: { location: `${elsewhere}/mcp` } });
-          }),
-        ),
-      );
-      const context = yield* PeerMcpClient.layer.pipe(
-        Layer.provide(Layer.mock(PeerLinks.PeerLinks)({
-          resolve: () => Effect.succeed({ link, url: front, token: "fixed-token" }),
-          recordOutcome: () => Effect.void,
-        })),
-        Layer.provide(FetchHttpClient.layer),
-        Layer.build,
-      );
-      const client = Context.get(context, PeerMcpClient.PeerMcpClient);
+it.effect(
+  "should reject a peer MCP 307 redirect without forwarding [private message] to another origin",
+  () =>
+    Effect.scoped(
+      Effect.gen(function* () {
+        const b = yield* serveB(box);
+        const a = yield* makeA(laptop);
+        const pairing = yield* b.auth.issuePairingCredential();
+        const link = yield* a.links.link({
+          url: b.url,
+          pairingCode: pairing.credential,
+          access: "auto",
+        });
+        const received = yield* Ref.make<ReadonlyArray<string>>([]);
+        const elsewhere = yield* serveRaw((request) =>
+          request.text.pipe(
+            Effect.flatMap((body) => Ref.update(received, (seen) => [...seen, body])),
+            Effect.as(HttpServerResponse.empty({ status: 404 })),
+          ),
+        );
+        const front = yield* serveRaw((request) =>
+          request.text.pipe(
+            Effect.map((body) => {
+              const { method } = JSON.parse(body);
+              if (method === "initialize") {
+                return HttpServerResponse.jsonUnsafe(
+                  {},
+                  { headers: { "mcp-session-id": "fixed-session" } },
+                );
+              }
+              if (method === "notifications/initialized") return HttpServerResponse.empty();
+              return HttpServerResponse.empty({
+                status: 307,
+                headers: { location: `${elsewhere}/mcp` },
+              });
+            }),
+          ),
+        );
+        const context = yield* PeerMcpClient.layer.pipe(
+          Layer.provide(
+            Layer.mock(PeerLinks.PeerLinks)({
+              resolve: () => Effect.succeed({ link, url: front, token: "fixed-token" }),
+              recordOutcome: () => Effect.void,
+            }),
+          ),
+          Layer.provide(FetchHttpClient.layer),
+          Layer.build,
+        );
+        const client = Context.get(context, PeerMcpClient.PeerMcpClient);
 
-      const error = yield* client.call({
-        environmentId: box.environmentId,
-        tool: "t3_thread_send",
-        arguments: { message: "private message" },
-        limits: { runtimeMode: "full-access", interactionMode: "default" },
-        success: Schema.Unknown,
-      }).pipe(Effect.flip);
+        const error = yield* client
+          .call({
+            environmentId: box.environmentId,
+            tool: "t3_thread_send",
+            arguments: { message: "private message" },
+            limits: { runtimeMode: "full-access", interactionMode: "default" },
+            success: Schema.Unknown,
+          })
+          .pipe(Effect.asVoid, Effect.flip);
 
-      expect(error.message).toBe("The linked environment answered HTTP 307.");
-      expect(yield* Ref.get(received)).toEqual([]);
-    }),
-  ).pipe(Effect.provide(NodeHttpServer.layerTest)),
+        expect(error.message).toBe("The linked environment answered HTTP 307.");
+        expect(yield* Ref.get(received)).toEqual([]);
+      }),
+    ).pipe(Effect.provide(NodeHttpServer.layerTest)),
 );
 
 it.effect("never sends a link's token to an address that stops answering as that peer", () =>

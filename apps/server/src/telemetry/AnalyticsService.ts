@@ -121,9 +121,9 @@ function serverOsFromNodePlatform(platform: string): ClientOs {
 export const make = Effect.gen(function* () {
   if (!managedPolicy.allows("productAnalytics"))
     return AnalyticsService.of({
-      record: () => Effect.void,
+      record: Effect.fn("AnalyticsService.record")(() => Effect.void),
       flush: Effect.void,
-      recordOwners: () => Effect.void,
+      recordOwners: Effect.fn("AnalyticsService.recordOwners")(() => Effect.void),
     });
   const telemetryConfig = yield* TelemetryEnvConfig;
   const httpClient = yield* HttpClient.HttpClient;

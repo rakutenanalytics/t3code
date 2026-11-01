@@ -13,6 +13,19 @@ afterEach(() => {
 });
 
 describe("app identity", () => {
+  it("should open [t3safe://new] prompt links when the safe identity is baked", async () => {
+    vi.stubGlobal(
+      "__T3CODE_APP_IDENTITY__",
+      JSON.parse(NodeFS.readFileSync(safeIdentityFile, "utf8")),
+    );
+    const { promptLinkAppPath, promptLinkDeepLink } = await import("./promptLinks.ts");
+
+    const appLink = promptLinkDeepLink("/new?prompt=hello");
+
+    expect(appLink).toBe("t3safe://new?prompt=hello");
+    expect(promptLinkAppPath(appLink)).toBe("/new?prompt=hello");
+  });
+
   it("should default to home dir [.t3], env var [T3CODE_HOME], CLI [t3], scheme [t3code] and port [3773] when no identity is baked", async () => {
     // Target
     const { appIdentity } = await import("./appIdentity.ts");
@@ -60,5 +73,4 @@ describe("app identity", () => {
     expect(appLink).toBe(`t3safe://pair?pairingUrl=${encodeURIComponent(pairingUrl)}`);
     expect(readPairingAppLink(appLink)).toBe(pairingUrl);
   });
-
 });

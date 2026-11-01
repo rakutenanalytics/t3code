@@ -642,7 +642,8 @@ const buildIosOnEas = Effect.fn("nativeClient.buildIosOnEas")(function* (staging
   const environment = yield* HostProcess.Environment;
   if (environment.T3_NATIVE_CLIENT_EAS_BUILD !== "1") {
     return yield* new NativeClientError({
-      message: "Cloud builds upload the checkout to EAS. Set T3_NATIVE_CLIENT_EAS_BUILD=1 to opt in, or build locally with Xcode.",
+      message:
+        "Cloud builds upload the checkout to EAS. Set T3_NATIVE_CLIENT_EAS_BUILD=1 to opt in, or build locally with Xcode.",
     });
   }
   const fs = yield* FileSystem.FileSystem;
