@@ -110,6 +110,17 @@ describe("artifact host review", () => {
 
       expect(rebuilt.status, rebuilt.stderr).toBe(0);
       expect(fixture.report().unapprovedForbiddenLiterals).toEqual([]);
+      const expectedPrivacyHash =
+        "11fae3d2ee4f1b3dcab5a6c068af9b65c626c46abaeec72c75159134a1fe7f8c";
+      for (const [utilsHash, indexHash] of [
+        ["B4I4LKis", "BSreM5r9"],
+        ["NNsfeux9", "CeBtHz1J"],
+      ] as const) {
+        const hosts = collectArtifactHosts([
+          { file: "SettingsPanels.logic-cjmgdhuu.js", text: callSite(utilsHash, indexHash) },
+        ]);
+        expect(hosts[0]!.literals[0]!.contextSha256).toBe(expectedPrivacyHash);
+      }
 
       fixture.write(
         "SettingsPanels.logic-cjmgdhuu.js",
@@ -128,10 +139,15 @@ describe("artifact host review", () => {
     }
   });
 
-  it.each(["left", "right"])(
-    "accepts a hosted-origin literal when a chunk hash clips the %s context boundary",
-    (boundary) => {
-      const chunk = (hash: string) => `import "./utils-${hash}.js";`;
+  it.each([
+    { boundary: "left", specifier: "./utils", quote: '"' },
+    { boundary: "right", specifier: "./utils", quote: '"' },
+    { boundary: "left", specifier: "../x/utils", quote: "'" },
+    { boundary: "right", specifier: "../x/utils", quote: "`" },
+  ])(
+    "accepts a hosted-origin literal when [$specifier] clips the [$boundary] context boundary",
+    ({ boundary, specifier, quote }) => {
+      const chunk = (hash: string) => `import ${quote}${specifier}-${hash}.js${quote};`;
       const literal = 'const origin="https://app.t3.codes";';
       const callSite = (hash: string) => {
         if (boundary === "left") return chunk(hash) + " ".repeat(50) + literal;
@@ -151,6 +167,40 @@ describe("artifact host review", () => {
       expect(reviewArtifactHosts(rebuilt, [], ledger).passed).toBe(true);
     },
   );
+
+  it("rejects a changed absolute URL path when its eight-letter suffix clips the right boundary", () => {
+    const callSite = (suffix: string) =>
+      `const u="https://t3.codes/${"x".repeat(71)}-${suffix}.js";`;
+    const original = collectArtifactHosts([{ file: "main.js", text: callSite("download") }]);
+    const ledger = [
+      { host: "t3.codes", ...original[0]!.literals[0]!, note: "Reviewed download link" },
+    ];
+
+    const changed = collectArtifactHosts([{ file: "main.js", text: callSite("tracking") }]);
+    const review = reviewArtifactHosts(changed, [], ledger);
+
+    expect(reviewArtifactHosts(original, [], ledger).passed).toBe(true);
+    expect(changed[0]!.literals[0]!.contextSha256).not.toBe(ledger[0]!.contextSha256);
+    expect(review.passed).toBe(false);
+    expect(review.unapprovedForbiddenLiterals).toHaveLength(1);
+  });
+
+  it("rejects a changed executable property when its eight-letter name clips the left boundary", () => {
+    const callSite = (method: string) =>
+      `globalThis.${method}.js(${" ".repeat(64)}"https://app.t3.codes");`;
+    const original = collectArtifactHosts([{ file: "main.js", text: callSite("noopnoop") }]);
+    const ledger = [
+      { host: "app.t3.codes", ...original[0]!.literals[0]!, note: "Reviewed inert method" },
+    ];
+
+    const changed = collectArtifactHosts([{ file: "main.js", text: callSite("sendData") }]);
+    const review = reviewArtifactHosts(changed, [], ledger);
+
+    expect(reviewArtifactHosts(original, [], ledger).passed).toBe(true);
+    expect(changed[0]!.literals[0]!.contextSha256).not.toBe(ledger[0]!.contextSha256);
+    expect(review.passed).toBe(false);
+    expect(review.unapprovedForbiddenLiterals).toHaveLength(1);
+  });
 
   it("should group multiple URLs and literal hosts into one categorized host with a sample file", () => {
     const files = [

@@ -140,3 +140,5 @@ Each change to a security file requires a new entry naming that exact path and t
 
 - baseline-update: security/artifact-hosts.json — Rebaseline all four clipped privacy-link chunk-hash contexts as two desktop/CLI keys; all 96 prior keys traced to preserved context evidence, other 92 fingerprints unchanged. Release run 42769575199 and PR-CI-shaped bundles retain host, path and call-site approval requirements.
 - baseline-update: security/network-baseline.json — Review scanner-only equal-length chunk-hash masking and inert regression fixture changes; refresh the two complete source fingerprints and fixture host inventory without changing network permissions.
+
+- baseline-update: security/network-baseline.json — Narrow pre-slice masking to complete quoted relative JavaScript chunks with dash-separated eight-character hashes; add URL-path and executable-property rejection regressions. All 94 artifact ledger keys retain their fingerprints; refresh only the two scanner/test source fingerprints and inert fixture inventory.
