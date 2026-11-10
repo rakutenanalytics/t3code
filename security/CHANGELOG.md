@@ -2,6 +2,33 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-11-10 — v0.1.7 packaged host contexts
+
+- baseline-update: security/artifact-hosts.json — Rebuilds final-head desktop/client and single-file CLI inputs, including installed production dependency text. Reviews six DMG client contexts reported by CI, the local privacy-link variant caused by a clipped chunk suffix, and thirteen CLI source/client contexts that would fail the later scan. These are inert schema/help/label strings, URL construction or user-initiated navigation with no automatic request; baked analytics/Connect denials remain verified. Records six informational dependency hosts, including the conditional Slack MCP workspace-validation POST as intentional provider behavior, not dormant catalogue text. Local inventory matches CI's 299 hosts; native DMG/SEA validation remains required in CI. No denylist, provider trust prefix or runtime capability changes.
+
+## 2026-11-10 — triage policy recovery
+
+- baseline-update: security/egress-inventory.md — Corrects the stale triage row to name the enforced remoteContent gate at both entry points. Server capability and recovery guidance now honor the baked denial; no capability grant changes.
+- baseline-update: security/network-baseline.json — Refreshes scanner-required whole-file fingerprints for the triage capability, failure toast and boot recovery changes plus focused tests. Literal hosts and URLs are unchanged; the new hook test performs no network access. No capability or destination grant changes.
+
+## 2026-11-10 — v0.1.7 advisory remediation
+
+- baseline-update: security/dependency-baseline.json — Applies age-qualified fixes for the inherited advisory set, including all undici majors, direct sharp pins, DOMPurify, Seroval and MCP SDK dependencies. Verifies registry integrity and tarball lifecycle metadata. Removes sharp's obsolete install grant because 0.35.5 has no install hook; pnpm 11.10.0, strict 4320-minute age checks, trust rules and all other exact grants remain intact. Two residual tooling advisories have no path through desktop, server or web production dependencies; no advisory exception is added.
+- baseline-update: security/stage-lock-baseline.json — Refreshes deterministic desktop/CLI projections for the reviewed fixes. Zod's server root is exact 4.6.6 so the existing projection uses the same patched resolution; both projected stages pass frozen production lock validation.
+- baseline-update: security/network-baseline.json — Reviews dependency manifest/workspace changes and a peer-client test fixture that temporarily permits only peerLinks while testing session reuse and refusal. Fork denial coverage remains unchanged. No destination, runtime capability or lifecycle grant is added.
+- baseline-update: security/last-approved-upstream — Advances the incorporated source/dependency review anchor to v0.1.7, 322f6544dfad0a3c8a0c8cbecf2c7f7874b14268, sync count 2. Eligible advisory fixes and local targeted checks are complete. Full packaged DMG/standalone CLI validation remains required in CI before release approval or publication.
+
+## 2026-11-10 — v0.1.7 local sync candidate
+
+- baseline-update: security/allowlist.json — Reviews Cursor api.cursor.com, Claude downloads.claude.ai and GitHub media.githubusercontent.com destinations behind metadata/media denials; adds default-denied peerLinks without widening the baked allow list.
+- baseline-update: security/artifact-hosts.json — Traces 20 changed literal contexts in locally assembled desktop/server/web bundles to source constants, explicit navigation, local identifiers or baked-denied analytics; records 23 informational hosts. Assembled policy/identity and host scans pass. Full DMG extraction remains unverified because Rust/Cargo is unavailable; these entries do not approve a release.
+- baseline-update: security/dependency-baseline.json — Records age-qualified v0.1.7 dependency inputs and Electron 44.10.2 with pnpm 11, 4320-minute strict age floor, no age exclusions and exact build grants. Removes the automatic EAS source-map upload hook. Advisory findings remain release blockers, not accepted exceptions.
+- baseline-update: security/dependency-exceptions.json — Removes the stale uniwind age exception. Retains seven exact historical provenance exceptions; no new age exception is approved.
+- baseline-update: security/egress-inventory.md — Documents independent baked/admin policy contracts, denied Cursor/npm metadata, source-control media, outbound peers, app/CLI triage and native/JS Expo Observe export denial; records dynamic Git-host actions and removed build-cache/EAS upload hooks.
+- baseline-update: security/network-baseline.json — Reviews v0.1.2 to v0.1.7 runtime/build source and fixture changes with preserved baked gates, new peerLinks denial, early metadata/media/triage denials, mobile preview and Expo Observe dispatch gating, removed remote task cache and retained fork workflows. Scanner excludes vendored references; touched checks batch their source inputs. No network grant is added.
+- baseline-update: security/stage-lock-baseline.json — Projects desktop/CLI dependencies with root exact overrides, including node-pty, and Electron 44.10.2. Stage installs remain frozen; focused staging regression passes.
+- baseline-update: security/threat-model.md — Clarifies independent baked/admin denials and outbound peer links versus allowed inbound network clients. Provider shell sandboxing remains outside the managed build boundary.
+
 ## 2026-10-28 — Bash 3.2 update argument forwarding (#11)
 
 - baseline-update: security/network-baseline.json — Reviews only `scripts/safe/t3safe`, its new offline `scripts/safe/t3safe.test.ts` regression and the macOS CI invocation in `.github/workflows/pr-checks.yml`. Guarded array expansion preserves zero arguments under Bash 3.2 nounset without changing installer checksum verification, mode selection or options. The new www.gnu.org literal is a Bash manual comment only; fixture GitHub URLs are served by a local curl stub. No runtime network grant, dependency or scanner policy changes.
@@ -109,3 +136,4 @@ Each change to a security file requires a new entry naming that exact path and t
 ## 2026-10-26 — opt-in use of the official T3 home
 
 - baseline-update: security/network-baseline.json — Refreshes fingerprints of files that gain the opt-in home choice (`t3safe home use-official`, saved in the safe Electron profile, off by default): DesktopEnvironment, DesktopStatePaths, DesktopBackendPool (clearer "another instance" dialog), serverOwnership (message only), bin.ts (offline `home` command), the t3safe wrapper (doctor reports the effective home), packages/shared/package.json (new `./homeChoice` subpath export) and the affected tests. The default home stays ~/.t3-safe and app-identity.json is unchanged; no host, URL or network statement added.
+- baseline-update: security/network-baseline.json — Records the three macOS workflow files after moving jobs from macos-14, which hosted runners no longer provision, to macos-15. The change is the runner label only; no step, action pin, permission, network host or secret handling changes.

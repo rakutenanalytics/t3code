@@ -14,7 +14,7 @@ vp test run scripts/safe/managed-policy.test.ts apps/server/src/telemetry/Manage
 node scripts/safe/touched-checks.ts origin/main
 ```
 
-Typecheck contracts, shared, client-runtime, server, desktop, web and scripts with `vp exec --filter <package-name> -- tsc --noEmit`. Do not run repository-wide checks. The PR workflow runs the browser presentation case and builds both artifacts on macos-14 ARM64. Full local desktop builds and browsers are unnecessary for ordinary sync preparation.
+Typecheck contracts, shared, client-runtime, server, desktop, web and scripts with `vp exec --filter <package-name> -- tsc --noEmit`. Do not run repository-wide checks. The PR workflow runs the browser presentation case and builds both artifacts on macos-15 ARM64. Full local desktop builds and browsers are unnecessary for ordinary sync preparation.
 
 The egress baseline binds the complete contents of each network-related source file, including wrapped arguments, generated files, fixtures and tests. It also lists literal hosts by file for readable review. Scanning covers app/package/script/native/workflow source and root configuration, including HTML/CSS/plist/TOML/XML/Gradle/Python and npm hooks; vendored `.repos` references stay outside the repository inventory. Detection includes low-level Node transports, browser resources, dynamic imports, process spawning, network tools and common telemetry/feature-flag SDKs. Computed destinations are caught as source changes, not resolved into hosts. A baseline refresh records a review decision; it does not prove runtime safety.
 
@@ -53,7 +53,7 @@ Code must take names, paths and ports from `appIdentity`, never from literals su
 | Workflow             | Purpose and authority                                                                                                                    |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | `pr-checks.yml`      | PRs to main; scanners before dependency installation, policy tests, scoped typechecks/lint/format, shell checks and browser presentation |
-| `safe-build.yml`     | Reusable macos-14 ARM64 DMG + CLI build; no publishing, no secrets; artifact smoke and checksums                                         |
+| `safe-build.yml`     | Reusable macos-15 ARM64 DMG + CLI build; no publishing, no secrets; artifact smoke and checksums                                         |
 | `release.yml`        | Main changes affecting shipped files; policy verification, next safe tag, build and public release using only GITHUB_TOKEN               |
 | `upstream-watch.yml` | Daily stable-release comparison; one open `upstream-sync` issue for the latest tag, with a fixed review template                         |
 
