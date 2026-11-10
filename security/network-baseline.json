@@ -38,13 +38,13 @@
       "d1d840b6a2dae8762b64f15b480d4c5b7826104b5895dcba3a2ab87cd75d4758": 1
     },
     ".github/workflows/pr-checks.yml": {
-      "94a79e4320500a5da08b582188ebb170ab49ec026184a29746ffc4b670c4a143": 1
+      "3942c96927f39adcd1e7a9cfa7fbc01935589c58416b60ae9bbb2ef33e806cf1": 1
     },
     ".github/workflows/release.yml": {
-      "5077642be3be7295de057901b0d87745551b2333d9baf37d5429d32b100215a2": 1
+      "d365ed2f759a7db675d70060db065bb3d8a412c96489ebbf543eedd1df918ec8": 1
     },
     ".github/workflows/safe-build.yml": {
-      "e206a54f50de42df0203e7ad1aa4c203dd8aa01c26c17f919086e36f0632331f": 1
+      "c4ab60d45564d5754b887fb50c09ed626d28d9a725e5d5794168585de87e2d0e": 1
     },
     ".github/workflows/upstream-watch.yml": {
       "b8f09d94311798ae73abcf6446f4282f474f1f260087726ddce4ae68d05c87b6": 1
