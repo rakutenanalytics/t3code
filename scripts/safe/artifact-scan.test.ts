@@ -93,6 +93,65 @@ describe("artifact host review", () => {
     }
   });
 
+  it("accepts the reviewed privacy link across clipped chunk hashes but rejects a new fetch", () => {
+    const fixture = createScannerFixture();
+    const callSite = (utilsHash: string, indexHash: string) =>
+      `import{_n as e,gn as t,hn as n,pn as r}from"./utils-${utilsHash}.js";import{e_ as i,vt as a,zh as o}from"./index-${indexHash}.js";var s=\`https://t3.codes/privacy-policy\`;function c(e){return e!==\`separate\`}function l(e,t=\`repository\`){return e}`;
+    fixture.write("SettingsPanels.logic-BGZgqFpo.js", callSite("B4I4LKis", "BSreM5r9"));
+
+    try {
+      expect(
+        fixture.scan("--accept-gated-literals", "--note", "Reviewed privacy anchor").status,
+      ).toBe(0);
+      NodeFS.unlinkSync(NodePath.join(fixture.bundle, "SettingsPanels.logic-BGZgqFpo.js"));
+      fixture.write("SettingsPanels.logic-cjmgdhuu.js", callSite("NNsfeux9", "CeBtHz1J"));
+
+      const rebuilt = fixture.scan();
+
+      expect(rebuilt.status, rebuilt.stderr).toBe(0);
+      expect(fixture.report().unapprovedForbiddenLiterals).toEqual([]);
+
+      fixture.write(
+        "SettingsPanels.logic-cjmgdhuu.js",
+        callSite("NNsfeux9", "CeBtHz1J").replace(
+          "s=`https://t3.codes/privacy-policy`",
+          "s=fetch(`https://t3.codes/privacy-policy`)",
+        ),
+      );
+
+      expect(fixture.scan().status).toBe(1);
+      expect(fixture.report().unapprovedForbiddenLiterals).toMatchObject([
+        { host: "t3.codes", file: "SettingsPanels.logic-cjmgdhuu.js" },
+      ]);
+    } finally {
+      fixture.cleanup();
+    }
+  });
+
+  it.each(["left", "right"])(
+    "accepts a hosted-origin literal when a chunk hash clips the %s context boundary",
+    (boundary) => {
+      const chunk = (hash: string) => `import "./utils-${hash}.js";`;
+      const literal = 'const origin="https://app.t3.codes";';
+      const callSite = (hash: string) => {
+        if (boundary === "left") return chunk(hash) + " ".repeat(50) + literal;
+        return literal + " ".repeat(55) + chunk(hash);
+      };
+      const original = collectArtifactHosts([
+        { file: "utils-12345678.js", text: callSite("abcdefgh") },
+      ]);
+      const ledger = [
+        { host: "app.t3.codes", ...original[0]!.literals[0]!, note: "Reviewed hosted origin" },
+      ];
+
+      const rebuilt = collectArtifactHosts([
+        { file: "utils-87654321.js", text: callSite("aB_cD-12") },
+      ]);
+
+      expect(reviewArtifactHosts(rebuilt, [], ledger).passed).toBe(true);
+    },
+  );
+
   it("should group multiple URLs and literal hosts into one categorized host with a sample file", () => {
     const files = [
       {

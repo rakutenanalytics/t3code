@@ -7763,10 +7763,10 @@
       "bcf06f604f7ae76d6cfac2c2e2eddab1b21fe42eb7606b601b69df90a57adf9c": 1
     },
     "scripts/safe/artifact-host-review.ts": {
-      "f4ffcf9a069f89b0ff5291af1b8eff06d73b37f3aa845b3589bac2adcdadfc4d": 1
+      "b6f6ad090e980acb8ef3da838aa0bf67b6bd8868a2713dbb369c434550bea982": 1
     },
     "scripts/safe/artifact-scan.test.ts": {
-      "f1136d0f6ca4e614321e7cc2e9ba83ef85ee0a138bf168beedd9e7e4de84e581": 1
+      "503764ca3d52d0b7a882694c7517374e827b12b17c155a80953c3d27c5dd8eaf": 1
     },
     "scripts/safe/artifact-scan.ts": {
       "5ffcd54a5fe7bda86cc093bd9d24adcf3294ca406904873fd1785b4ca12740e5": 1
@@ -10019,6 +10019,7 @@
       "relay.t3.codes",
       "reviewed.example.com",
       "runtime-abcdefgh.js",
+      "settingspanels.logic-cjmgdhuu.js",
       "statsigapi.net",
       "t3.codes",
       "us.i.posthog.com",
@@ -14321,6 +14322,7 @@
       "https://statsigapi.net",
       "https://t3.codes",
       "https://t3.codes/download",
+      "https://t3.codes/privacy-policy",
       "https://us.i.posthog.com",
       "https://www.w3.org/2000/svg",
       "https://www.w3.org/TR/SVG2/"
