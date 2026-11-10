@@ -2,6 +2,7 @@
 import * as NodeFS from "node:fs";
 import * as NodePath from "node:path";
 import * as Schema from "effect/Schema";
+import { resolveCatalogDependencies } from "./resolve-catalog.ts";
 import { fromYaml } from "@t3tools/shared/schemaYaml";
 
 export function createLockedStageFiles(input: {
@@ -18,8 +19,18 @@ export function createLockedStageFiles(input: {
 }) {
   const lockfile = decodeLockfile(input.lockfile);
   const workspace = decodeYamlRecord(input.workspace);
-  const dependencies = selectLockedDependencies(input.dependencies, lockfile);
-  const devDependencies = selectLockedDependencies(input.devDependencies ?? {}, lockfile);
+  const policy = Schema.decodeSync(fromYaml(StageDependencyPolicy))(input.workspace);
+  const overrides = resolveCatalogDependencies(
+    policy.overrides ?? {},
+    policy.catalog ?? {},
+    "release stage",
+  );
+  const dependencies = selectLockedDependencies(input.dependencies, lockfile, overrides);
+  const devDependencies = selectLockedDependencies(
+    input.devDependencies ?? {},
+    lockfile,
+    overrides,
+  );
   const importer = { dependencies, devDependencies };
   const stageLockfile = { ...decodeYamlRecord(input.lockfile), importers: { ".": importer } };
   const stageWorkspace = { ...workspace };
@@ -52,6 +63,11 @@ export function assertStagedDependencyVersions(stageDirectory: string, reviewedL
   }
 }
 
+const StageDependencyPolicy = Schema.Struct({
+  overrides: Schema.optionalKey(Schema.Record(Schema.String, Schema.String)),
+  catalog: Schema.optionalKey(Schema.Record(Schema.String, Schema.String)),
+});
+
 const LockedDependency = Schema.Struct({ specifier: Schema.String, version: Schema.String });
 const DependencyGroup = Schema.Record(Schema.String, LockedDependency);
 const Lockfile = Schema.Struct({
@@ -72,9 +88,11 @@ const decodeYamlRecord = Schema.decodeSync(fromYaml(Schema.Record(Schema.String,
 function selectLockedDependencies(
   dependencies: Record<string, string>,
   lockfile: typeof Lockfile.Type,
+  overrides: Record<string, string>,
 ) {
   const selected: Record<string, { specifier: string; version: string }> = {};
-  for (const [name, specifier] of Object.entries(dependencies)) {
+  for (const [name, requestedSpecifier] of Object.entries(dependencies)) {
+    const specifier = overrides[name] ?? requestedSpecifier;
     const versions = new Set<string>();
     for (const importer of Object.values(lockfile.importers)) {
       const dependency =

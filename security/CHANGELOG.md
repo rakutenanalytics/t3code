@@ -2,6 +2,17 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-11-10 — v0.1.7 local sync candidate
+
+- baseline-update: security/allowlist.json — Reviews Cursor api.cursor.com, Claude downloads.claude.ai and GitHub media.githubusercontent.com destinations behind metadata/media denials; adds default-denied peerLinks without widening the baked allow list.
+- baseline-update: security/artifact-hosts.json — Traces 20 changed literal contexts in locally assembled desktop/server/web bundles to source constants, explicit navigation, local identifiers or baked-denied analytics; records 23 informational hosts. Assembled policy/identity and host scans pass. Full DMG extraction remains unverified because Rust/Cargo is unavailable; these entries do not approve a release.
+- baseline-update: security/dependency-baseline.json — Records age-qualified v0.1.7 dependency inputs and Electron 44.10.2 with pnpm 11, 4320-minute strict age floor, no age exclusions and exact build grants. Removes the automatic EAS source-map upload hook. Advisory findings remain release blockers, not accepted exceptions.
+- baseline-update: security/dependency-exceptions.json — Removes the stale uniwind age exception. Retains seven exact historical provenance exceptions; no new age exception is approved.
+- baseline-update: security/egress-inventory.md — Documents independent baked/admin policy contracts, denied Cursor/npm metadata, source-control media, outbound peers, app/CLI triage and native/JS Expo Observe export denial; records dynamic Git-host actions and removed build-cache/EAS upload hooks.
+- baseline-update: security/network-baseline.json — Reviews v0.1.2 to v0.1.7 runtime/build source and fixture changes with preserved baked gates, new peerLinks denial, early metadata/media/triage denials, mobile preview and Expo Observe dispatch gating, removed remote task cache and retained fork workflows. Scanner excludes vendored references; touched checks batch their source inputs. No network grant is added.
+- baseline-update: security/stage-lock-baseline.json — Projects desktop/CLI dependencies with root exact overrides, including node-pty, and Electron 44.10.2. Stage installs remain frozen; focused staging regression passes.
+- baseline-update: security/threat-model.md — Clarifies independent baked/admin denials and outbound peer links versus allowed inbound network clients. Provider shell sandboxing remains outside the managed build boundary.
+
 ## 2026-10-28 — Bash 3.2 update argument forwarding (#11)
 
 - baseline-update: security/network-baseline.json — Reviews only `scripts/safe/t3safe`, its new offline `scripts/safe/t3safe.test.ts` regression and the macOS CI invocation in `.github/workflows/pr-checks.yml`. Guarded array expansion preserves zero arguments under Bash 3.2 nounset without changing installer checksum verification, mode selection or options. The new www.gnu.org literal is a Bash manual comment only; fixture GitHub URLs are served by a local curl stub. No runtime network grant, dependency or scanner policy changes.

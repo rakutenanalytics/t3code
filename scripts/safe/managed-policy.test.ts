@@ -41,6 +41,7 @@ describe("managed capability policy", () => {
       ["remoteContent", false],
       ["providerMetadata", false],
       ["providerTelemetry", false],
+      ["peerLinks", false],
     ]);
   });
 

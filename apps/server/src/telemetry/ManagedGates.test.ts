@@ -1,3 +1,7 @@
+import { sourceControlMediaResponse } from "../assets/sourceControlMediaResponse.ts";
+import * as BuiltInDrivers from "../sourceControl/builtInDrivers.ts";
+import * as NodeCrypto from "@effect/platform-node/NodeCrypto";
+import * as ManagedPolicy from "../policy/ManagedPolicy.ts";
 import { resolveNewestVersion } from "../cli/update.ts";
 import { describe, expect, it, vi, afterEach } from "@effect/vitest";
 import * as NodeServices from "@effect/platform-node/NodeServices";
@@ -38,7 +42,9 @@ describe("managed gates", () => {
       expect(requests).toEqual([]);
     }).pipe(
       Effect.provideService(HttpClient.HttpClient, transport),
-      Effect.provide(Layer.merge(configLayer, enabledAnalytics)),
+      Effect.provide(
+        Layer.mergeAll(configLayer, enabledAnalytics, NodeCrypto.layer, ManagedPolicy.layerTest()),
+      ),
       Effect.scoped,
     );
   });
@@ -63,18 +69,33 @@ describe("managed gates", () => {
 
     return Effect.gen(function* () {
       const otel = yield* OtelEnvironment.load;
-      const traces = OtelEnvironment.resolveSignalEndpoint(otel, "traces", {
-        url: "https://collector.example.com/traces",
-        export: { protocol: "http/protobuf", headers: undefined, exportIntervalMs: 1000 },
-      });
-      const metrics = OtelEnvironment.resolveSignalEndpoint(otel, "metrics", {
-        url: undefined,
-        export: { protocol: "http/protobuf", headers: undefined, exportIntervalMs: 1000 },
-      });
-      const logs = OtelEnvironment.resolveSignalEndpoint(otel, "logs", {
-        url: undefined,
-        export: { protocol: "http/protobuf", headers: undefined, exportIntervalMs: 1000 },
-      });
+      const traces = OtelEnvironment.resolveSignalEndpoint(
+        otel,
+        "traces",
+        {
+          url: "https://collector.example.com/traces",
+          export: { protocol: "http/protobuf", headers: undefined, exportIntervalMs: 1000 },
+        },
+        { bootstrapUrl: undefined, settingsUrl: undefined },
+      );
+      const metrics = OtelEnvironment.resolveSignalEndpoint(
+        otel,
+        "metrics",
+        {
+          url: undefined,
+          export: { protocol: "http/protobuf", headers: undefined, exportIntervalMs: 1000 },
+        },
+        { bootstrapUrl: undefined, settingsUrl: undefined },
+      );
+      const logs = OtelEnvironment.resolveSignalEndpoint(
+        otel,
+        "logs",
+        {
+          url: undefined,
+          export: { protocol: "http/protobuf", headers: undefined, exportIntervalMs: 1000 },
+        },
+        { bootstrapUrl: undefined, settingsUrl: undefined },
+      );
 
       expect([traces, metrics, logs]).toEqual([undefined, undefined, undefined]);
     }).pipe(Effect.provide(ConfigProvider.layer(environment)));
@@ -99,4 +120,15 @@ it.effect(
       expect(requests).toEqual([]);
     }).pipe(Effect.provideService(HttpClient.HttpClient, transport));
   },
+);
+
+it.effect("returns HTTP 403 for a signed remote media request when remoteContent is denied", () =>
+  Effect.gen(function* () {
+    const response = yield* sourceControlMediaResponse(
+      { url: "https://github.com/user-attachments/assets/fixed-id", cwd: "/fixture", expiresAt: 0 },
+      {},
+    );
+
+    expect(response.status).toBe(403);
+  }).pipe(Effect.provideService(BuiltInDrivers.SourceControlDrivers, [])),
 );

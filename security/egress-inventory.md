@@ -59,3 +59,15 @@ CI adds literal host/URL checks and reviewed whole-file source fingerprints and 
 The dependency audit adds unauthenticated metadata reads from `registry.npmjs.org` only with `dependency-scan.ts --online`, including the PR advisory job. It rejects redirects and times out each request. Package changes require separate tarball reviews and fingerprint-bound approvals; see [maintenance](../docs/safe-fork/MAINTAINING.md). Offline scanning makes no registry requests. This grants no runtime network capability.
 
 This inventory covers runtime paths, not every transitive install/build endpoint. Build toolchain downloads and dependency lifecycle destinations still need review. Redirects and SDK-owned endpoints must be reviewed before treating the host inventory as enforceable network policy.
+
+## v0.1.7 boundary changes
+
+The baked capability policy remains independent of the administrator's machine policy. The server publishes it as `safeManagedPolicy`; upstream's `managedPolicy` remains its administrator-policy summary. Either policy can deny a path. An absent machine policy cannot enable a baked denial.
+
+Cursor's direct account/model catalog and the server npm release lookup require `providerMetadata`. Source-control media responses require `remoteContent` before driver fetch, including existing signed URLs. Linked-environment creation, discovery and restored-link resolution require the new `peerLinks` capability, denied in the shipped policy. Ordinary LAN/Tailscale client access stays under `remoteAccess.network`.
+
+New GitCafe, GitLab, Azure DevOps and Forgejo integrations use explicitly selected Git hosting credentials and destinations, within the existing dynamic Git-host approval boundary. Mobile source-map/dSYM upload is an excluded build-only surface; its automatic EAS success hook and mobile publishing workflows are removed. The upstream task-cache endpoint configuration and automatic credential lookup are removed from root Vite configuration. No remote build-cache destination is enabled by the fork.
+
+The new in-app triage service would clone upstream source and give an agent a remotely refreshed playbook. Both app and CLI triage entry points now require `remoteContent` before creating a session or launching a provider. Mobile PR preview sources also enforce `remoteContent`, including galleries and compact video previews.
+
+Expo Observe is new in v0.1.7. Native build configuration uses an inert `.invalid` endpoint when baked `telemetryExport` is denied; the JS startup/preference paths keep dispatch disabled even if a relay URL is present. Queued crash reports cannot turn that denial into an export.

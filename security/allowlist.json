@@ -128,7 +128,8 @@
     "upstreamUpdate",
     "remoteContent",
     "providerMetadata",
-    "providerTelemetry"
+    "providerTelemetry",
+    "peerLinks"
   ],
   "outOfScopeSurfaces": [
     "Mobile Expo OTA/native services",
@@ -839,6 +840,21 @@
       "file": "scripts/lib/windows-jsign.ts",
       "host": "timestamp.acs.microsoft.com",
       "justification": "Explicit Windows signing on a non-Windows build host with configured Azure account/profile. jsign sends an RFC3161 executable digest to the existing Microsoft timestamp endpoint and uses the configured Azure signing service with build credentials. Binary comes from maintainer-controlled T3CODE_JSIGN or PATH. Safe macOS-only workflow does not invoke this Windows path; no runtime traffic grant."
+    },
+    {
+      "file": "packages/provider-cursor/src/server/CursorSdkCatalog.ts",
+      "host": "api.cursor.com",
+      "justification": "Cursor account/model discovery sends a selected API key only when providerMetadata is allowed; source gate runs before either catalog probe, including a configured backend override."
+    },
+    {
+      "file": "apps/server/src/provider/Drivers/ClaudeMaintenance.ts",
+      "host": "downloads.claude.ai",
+      "justification": "Selected Claude release lookup; shared provider maintenance resolver denies providerMetadata before remote discovery."
+    },
+    {
+      "file": "packages/source-control-github/src/shared/gitHubMedia.ts",
+      "host": "media.githubusercontent.com",
+      "justification": "GitHub media URL recognition. The sourceControlMediaResponse service denies remoteContent before driver fetch; web/mobile remote media views also deny it."
     }
   ]
 }

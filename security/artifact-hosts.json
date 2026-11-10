@@ -2,19 +2,11 @@
   "justification": "Only T3-owned domains and the explicit telemetryDomains denylist fail. Telemetry literals under the directory prefixes in providerSdkPaths are provider-owned and trusted; T3-owned hosts never gain this exemption. Other hosts are trusted by default; seenHosts is informational. Ledger keys bind host + artifact-relative filePattern with normalized 8-character chunk suffix + SHA-256 of the literal plus 80 characters on each side. For normalized encoded hosts the literal spans the full URL. The same chunk normalization applies to context, and embedded build versions (N.N.N-safe.N) normalize to 0.0.0-safe.* so releases need no ledger edits. Adjacent changes require renewed review. Acceptance requires a source review note and packaged policy verification. DMG paths and stable CLI bin.mjs/client paths have separate entries, accepted from real CI extraction on 2026-10-23.",
   "seenHosts": [
     {
-      "host": ".",
-      "category": "unexpected/other"
-    },
-    {
-      "host": "[2001:db8::1]",
-      "category": "unexpected/other"
-    },
-    {
-      "host": "[ffff::]",
-      "category": "unexpected/other"
-    },
-    {
       "host": "*.example.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": ".",
       "category": "unexpected/other"
     },
     {
@@ -23,6 +15,10 @@
     },
     {
       "host": "1.1.1.1",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "101arrowz.github.io",
       "category": "unexpected/other"
     },
     {
@@ -35,6 +31,14 @@
     },
     {
       "host": "262.ecma-international.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "[2001:db8::1]",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "[ffff::]",
       "category": "unexpected/other"
     },
     {
@@ -150,6 +154,10 @@
       "category": "unexpected/other"
     },
     {
+      "host": "betteroffice.dev",
+      "category": "unexpected/other"
+    },
+    {
       "host": "bippy.dev",
       "category": "unexpected/other"
     },
@@ -163,6 +171,10 @@
     },
     {
       "host": "blueoakcouncil.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "box.example.ts.net",
       "category": "unexpected/other"
     },
     {
@@ -366,11 +378,19 @@
       "category": "unexpected/other"
     },
     {
+      "host": "docx.invalid",
+      "category": "unexpected/other"
+    },
+    {
       "host": "dom.spec.whatwg.org",
       "category": "schema/namespace"
     },
     {
       "host": "dotenvx.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "downloads.claude.ai",
       "category": "unexpected/other"
     },
     {
@@ -442,11 +462,23 @@
       "category": "unexpected/other"
     },
     {
+      "host": "fontsource.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "foo.bar",
+      "category": "unexpected/other"
+    },
+    {
       "host": "freesound.org",
       "category": "unexpected/other"
     },
     {
       "host": "fsf.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "gateway.example.ts.net",
       "category": "unexpected/other"
     },
     {
@@ -515,6 +547,10 @@
     },
     {
       "host": "in-memory",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "incubator.callstack.com",
       "category": "unexpected/other"
     },
     {
@@ -606,6 +642,10 @@
       "category": "unexpected/other"
     },
     {
+      "host": "machine.tailnet.ts.net",
+      "category": "unexpected/other"
+    },
+    {
       "host": "marked.js.org",
       "category": "unexpected/other"
     },
@@ -662,6 +702,10 @@
       "category": "unexpected/other"
     },
     {
+      "host": "ns.adobe.com",
+      "category": "unexpected/other"
+    },
+    {
       "host": "nvlpubs.nist.gov",
       "category": "unexpected/other"
     },
@@ -691,6 +735,10 @@
     },
     {
       "host": "paulmillr.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "pele.run",
       "category": "unexpected/other"
     },
     {
@@ -740,6 +788,10 @@
     {
       "host": "pw-",
       "category": "unexpected/other"
+    },
+    {
+      "host": "raw.github.com",
+      "category": "docs/source/license"
     },
     {
       "host": "raw.githubusercontent.com",
@@ -802,6 +854,18 @@
       "category": "unexpected/other"
     },
     {
+      "host": "schemas.microsoft.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "schemas.openxmlformats.org",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "scripts.sil.org",
+      "category": "unexpected/other"
+    },
+    {
       "host": "search.brave.com",
       "category": "unexpected/other"
     },
@@ -834,6 +898,10 @@
       "category": "unexpected/other"
     },
     {
+      "host": "startup-recovery.invalid",
+      "category": "unexpected/other"
+    },
+    {
       "host": "storage.googleapis.com",
       "category": "unexpected/other"
     },
@@ -843,6 +911,10 @@
     },
     {
       "host": "stripe.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "stuartk.com",
       "category": "unexpected/other"
     },
     {
@@ -883,6 +955,10 @@
     },
     {
       "host": "tc39.es",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "test-api.com",
       "category": "unexpected/other"
     },
     {
@@ -1022,6 +1098,10 @@
       "category": "unexpected/other"
     },
     {
+      "host": "www.idpf.org",
+      "category": "unexpected/other"
+    },
+    {
       "host": "www.ietf.org",
       "category": "unexpected/other"
     },
@@ -1062,6 +1142,10 @@
       "category": "unexpected/other"
     },
     {
+      "host": "www.svengreb.de",
+      "category": "unexpected/other"
+    },
+    {
       "host": "www.typescriptlang.org",
       "category": "unexpected/other"
     },
@@ -1078,7 +1162,15 @@
       "category": "unexpected/other"
     },
     {
+      "host": "www.xfa.org",
+      "category": "unexpected/other"
+    },
+    {
       "host": "x.com",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "x.dev",
       "category": "unexpected/other"
     },
     {
@@ -1517,6 +1609,146 @@
       "filePattern": "client/assets/utils-*.js",
       "contextSha256": "e683a42cdd0ed9f9ab125efde2d7f29950347463c6c24a92c36d318b8a2e3226",
       "note": "v0.1.2 CI 40617280141; packaged policy/identity verified; app.asar SHA-256 e3e9079bee17557a62f9cc1911456f7e58e4da410e2a84559083e95561811c80. packages/contracts/src/t3ProjectFile.ts: inert documentation prose, no fetch. Previously accepted source behavior retained; reviewed minifier-context change only. CLI mirror of exact reviewed client bytes copied by safe-build.yml without rebuilding web."
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "apps/desktop/dist-electron/main.cjs",
+      "filePattern": "apps/desktop/dist-electron/main.cjs",
+      "contextSha256": "9b0509e0ccaa3cd760342b657a8bd4e8093a83b483bc5e7703d9cb967e5d63c2",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: packages/shared/src/connectAuth.ts:10 default hosted origin; connect callers retain baked t3Connect denial. URL constant alone performs no request. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "apps/server/dist/ManagedEndpointRuntime-D54IQQRJ.mjs",
+      "filePattern": "apps/server/dist/ManagedEndpointRuntime-*.mjs",
+      "contextSha256": "f614bf5d7c19dc8afe23aebd5b71fe3eb3564c5384190b69e48123d5c4a34ee9",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: packages/shared/src/connectAuth.ts:10 default hosted origin; connect callers retain baked t3Connect denial. URL constant alone performs no request. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "apps/server/dist/client/assets/main-D__Auv0P.js",
+      "filePattern": "apps/server/dist/client/assets/main-*.js",
+      "contextSha256": "71b1c8e4a0aba6721ce7cf9d84abe6afde31da5dde031fc6cb36ce3e28e89fc0",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: packages/shared/src/providerAuthReturnUrl.ts auth-return origin validation; compares a URL, performs no request. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "apps/server/dist/client/assets/main-D__Auv0P.js",
+      "filePattern": "apps/server/dist/client/assets/main-*.js",
+      "contextSha256": "5bca24b4f0f4550db6921055fc5c7673b53c6d2058f54e26bb571eaa77cc27bc",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: packages/shared/src/promptLinks.ts:175 constructs an explicit prompt link; no automatic navigation or request. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "apps/server/dist/client/assets/utils-CcEHQxrP.js",
+      "filePattern": "apps/server/dist/client/assets/utils-*.js",
+      "contextSha256": "89945f5bc0225a57a4725cadcbb1f150104a60047adf5efda8496d893a5edda7",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: packages/shared/src/connectAuth.ts:10 default hosted origin; connect callers retain baked t3Connect denial. URL constant alone performs no request. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "app.t3.codes",
+      "file": "apps/server/dist/runtimeLayer-BRQKfyxN.mjs",
+      "filePattern": "apps/server/dist/runtimeLayer-*.mjs",
+      "contextSha256": "02f5e7247b82d86473f6c10460129b89a8dff12401ffb4aa0acb1586469a92ec",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: packages/shared/src/providerAuthReturnUrl.ts auth-return origin validation; compares a URL, performs no request. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "ingest.t3.codes",
+      "file": "apps/server/dist/runtimeLayer-BRQKfyxN.mjs",
+      "filePattern": "apps/server/dist/runtimeLayer-*.mjs",
+      "contextSha256": "53673320292770998d97692c4d2c87fbc0d4e02620f2b46744e616bab0e0a368",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: apps/server/src/telemetry/AnalyticsService.ts:72 config default; line123 returns a no-op service before HttpClient acquisition when baked productAnalytics is denied. ManagedGates regression passes. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/desktop/dist-electron/main.cjs",
+      "filePattern": "apps/desktop/dist-electron/main.cjs",
+      "contextSha256": "9ecad6ec4d008f582341547e10d7e60f0f274b5a55f105392afa3afa20019dc3",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: packages/contracts/src/t3ProjectFile.ts:10,109 schema identifier or description; schema decoding does not fetch it. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/desktop/dist-electron/main.cjs",
+      "filePattern": "apps/desktop/dist-electron/main.cjs",
+      "contextSha256": "e0ec46470dd05e962d5c7aa6d12ce40436bc9dcbb8aec3f31da165aba0b29fe6",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: gnome-extension/bundle.json local GNOME extension UUID; not a URL or request. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/desktop/dist-electron/snapShot-C4qkNTUX.cjs",
+      "filePattern": "apps/desktop/dist-electron/snapShot-*.cjs",
+      "contextSha256": "32aa7698fa8c3f5f6a2a087a71e6f5f82444d7b2419a286fee9afff1c54387fa",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: packages/contracts/src/t3ProjectFile.ts:10,109 schema identifier or description; schema decoding does not fetch it. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/server/dist/ManagedEndpointRuntime-D54IQQRJ.mjs",
+      "filePattern": "apps/server/dist/ManagedEndpointRuntime-*.mjs",
+      "contextSha256": "51ea99bc7998e9a88a27822ef8c0c75d6450fb2ccb8e41e69ff5fb9596388e5b",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: local Git commit identity in cascade rebase stack; email-shaped identifier, no email transport. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/server/dist/ManagedEndpointRuntime-D54IQQRJ.mjs",
+      "filePattern": "apps/server/dist/ManagedEndpointRuntime-*.mjs",
+      "contextSha256": "b5c89dad4df9277e7bbbe2f0d16f5a99e52c423ca9cac99964820208ef859e1e",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: apps/server/src/cloud/servicePreflight.ts:31 human-readable mismatch guidance string; no shell execution, and cloud connector remains baked-denied. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/server/dist/client/assets/SettingsPanels.logic-BR6cZUVB.js",
+      "filePattern": "apps/server/dist/client/assets/SettingsPanels.logic-*.js",
+      "contextSha256": "f01256ddedd70f9665c0816c590010773fe31bc3c3c552a64e5e33ffcbca242b",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: apps/web/src/legalLinks.ts:1 explicit privacy link in SettingsPanels; no automatic request. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/server/dist/client/assets/index-DaCWf-Sf.js",
+      "filePattern": "apps/server/dist/client/assets/index-*.js",
+      "contextSha256": "8e48df98c6f4ba222cdb1ba6f7172115729b84b547cee45b055eb71bf85b57a4",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: apps/web/src/branding.ts:28 or lib/bootError.ts:4 explicit user-click download guidance; no updater request. Baked desktopAutoUpdate and upstreamUpdate remain denied. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/server/dist/client/assets/runtime-KYjubCHJ.js",
+      "filePattern": "apps/server/dist/client/assets/runtime-*.js",
+      "contextSha256": "904558f05f9bd4a2ee6631e0e583276ab10f7b670cdbdee21ff406c61b7db1e2",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: apps/web/src/branding.ts:28 or lib/bootError.ts:4 explicit user-click download guidance; no updater request. Baked desktopAutoUpdate and upstreamUpdate remain denied. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/server/dist/client/assets/utils-CcEHQxrP.js",
+      "filePattern": "apps/server/dist/client/assets/utils-*.js",
+      "contextSha256": "d44a37b6670f94a2f2ad8fd9a0acba215b00ca85f7f74a6b16d450da56208386",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: packages/contracts/src/t3ProjectFile.ts:10,109 schema identifier or description; schema decoding does not fetch it. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/server/dist/client/assets/utils-CcEHQxrP.js",
+      "filePattern": "apps/server/dist/client/assets/utils-*.js",
+      "contextSha256": "0f5f48b24b92412046ff5e023e219f4c346e9a64f0374e100d5532b8b7520922",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: packages/contracts/src/t3ProjectFile.ts:10,109 schema identifier or description; schema decoding does not fetch it. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/server/dist/managedPolicy-CxQyv-oL.mjs",
+      "filePattern": "apps/server/dist/managedPolicy-*.mjs",
+      "contextSha256": "3b1a1c0fcf39d7ba521d9101cc1fc529fff0b3a0e808877971891f23ba21bd16",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: packages/contracts/src/t3ProjectFile.ts:10,109 schema identifier or description; schema decoding does not fetch it. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/server/dist/runtimeLayer-BRQKfyxN.mjs",
+      "filePattern": "apps/server/dist/runtimeLayer-*.mjs",
+      "contextSha256": "b3f12399459f8bf6e73198d47f9d83ad9c6bc46d7cfc9532da47f26377cbd40f",
+      "note": "v0.1.7 local bundle/source review 2026-11-10: local generated project README attribution link; no request while writing the file. Assembled bundle policy/identity verification passed; packaged DMG verification pending."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/server/dist/client/assets/runtime-CULVp1bs.js",
+      "filePattern": "apps/server/dist/client/assets/runtime-*.js",
+      "contextSha256": "b3a43a9dc29c7641a99b7b578b6d3d0267df6b66e20943a0d87ec3e45e8f4bcc",
+      "note": "v0.1.7 local CI-version bundle review 2026-11-10: apps/web/src/branding.ts:28 download URL, explicit user navigation only. Built with APP_VERSION=0.1.0-safe.0 to exercise normalized release-version context; assembled bundle policy/identity passes. Full DMG verification pending."
     }
   ]
 }
