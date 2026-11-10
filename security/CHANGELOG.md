@@ -2,6 +2,10 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-11-10 — v0.1.7 packaged host contexts
+
+- baseline-update: security/artifact-hosts.json — Rebuilds final-head desktop/client and single-file CLI inputs, including installed production dependency text. Reviews six DMG client contexts reported by CI, the local privacy-link variant caused by a clipped chunk suffix, and thirteen CLI source/client contexts that would fail the later scan. These are inert schema/help/label strings, URL construction or user-initiated navigation with no automatic request; baked analytics/Connect denials remain verified. Records six informational dependency hosts, including the conditional Slack MCP workspace-validation POST as intentional provider behavior, not dormant catalogue text. Local inventory matches CI's 299 hosts; native DMG/SEA validation remains required in CI. No denylist, provider trust prefix or runtime capability changes.
+
 ## 2026-11-10 — triage policy recovery
 
 - baseline-update: security/egress-inventory.md — Corrects the stale triage row to name the enforced remoteContent gate at both entry points. Server capability and recovery guidance now honor the baked denial; no capability grant changes.
