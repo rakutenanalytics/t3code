@@ -1766,7 +1766,7 @@
       "f998da7d33d5c1f9ad2df93652463b5ebc2390c2f65939286cb4355433b83149": 1
     },
     "apps/server/package.json": {
-      "df7344cf7f2893cda5e0414cc5cdb364b809617c129d594bd031dcde2f1eb35c": 1
+      "d209e7515f7b25468d4dad73f6e281919bbc5cf775f0443f767913ae08c89814": 1
     },
     "apps/server/resources/cli-entitlements.plist": {
       "e02773082058a409d28d349113f229e8f1dd82393ab924d840a609db51f1fe01": 1
@@ -2807,7 +2807,7 @@
       "433ad16205eee8ee9cd9172d89825e4553609437c68709ea3c44557d7371ee38": 1
     },
     "apps/server/src/peer/PeerMcpClient.test.ts": {
-      "1fac5a5f2a9efad31f6fa5e5a7d1494f0f344baeb6388e9a87a604bf3733b894": 1
+      "5e69fb05c0eff03a7b6e3a33d1b00358ae5db41257bd2453aaa6328413c826ab": 1
     },
     "apps/server/src/peer/PeerMcpClient.ts": {
       "5995c55e43c05aa12edcf8afb313e772ca6aa6ac4fd7974b42be185d225ae01f": 1
@@ -3590,7 +3590,7 @@
       "0e9e5babddbe34afe81994af32ae9c893c0be58035f6baa8d8a7aba8be01c3f1": 1
     },
     "apps/web/package.json": {
-      "aecb60ec16e39a15ac989148f4753d46c496e69d9c1fa004b2cda836c05a527f": 1
+      "36baaace067479c2d57fd16f7617d4b159e8d7a890df200ace56f055def4c588": 1
     },
     "apps/web/scripts/build-libghostty-wasm.sh": {
       "2476f622fcde8eea47d24a0fb0bf0877de1f4292d88d3b41cae2b32233f3b57e": 1
@@ -7529,10 +7529,10 @@
       "5e9cb673245b0e28cdc26d3b5dd661d4565487f12a50ad58346e8094f9369fa6": 1
     },
     "pnpm-lock.yaml": {
-      "7fe1b9d9f04c29f0cc097fa1c09fd8b3ae8779aa3ec5ff049b773103d9cc7280": 1
+      "f24bc9a96a3ad8966cdf12679655a33e34ad4b48f834d7559882a915c7e2f71b": 1
     },
     "pnpm-workspace.yaml": {
-      "655caf2f0c394187b05dd329283a0c342a254f0b69c095ed608e8a46fbbfcd5e": 1
+      "fb176586134c2e1ba39155c4d94d9283dc4d3f31c0c85f80502e735e17722b35": 1
     },
     "scripts/apply-web-brand-assets.test.ts": {
       "e43e344c4d631cc9a4bac26888b10ea36cc7adb161bdc7d0ff6c75a879721ee1": 1
@@ -7733,7 +7733,7 @@
       "ce12f79dfecf211cee366eb7954e6a86863c50f8125dd4cc87bd9234075df3dc": 1
     },
     "scripts/package.json": {
-      "efdd7a37a94099aa54523f34a3d2a8a457c9eae5ae070acdc88023c2052a94d4": 1
+      "50a3c2e2f7727a6d0494767d6f181ddb42c1e01d82d0fefac0831f4c482e2f42": 1
     },
     "scripts/prepare-server-compile-cache.cjs": {
       "7471a771c72cd278b37cc8cd8b0f30a7c35d5472f8edf73cc5f6fd0e34c6358d": 1

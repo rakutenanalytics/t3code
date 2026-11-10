@@ -2,6 +2,13 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-11-10 — v0.1.7 advisory remediation
+
+- baseline-update: security/dependency-baseline.json — Applies age-qualified fixes for the inherited advisory set, including all undici majors, direct sharp pins, DOMPurify, Seroval and MCP SDK dependencies. Verifies registry integrity and tarball lifecycle metadata. Removes sharp's obsolete install grant because 0.35.5 has no install hook; pnpm 11.10.0, strict 4320-minute age checks, trust rules and all other exact grants remain intact. Two residual tooling advisories have no path through desktop, server or web production dependencies; no advisory exception is added.
+- baseline-update: security/stage-lock-baseline.json — Refreshes deterministic desktop/CLI projections for the reviewed fixes. Zod's server root is exact 4.6.6 so the existing projection uses the same patched resolution; both projected stages pass frozen production lock validation.
+- baseline-update: security/network-baseline.json — Reviews dependency manifest/workspace changes and a peer-client test fixture that temporarily permits only peerLinks while testing session reuse and refusal. Fork denial coverage remains unchanged. No destination, runtime capability or lifecycle grant is added.
+- baseline-update: security/last-approved-upstream — Advances the incorporated source/dependency review anchor to v0.1.7, 322f6544dfad0a3c8a0c8cbecf2c7f7874b14268, sync count 2. Eligible advisory fixes and local targeted checks are complete. Full packaged DMG/standalone CLI validation remains required in CI before release approval or publication.
+
 ## 2026-11-10 — v0.1.7 local sync candidate
 
 - baseline-update: security/allowlist.json — Reviews Cursor api.cursor.com, Claude downloads.claude.ai and GitHub media.githubusercontent.com destinations behind metadata/media denials; adds default-denied peerLinks without widening the baked allow list.

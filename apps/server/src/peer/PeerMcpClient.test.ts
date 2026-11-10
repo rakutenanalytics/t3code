@@ -1,3 +1,5 @@
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { vi } from "vite-plus/test";
 import { NodeHttpServer } from "@effect/platform-node";
 import { expect, it } from "@effect/vitest";
 import { OrchestratorMcpFailure } from "@t3tools/contracts";
@@ -49,6 +51,12 @@ it.effect.each([false, true])(
   (cancelFirst) =>
     Effect.scoped(
       Effect.gen(function* () {
+        // Session behavior needs a permitted link; PeerLinks.test.ts covers the fork denial.
+        const allows = managedPolicy.allows;
+        using _peerLinks = vi
+          .spyOn(managedPolicy, "allows")
+          .mockImplementation((capability) => capability === "peerLinks" || allows(capability));
+
         const entered = yield* Deferred.make<void>();
         const release = yield* Deferred.make<void>();
         const modes = McpInvocationContext.McpInvocationContext.pipe(
@@ -107,6 +115,11 @@ it.effect.each([false, true])(
 it.effect("keeps a link healthy when the peer refuses a call", () =>
   Effect.scoped(
     Effect.gen(function* () {
+      const allows = managedPolicy.allows;
+      using _peerLinks = vi
+        .spyOn(managedPolicy, "allows")
+        .mockImplementation((capability) => capability === "peerLinks" || allows(capability));
+
       const handlers = McpToolAccess.toLayer(toolkit, {
         probe: McpToolAccess.reads(() => Effect.succeed({ modes: "" })),
         hold: McpToolAccess.reads(() => Effect.succeed({ modes: "" })),
