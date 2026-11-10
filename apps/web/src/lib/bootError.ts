@@ -1,4 +1,5 @@
 import type { DesktopBridge, DesktopUpdateState } from "@t3tools/contracts";
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
 
 const FALLBACK_TRIAGE_COMMAND = "npx t3 triage";
 const DOWNLOAD_URL = "https://t3.codes/download";
@@ -25,6 +26,8 @@ function launcherCommand(launcherPath: string) {
 
 /** Desktop can run its bundled launcher without Node; everything else falls back to npx. */
 export async function resolveTriageCommand(bridge: DesktopBridge | undefined) {
+  if (!managedPolicy.allows("remoteContent")) return null;
+
   try {
     const state = await bridge?.cliCommand.getState();
     // Windows reports onPath from its PATH entry alone; only an existing launcher proves it runs.
@@ -293,7 +296,7 @@ export function showBootError(error: unknown) {
   const updateNote = element("p", { id: "boot-error-update-note", hidden: true });
   if (bridge) mountUpdateButton(bridge, update, updateNote, announce);
 
-  const command = element("code", { textContent: FALLBACK_TRIAGE_COMMAND });
+  const command = element("code");
   const copyCommand = element("button", {
     className: "boot-error-icon",
     type: "button",
@@ -318,7 +321,18 @@ export function showBootError(error: unknown) {
       },
     ),
   );
-  void resolveTriageCommand(bridge).then((value) => (command.textContent = value));
+  const triageGuidance = element("div", { hidden: true }, [
+    element("p", {
+      textContent:
+        "Run this on the computer that runs T3 Code. Your agent can check the local logs and help you file a bug report.",
+    }),
+    element("div", { id: "boot-error-command" }, [command, copyCommand]),
+  ]);
+  void resolveTriageCommand(bridge).then((value) => {
+    if (value === null) return;
+    command.textContent = value;
+    triageGuidance.hidden = false;
+  });
 
   let report = "(no error message)";
   try {
@@ -364,13 +378,7 @@ export function showBootError(error: unknown) {
           ),
         ]
       : []),
-    element("div", {}, [
-      element("p", {
-        textContent:
-          "Run this on the computer that runs T3 Code. Your agent can check the local logs and help you file a bug report.",
-      }),
-      element("div", { id: "boot-error-command" }, [command, copyCommand]),
-    ]),
+    triageGuidance,
     element("div", {}, [
       details,
       element("p", {

@@ -1,5 +1,6 @@
 import type { DesktopBridge, DesktopCliCommandState, DesktopUpdateState } from "@t3tools/contracts";
-import { describe, expect, it, vi } from "vite-plus/test";
+import { managedPolicy } from "@t3tools/shared/managedPolicy";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
 import {
   type BootErrorEnvironment,
@@ -19,6 +20,21 @@ const notOnPath = (launcherPath: string | null): DesktopCliCommandState => ({
 });
 
 describe("resolveTriageCommand", () => {
+  beforeEach(() => {
+    vi.spyOn(managedPolicy, "allows").mockReturnValue(true);
+  });
+  afterEach(() => vi.restoreAllMocks());
+
+  it("should return no command without querying the desktop launcher when remoteContent is denied", async () => {
+    vi.mocked(managedPolicy.allows).mockReturnValue(false);
+    const getState = vi.fn(async () => notOnPath("/home/me/.t3/bin/t3"));
+
+    const command = await resolveTriageCommand(desktopWith(getState));
+
+    expect(command).toBeNull();
+    expect(getState).not.toHaveBeenCalled();
+  });
+
   it("prefers t3 on PATH, then the desktop launcher", async () => {
     const onPath = { ...notOnPath("/home/me/.t3/bin/t3"), onPath: true };
     await expect(resolveTriageCommand(desktopWith(async () => onPath))).resolves.toBe("t3 triage");

@@ -2,6 +2,11 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-11-10 — triage policy recovery
+
+- baseline-update: security/egress-inventory.md — Corrects the stale triage row to name the enforced remoteContent gate at both entry points. Server capability and recovery guidance now honor the baked denial; no capability grant changes.
+- baseline-update: security/network-baseline.json — Refreshes scanner-required whole-file fingerprints for the triage capability, failure toast and boot recovery changes plus focused tests. Literal hosts and URLs are unchanged; the new hook test performs no network access. No capability or destination grant changes.
+
 ## 2026-11-10 — v0.1.7 advisory remediation
 
 - baseline-update: security/dependency-baseline.json — Applies age-qualified fixes for the inherited advisory set, including all undici majors, direct sharp pins, DOMPurify, Seroval and MCP SDK dependencies. Verifies registry integrity and tarball lifecycle metadata. Removes sharp's obsolete install grant because 0.35.5 has no install hook; pnpm 11.10.0, strict 4320-minute age checks, trust rules and all other exact grants remain intact. Two residual tooling advisories have no path through desktop, server or web production dependencies; no advisory exception is added.

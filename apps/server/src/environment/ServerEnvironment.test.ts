@@ -75,6 +75,20 @@ const makeServerConfig = Effect.fn(function* (baseDir: string) {
 });
 
 it.layer(Layer.mergeAll(NodeServices.layer, NodeCrypto.layer))("ServerEnvironmentLive", (it) => {
+  it.effect("should advertise triage as false under the default baked remoteContent policy", () =>
+    Effect.gen(function* () {
+      const fs = yield* FileSystem.FileSystem;
+      const baseDir = yield* fs.makeTempDirectoryScoped();
+
+      const descriptor = yield* Effect.gen(function* () {
+        const environment = yield* ServerEnvironment.ServerEnvironment;
+        return yield* environment.getDescriptor;
+      }).pipe(Effect.provide(layerServerEnvironment(baseDir)));
+
+      expect(descriptor.capabilities.triage).toBe(false);
+    }),
+  );
+
   it.effect("publishes proven install ownership only for manually updated servers", () =>
     Effect.gen(function* () {
       const fs = yield* FileSystem.FileSystem;

@@ -2285,10 +2285,10 @@
       "b720ab1f0d403014ace713dec88c9c9c8ec06645b8e83556076563199a144595": 1
     },
     "apps/server/src/environment/ServerEnvironment.test.ts": {
-      "ed3f035be87b1e7359226a4f143533d3f2cf8debcfff85a0df8ceadf49a19096": 1
+      "3892844ee62befd8baa474b3f0fc9ba7db40cb27ef288eb979ba0828b2af64b9": 1
     },
     "apps/server/src/environment/ServerEnvironment.ts": {
-      "b5e1aeeeace280ea8b6c55619c576fa39874851654f2f28ac62a9160884b6e34": 1
+      "68ce45c8b5dd9ec306a6a0c2213e6edd3eb2cf697eb3c0310c3aa1ad6122a615": 1
     },
     "apps/server/src/git/GitManager.test.ts": {
       "825665f276e9104d0b2684f096a515af1d7aa7558f583bb0bc7869080951e5fa": 1
@@ -5248,8 +5248,11 @@
     "apps/web/src/hooks/useSettings.favorites.browser.test.tsx": {
       "68519045a61e07d8ed2b4d23c5980ea19bbaadd43647aa764e2d0046ef0562ad": 1
     },
+    "apps/web/src/hooks/useStartTriage.test.ts": {
+      "ddf2201ca3c5be76f482e5617d43d02328b44c994a30f6c975b64e0ac679ea01": 1
+    },
     "apps/web/src/hooks/useStartTriage.ts": {
-      "c466612e626cc200bbf8bc8cac12e18e1b9d1ce3e83cbad1dedcf3d6dc803ca4": 1
+      "da1745abbb3885c964c4d4495445998be73795941c90db1d0d254244c596d468": 1
     },
     "apps/web/src/hooks/useThreadActions.ts": {
       "b412ae56afdf133728b5400aae5ff8fa6aaada0c5e04c268f004d059e07e9cf0": 1
@@ -5285,10 +5288,10 @@
       "24b4ddd96831bf45e73b3bdb82e395c530222ee2d415a4aa46fb345ef615ac84": 1
     },
     "apps/web/src/lib/bootError.test.ts": {
-      "f0233e2adc87ce0379f2d68ea5b6106c96e98773bcad12ed7d10f626a0ca2a5a": 1
+      "a138c90baea5028009e2423c244ab901d00f40bc17b1993a3083add887b9f187": 1
     },
     "apps/web/src/lib/bootError.ts": {
-      "adcc85af218b1114e9cf2f24dd81c8933ef38a0a07d04be150ec6ce671770821": 1
+      "6db020bfe078f8c84d23f68cafce8f6e4768b82f872f8a95956415af2c0c5808": 1
     },
     "apps/web/src/lib/composerContextRecords.test.ts": {
       "b96308baef9243296dfa9d0781ab09523ca8e8d244166a779c3dde014e9cd563": 1
