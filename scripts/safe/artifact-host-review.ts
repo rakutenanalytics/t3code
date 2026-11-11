@@ -7,6 +7,7 @@ export function collectArtifactHosts(
 ) {
   const hostFiles = new Map<string, Map<string, ArtifactLiteral>>();
   for (const { file, text } of files) {
+    const contextText = maskLocalChunkHashes(text);
     const hosts = new Set<string>();
     const encodedHostUrls = new Map<string, Set<string>>();
     for (const match of text.matchAll(/(?:https?|wss?):\/\/([a-zA-Z0-9.-]+)(?=[:/\s'"`?#)]|$)/g)) {
@@ -48,7 +49,7 @@ export function collectArtifactHosts(
       for (const match of text.matchAll(
         new RegExp(`(?<![a-z0-9.-])(?:${hostPattern})(?![a-z0-9.-])`, "gi"),
       )) {
-        const context = text.slice(
+        const context = contextText.slice(
           Math.max(0, match.index - 80),
           match.index + match[0].length + 80,
         );
@@ -233,6 +234,15 @@ function normalizeVolatileNames(value: string) {
   return value
     .replace(/[-.][A-Za-z0-9_-]{8}(?=\.[cm]?js\b)/g, "-*")
     .replace(/\d+\.\d+\.\d+-safe\.\d+/g, "0.0.0-safe.*");
+}
+
+function maskLocalChunkHashes(text: string) {
+  // Identify complete quoted relative chunks before clipping can hide their path or hash.
+  // Equal-length masks retain host offsets; URL paths and executable properties stay visible.
+  return text.replace(
+    /(["'`])((?:\.\.?\/)+(?:[A-Za-z0-9_@.-]+\/)*[A-Za-z0-9_.-]+-)[A-Za-z0-9_-]{8}(\.js)\1/g,
+    "$1$2________$3$1",
+  );
 }
 
 function matchesDomain(host: string, domains: string[]) {

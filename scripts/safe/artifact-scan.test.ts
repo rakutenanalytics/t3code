@@ -93,6 +93,115 @@ describe("artifact host review", () => {
     }
   });
 
+  it("accepts the reviewed privacy link across clipped chunk hashes but rejects a new fetch", () => {
+    const fixture = createScannerFixture();
+    const callSite = (utilsHash: string, indexHash: string) =>
+      `import{_n as e,gn as t,hn as n,pn as r}from"./utils-${utilsHash}.js";import{e_ as i,vt as a,zh as o}from"./index-${indexHash}.js";var s=\`https://t3.codes/privacy-policy\`;function c(e){return e!==\`separate\`}function l(e,t=\`repository\`){return e}`;
+    fixture.write("SettingsPanels.logic-BGZgqFpo.js", callSite("B4I4LKis", "BSreM5r9"));
+
+    try {
+      expect(
+        fixture.scan("--accept-gated-literals", "--note", "Reviewed privacy anchor").status,
+      ).toBe(0);
+      NodeFS.unlinkSync(NodePath.join(fixture.bundle, "SettingsPanels.logic-BGZgqFpo.js"));
+      fixture.write("SettingsPanels.logic-cjmgdhuu.js", callSite("NNsfeux9", "CeBtHz1J"));
+
+      const rebuilt = fixture.scan();
+
+      expect(rebuilt.status, rebuilt.stderr).toBe(0);
+      expect(fixture.report().unapprovedForbiddenLiterals).toEqual([]);
+      const expectedPrivacyHash =
+        "11fae3d2ee4f1b3dcab5a6c068af9b65c626c46abaeec72c75159134a1fe7f8c";
+      for (const [utilsHash, indexHash] of [
+        ["B4I4LKis", "BSreM5r9"],
+        ["NNsfeux9", "CeBtHz1J"],
+      ] as const) {
+        const hosts = collectArtifactHosts([
+          { file: "SettingsPanels.logic-cjmgdhuu.js", text: callSite(utilsHash, indexHash) },
+        ]);
+        expect(hosts[0]!.literals[0]!.contextSha256).toBe(expectedPrivacyHash);
+      }
+
+      fixture.write(
+        "SettingsPanels.logic-cjmgdhuu.js",
+        callSite("NNsfeux9", "CeBtHz1J").replace(
+          "s=`https://t3.codes/privacy-policy`",
+          "s=fetch(`https://t3.codes/privacy-policy`)",
+        ),
+      );
+
+      expect(fixture.scan().status).toBe(1);
+      expect(fixture.report().unapprovedForbiddenLiterals).toMatchObject([
+        { host: "t3.codes", file: "SettingsPanels.logic-cjmgdhuu.js" },
+      ]);
+    } finally {
+      fixture.cleanup();
+    }
+  });
+
+  it.each([
+    { boundary: "left", specifier: "./utils", quote: '"' },
+    { boundary: "right", specifier: "./utils", quote: '"' },
+    { boundary: "left", specifier: "../x/utils", quote: "'" },
+    { boundary: "right", specifier: "../x/utils", quote: "`" },
+  ])(
+    "accepts a hosted-origin literal when [$specifier] clips the [$boundary] context boundary",
+    ({ boundary, specifier, quote }) => {
+      const chunk = (hash: string) => `import ${quote}${specifier}-${hash}.js${quote};`;
+      const literal = 'const origin="https://app.t3.codes";';
+      const callSite = (hash: string) => {
+        if (boundary === "left") return chunk(hash) + " ".repeat(50) + literal;
+        return literal + " ".repeat(55) + chunk(hash);
+      };
+      const original = collectArtifactHosts([
+        { file: "utils-12345678.js", text: callSite("abcdefgh") },
+      ]);
+      const ledger = [
+        { host: "app.t3.codes", ...original[0]!.literals[0]!, note: "Reviewed hosted origin" },
+      ];
+
+      const rebuilt = collectArtifactHosts([
+        { file: "utils-87654321.js", text: callSite("aB_cD-12") },
+      ]);
+
+      expect(reviewArtifactHosts(rebuilt, [], ledger).passed).toBe(true);
+    },
+  );
+
+  it("rejects a changed absolute URL path when its eight-letter suffix clips the right boundary", () => {
+    const callSite = (suffix: string) =>
+      `const u="https://t3.codes/${"x".repeat(71)}-${suffix}.js";`;
+    const original = collectArtifactHosts([{ file: "main.js", text: callSite("download") }]);
+    const ledger = [
+      { host: "t3.codes", ...original[0]!.literals[0]!, note: "Reviewed download link" },
+    ];
+
+    const changed = collectArtifactHosts([{ file: "main.js", text: callSite("tracking") }]);
+    const review = reviewArtifactHosts(changed, [], ledger);
+
+    expect(reviewArtifactHosts(original, [], ledger).passed).toBe(true);
+    expect(changed[0]!.literals[0]!.contextSha256).not.toBe(ledger[0]!.contextSha256);
+    expect(review.passed).toBe(false);
+    expect(review.unapprovedForbiddenLiterals).toHaveLength(1);
+  });
+
+  it("rejects a changed executable property when its eight-letter name clips the left boundary", () => {
+    const callSite = (method: string) =>
+      `globalThis.${method}.js(${" ".repeat(64)}"https://app.t3.codes");`;
+    const original = collectArtifactHosts([{ file: "main.js", text: callSite("noopnoop") }]);
+    const ledger = [
+      { host: "app.t3.codes", ...original[0]!.literals[0]!, note: "Reviewed inert method" },
+    ];
+
+    const changed = collectArtifactHosts([{ file: "main.js", text: callSite("sendData") }]);
+    const review = reviewArtifactHosts(changed, [], ledger);
+
+    expect(reviewArtifactHosts(original, [], ledger).passed).toBe(true);
+    expect(changed[0]!.literals[0]!.contextSha256).not.toBe(ledger[0]!.contextSha256);
+    expect(review.passed).toBe(false);
+    expect(review.unapprovedForbiddenLiterals).toHaveLength(1);
+  });
+
   it("should group multiple URLs and literal hosts into one categorized host with a sample file", () => {
     const files = [
       {
