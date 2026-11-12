@@ -68,19 +68,19 @@
     },
     {
       "host": "api.github.com",
-      "purpose": "Pricing and explicit release/Git hosting workflows"
+      "purpose": "Pricing and explicit release/Git hosting workflows; safe desktop updates from rakutenanalytics/t3code releases only"
     },
     {
       "host": "github.com",
-      "purpose": "Explicit Git hosting, provider/tool/runtime downloads"
+      "purpose": "Explicit Git hosting, provider/tool/runtime downloads; safe desktop updates from rakutenanalytics/t3code releases only"
     },
     {
       "host": "objects.githubusercontent.com",
-      "purpose": "Redirected GitHub release assets"
+      "purpose": "Redirected GitHub release assets; safe desktop updates from rakutenanalytics/t3code releases only"
     },
     {
       "host": "release-assets.githubusercontent.com",
-      "purpose": "Redirected GitHub release assets"
+      "purpose": "Redirected GitHub release assets; safe desktop updates from rakutenanalytics/t3code releases only"
     },
     {
       "host": "open-vsx.org",
@@ -122,7 +122,6 @@
   "deniedCapabilities": [
     "productAnalytics",
     "t3Connect",
-    "desktopAutoUpdate",
     "telemetryExport",
     "providerFeedback",
     "upstreamUpdate",
@@ -855,6 +854,11 @@
       "file": "packages/source-control-github/src/shared/gitHubMedia.ts",
       "host": "media.githubusercontent.com",
       "justification": "GitHub media URL recognition. The sourceControlMediaResponse service denies remoteContent before driver fetch; web/mobile remote media views also deny it."
+    },
+    {
+      "file": "apps/desktop/src/updates/DesktopUpdates.ts",
+      "host": "github.com",
+      "justification": "Safe desktop updater pins the GitHub provider to rakutenanalytics/t3code and latest; machine feed overrides and mock feeds cannot redirect safe builds. GitHub redirects release assets to the inventoried CDN hosts."
     }
   ]
 }

@@ -25,6 +25,7 @@ on:
       - "tsconfig*.json"
       - "vite.config.ts"
       - "third-party-licenses.config.json"
+      - ".github/actions/build-safe/**"
       - ".github/workflows/safe-build.yml"
       - ".github/workflows/release.yml"
 permissions:
@@ -113,16 +114,39 @@ jobs:
           node scripts/safe/stage-lock-scan.ts
   build:
     needs: plan
-    if: needs.plan.outputs.release == 'true'
-    uses: ./.github/workflows/safe-build.yml
-    with:
-      version: ${{ needs.plan.outputs.version }}
+    if: needs.plan.outputs.release == 'true' && github.ref == 'refs/heads/main'
+    runs-on: macos-15
+    environment: release
+    timeout-minutes: 60
     permissions:
       contents: read
+    env:
+      SAFE_VERSION: ${{ needs.plan.outputs.version }}
+      CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      T3CODE_TELEMETRY_ENABLED: "false"
+      T3CODE_DISABLE_AUTO_UPDATE: "false"
+      T3CODE_MOBILE_UPDATES_ENABLED: "0"
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ needs.plan.outputs.commit }}
+          persist-credentials: false
+      - name: Import the stable release identity into an ephemeral keychain
+        env:
+          SAFE_SIGNING_P12_BASE64: ${{ secrets.SAFE_SIGNING_P12_BASE64 }}
+          SAFE_SIGNING_P12_PASSWORD: ${{ secrets.SAFE_SIGNING_P12_PASSWORD }}
+        run: bash scripts/safe/import-signing-key.sh
+      - uses: ./.github/actions/build-safe
+      - name: Delete release signing material
+        if: always()
+        run: |
+          security delete-keychain "$RUNNER_TEMP/t3safe-signing.keychain-db" || true
+          rm -f "$RUNNER_TEMP/t3safe-signing.p12" "$RUNNER_TEMP/t3safe-signing.pem"
   publish:
     needs: [plan, build]
     if: needs.plan.outputs.release == 'true'
     runs-on: macos-15
+    environment: release
     timeout-minutes: 10
     permissions:
       contents: write
@@ -146,6 +170,9 @@ jobs:
         with:
           subject-path: |
             release-safe/*.dmg
+            release-safe/*.zip
+            release-safe/*.blockmap
+            release-safe/latest-mac.yml
             release-safe/*.tar.gz
             release-safe/install.sh
       - name: Publish public release assets
@@ -160,4 +187,4 @@ jobs:
           shasum -a 256 --check SHA256SUMS
           gh release create "$RELEASE_TAG" ./* --repo "$GITHUB_REPOSITORY" \
             --target "$RELEASE_COMMIT" --latest --title "T3 Code $RELEASE_TAG" \
-            --notes 'Managed macOS Apple Silicon build. Unsigned/ad-hoc signed. See docs/safe-fork/INSTALL.md for installation and policy limits.'
+            --notes 'Managed macOS Apple Silicon build. Signed with the stable self-signed safe-fork identity; not Apple notarized. See docs/safe-fork/INSTALL.md for installation and policy limits.'

@@ -43,7 +43,7 @@ Done when the branch has the merge, all conflicts resolved, and the old review a
 
 For each new or changed outbound call, record its trigger (startup/timer/render/provider probe or explicit user action), agent reachability (MCP/shell/preview), shipped surfaces (desktop/server/CLI/web/mobile), destination and payload. Inspect these boundaries every sync:
 
-- Self-update and distribution sources: `releases`, `api.github.com/repos`, `raw.githubusercontent.com`, `registry.npmjs.org`, `SHA256SUMS`, `install.sh`; settings newly defaulting to true that cause networking.
+- Self-update and distribution sources: preserve the safe-only GitHub updater, forced latest channel, certificate-pinned designated requirement, committed public fingerprint, protected `release` signing job, secret-free PR build, and ZIP/blockmap/latest-mac.yml assets. Never regenerate or replace the stable signing key during a sync. `releases`, `api.github.com/repos`, `raw.githubusercontent.com`, `registry.npmjs.org`, `SHA256SUMS`, `install.sh`; settings newly defaulting to true that cause networking.
 - Renderer resources: `<img>`, `<video>`, `<iframe>`, CSS URLs/imports, CSP and Electron permission handlers; clipboard/geolocation must retain explicit authorization.
 - Child-process environments, provider SDK initialization and dependency-owned endpoints. Inspect the relevant locked package `dist` URLs without executing it.
 - Every `HttpClient` acquisition in server cloud, relay and telemetry code still uses `enforceManagedCapability` or a gated constructor.

@@ -59,13 +59,29 @@ try {
     urlSchemes: (infoPlist.CFBundleURLTypes ?? []).flatMap((type) => type.CFBundleURLSchemes ?? []),
   });
   const updateFeed = NodePath.join(resources, "app-update.yml");
-  if (NodeFS.existsSync(updateFeed)) {
+  if (!NodeFS.existsSync(updateFeed)) {
+    violations.push("app-update.yml is required for safe release updates");
+  } else {
     const feed = NodeFS.readFileSync(updateFeed, "utf8");
     if (
+      !/^provider:\s*github\s*$/m.test(feed) ||
+      !/^channel:\s*latest\s*$/m.test(feed) ||
       !/^owner:\s*['"]?rakutenanalytics['"]?\s*$/m.test(feed) ||
       !/^repo:\s*['"]?t3code['"]?\s*$/m.test(feed)
     )
       violations.push("app-update.yml must use the fork-owned release feed");
+  }
+  if (process.env.SAFE_SIGNING_IDENTITY) {
+    const app = NodePath.join(mount, apps[0]!);
+    const requirement = `=certificate leaf = H"${process.env.SAFE_SIGNING_IDENTITY}"`;
+    runDesktopSmokeCommand("codesign", [
+      "--verify",
+      "--deep",
+      "--strict",
+      "--test-requirement",
+      requirement,
+      app,
+    ]);
   }
   finishScan(
     "desktop DMG",

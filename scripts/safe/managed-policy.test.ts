@@ -74,6 +74,6 @@ describe("managed capability policy", () => {
     expect(reloaded.policy).toEqual(managedPolicy.policy);
     expect(reloaded.allows("t3Connect")).toBe(false);
     expect(reloaded.allows("productAnalytics")).toBe(false);
-    expect(reloaded.allows("desktopAutoUpdate")).toBe(false);
+    expect(reloaded.allows("desktopAutoUpdate")).toBe(true);
   });
 });

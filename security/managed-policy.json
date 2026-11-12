@@ -1,1 +1,1 @@
-{ "allow": ["remoteAccess.network"] }
+{ "allow": ["remoteAccess.network", "desktopAutoUpdate"] }

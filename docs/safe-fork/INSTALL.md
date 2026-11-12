@@ -28,7 +28,7 @@ t3safe update                          # same result, from an installed CLI
 t3safe update --version v0.1.0-safe.3  # a specific release
 ```
 
-`t3safe update` downloads the selected release's installer, verifies it against `SHA256SUMS`, then runs it with your existing app-only or CLI-only selection. The desktop app does not update itself.
+`t3safe update` downloads the selected release's installer, verifies it against `SHA256SUMS`, then runs it with your existing app-only or CLI-only selection. After the first signed release is installed, the desktop updater checks only this fork's GitHub releases on the stable channel. Existing unsigned/ad-hoc installs need one manual installation of a signed release before in-app updates can work. Machine policy may turn updates off.
 
 ## Options
 
@@ -63,13 +63,13 @@ The `t3safe doctor` and `t3safe update` commands come from this installer; a DMG
 1. Download the `*-darwin-arm64.dmg` and `SHA256SUMS` from [Releases](https://github.com/rakutenanalytics/t3code/releases).
 2. Verify: compare `shasum -a 256 <downloaded.dmg>` with its line in `SHA256SUMS`.
 3. Open the DMG and drag `T3 Code Safe.app` anywhere (for example `/Applications` or `~/Applications`).
-4. The build is unsigned. Remove quarantine, adjusting the path:
+4. The build uses a self-signed certificate and is not Apple notarized. Remove quarantine, adjusting the path:
 
    ```sh
    xattr -dr com.apple.quarantine "/Applications/T3 Code Safe.app"
    ```
 
-5. Open the app. If macOS still blocks it, use System Settings → Privacy & Security → Open Anyway. Device policy may prohibit unsigned apps.
+5. Open the app. If macOS still blocks it, use System Settings → Privacy & Security → Open Anyway. Device policy may prohibit self-signed apps.
 6. Optional terminal command: in the app, open Settings and press **Install** on the CLI command row. It creates `t3safe` only (never `t3`), using the installed app.
 
 ## Troubleshooting

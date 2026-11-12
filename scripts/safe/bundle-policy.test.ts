@@ -21,8 +21,10 @@ function createBundleFixture(files: Record<string, string>) {
   const directory = NodeFS.mkdtempSync(NodePath.join(NodeOS.tmpdir(), "t3safe-bundle-"));
   directories.push(directory);
   const entries = {
-    "apps/desktop/dist-electron/main.cjs": 'const policy = {allow:["remoteAccess.network"]};',
-    "apps/desktop/dist-electron/preload.cjs": 'const policy = {allow:["remoteAccess.network"]};',
+    "apps/desktop/dist-electron/main.cjs":
+      'const policy = {allow:["remoteAccess.network","desktopAutoUpdate"]};',
+    "apps/desktop/dist-electron/preload.cjs":
+      'const policy = {allow:["remoteAccess.network","desktopAutoUpdate"]};',
     "apps/server/dist/bin.mjs": 'import "./managedPolicy.mjs";',
     ...files,
   };
@@ -37,8 +39,9 @@ function createBundleFixture(files: Record<string, string>) {
 describe("packaged managed policy", () => {
   it("accepts the reviewed policy in staged CLI source and client assets", () => {
     const bundle = createBundleFixture({
-      "bin.mjs": 'const policy={allow:["remoteAccess.network"]};',
-      "client/assets/runtime.js": 'const policy={allow:["remoteAccess.network"]};',
+      "bin.mjs": 'const policy={allow:["remoteAccess.network","desktopAutoUpdate"]};',
+      "client/assets/runtime.js":
+        'const policy={allow:["remoteAccess.network","desktopAutoUpdate"]};',
     });
 
     const violations = cliBundlePolicyViolations(bundle);
@@ -49,7 +52,8 @@ describe("packaged managed policy", () => {
   it("rejects staged CLI source with a missing policy or unexpanded constant", () => {
     const bundle = createBundleFixture({
       "bin.mjs": "const policy=__T3CODE_MANAGED_POLICY__;",
-      "client/assets/runtime.js": 'const policy={allow:["remoteAccess.network"]};',
+      "client/assets/runtime.js":
+        'const policy={allow:["remoteAccess.network","desktopAutoUpdate"]};',
     });
 
     const violations = cliBundlePolicyViolations(bundle);
@@ -63,8 +67,9 @@ describe("packaged managed policy", () => {
   it("should accept the reviewed policy in a server chunk and a web chunk using backtick strings", () => {
     const bundle = createBundleFixture({
       "apps/server/dist/managedPolicy.mjs":
-        'export const policy = {"allow":["remoteAccess.network"]};',
-      "apps/server/dist/client/assets/runtime.js": "const policy={allow:[`remoteAccess.network`]};",
+        'export const policy = {"allow":["remoteAccess.network","desktopAutoUpdate"]};',
+      "apps/server/dist/client/assets/runtime.js":
+        "const policy={allow:[`remoteAccess.network`,`desktopAutoUpdate`]};",
     });
 
     const violations = bundlePolicyViolations(bundle);
@@ -75,7 +80,8 @@ describe("packaged managed policy", () => {
   it("should report a missing server policy when only the web client contains the reviewed literal", () => {
     const bundle = createBundleFixture({
       "apps/server/dist/managedPolicy.mjs": "export const policy = null;",
-      "apps/server/dist/client/assets/runtime.js": 'const policy={allow:["remoteAccess.network"]};',
+      "apps/server/dist/client/assets/runtime.js":
+        'const policy={allow:["remoteAccess.network","desktopAutoUpdate"]};',
     });
 
     const violations = bundlePolicyViolations(bundle);
@@ -86,7 +92,7 @@ describe("packaged managed policy", () => {
   it("should report a missing web policy when only the server contains the reviewed literal", () => {
     const bundle = createBundleFixture({
       "apps/server/dist/managedPolicy.mjs":
-        'export const policy = {allow:["remoteAccess.network"]};',
+        'export const policy = {allow:["remoteAccess.network","desktopAutoUpdate"]};',
       "apps/server/dist/client/assets/runtime.js": "const policy=null;",
     });
 
