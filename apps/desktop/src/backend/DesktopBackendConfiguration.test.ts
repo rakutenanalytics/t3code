@@ -3,6 +3,7 @@ import * as NodeServices from "@effect/platform-node/NodeServices";
 import { assert, describe, it } from "@effect/vitest";
 import { currentDesktopBootstrapToken } from "@t3tools/shared/desktopBootstrapToken";
 import * as Clock from "effect/Clock";
+import { createManagedProviderEnvironment } from "@t3tools/shared/providerEnvironment";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
 import * as Layer from "effect/Layer";
@@ -22,14 +23,21 @@ import * as DesktopAppSettings from "../settings/DesktopAppSettings.ts";
 import * as DesktopWslEnvironment from "../wsl/DesktopWslEnvironment.ts";
 import * as DesktopWslServerTree from "../wsl/DesktopWslServerTree.ts";
 
-const layerShellEnvironment = (prepared = true) =>
-  Layer.succeed(DesktopShellEnvironment.DesktopShellEnvironment, {
-    installIntoProcess: Effect.succeed(prepared),
-    awaitDiscovery: Effect.succeed(prepared),
-    updates: Stream.empty,
-  });
+type ShellDiscovery = boolean | DesktopShellEnvironment.DesktopShellEnvironment["Service"];
 
-const layerBackendConfiguration = (prepared = true) =>
+const layerShellEnvironment = (prepared: ShellDiscovery = true) =>
+  Layer.succeed(
+    DesktopShellEnvironment.DesktopShellEnvironment,
+    typeof prepared === "boolean"
+      ? {
+          installIntoProcess: Effect.succeed(prepared),
+          awaitDiscovery: Effect.succeed(prepared),
+          updates: Stream.empty,
+        }
+      : prepared,
+  );
+
+const layerBackendConfiguration = (prepared: ShellDiscovery = true) =>
   DesktopBackendConfiguration.layer.pipe(Layer.provide(layerShellEnvironment(prepared)));
 
 const layerServerExposure = Layer.succeed(DesktopServerExposure.DesktopServerExposure, {
@@ -110,7 +118,7 @@ const withHarness = <A, E, R>(
     | FileSystem.FileSystem
     | DesktopBackendConfiguration.DesktopBackendConfiguration
   >,
-  prepared = true,
+  prepared: ShellDiscovery = true,
 ) =>
   Effect.gen(function* () {
     const fileSystem = yield* FileSystem.FileSystem;
@@ -224,6 +232,35 @@ const withPackagedWslHarness = <A, E, R>(
   }).pipe(Effect.scoped, Effect.provide(Layer.mergeAll(NodeServices.layer, NodeCrypto.layer)));
 
 describe("DesktopBackendConfiguration", () => {
+  it.effect(
+    "should inherit /provider/bin in provider environments when desktop shell discovery finishes after startup",
+    () => {
+      const inheritedPath = process.env.PATH;
+      const discovery = Effect.sync(() => {
+        process.env.PATH = "/provider/bin:/usr/bin";
+        return true;
+      });
+
+      process.env.PATH = "/usr/bin";
+
+      return withHarness(
+        Effect.gen(function* () {
+          const configuration = yield* DesktopBackendConfiguration.DesktopBackendConfiguration;
+
+          yield* configuration.resolvePrimary;
+          const providerEnvironment = createManagedProviderEnvironment(process.env);
+
+          assert.equal(providerEnvironment.PATH, "/provider/bin:/usr/bin");
+        }),
+        {
+          installIntoProcess: Effect.succeed(true),
+          awaitDiscovery: discovery,
+          updates: Stream.empty,
+        },
+      ).pipe(Effect.ensuring(Effect.sync(() => restoreEnv("PATH", inheritedPath))));
+    },
+  );
+
   it.effect("resolvePrimary produces a stable scoped bootstrap token", () =>
     withHarness(
       Effect.gen(function* () {

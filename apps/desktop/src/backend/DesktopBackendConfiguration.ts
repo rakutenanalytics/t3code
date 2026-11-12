@@ -784,7 +784,8 @@ export const make = Effect.gen(function* () {
       Effect.provideService(FileSystem.FileSystem, fileSystem),
       Effect.provideService(DesktopEnvironment.DesktopEnvironment, environment),
     );
-    const shellEnvironmentPrepared = yield* shellEnvironment.installIntoProcess;
+    // Managed providers snapshot their environment, so discovery must finish before the backend starts.
+    const shellEnvironmentPrepared = yield* shellEnvironment.awaitDiscovery;
     return yield* resolvePrimaryStartConfig({
       ...shared,
       resourceMonitorPath,
