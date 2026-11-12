@@ -2,6 +2,11 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-11-12 — maintainer-dispatched releases
+
+- baseline-update: security/egress-inventory.md — Records explicit maintainer dispatch on main as the only release trigger. Merges and tag pushes start no release build; publication destinations and payloads are unchanged.
+- baseline-update: security/network-baseline.json — Reviews the release workflow removing all push triggers and tag-event handling, and restricting planning to refs/heads/main. Retains main-tip, monotonic-version, published-release and explicit-tag retry checks, plus the already-tagged skip when no tag is supplied. Signing, updater policy and other workflows are unchanged.
+
 ## 2026-11-11 — provider PATH discovery ordering
 
 - baseline-update: security/network-baseline.json — Reviews the desktop backend waiting for existing bounded shell discovery before spawning, plus a focused regression using a synthetic PATH. Managed provider telemetry denials still copy and sanitize the environment. Only two source fingerprints change; literal hosts, URLs, dependencies, runtime capabilities and signing remain unchanged.
