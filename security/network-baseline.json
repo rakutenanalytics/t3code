@@ -41,7 +41,7 @@
       "d1d840b6a2dae8762b64f15b480d4c5b7826104b5895dcba3a2ab87cd75d4758": 1
     },
     ".github/workflows/pr-checks.yml": {
-      "be29035e2160bf7e1d01fb58e99ab5e73d04e5cbd2f9c6ef0167e6814e2c0a44": 1
+      "731aab8d8d6056509fa356b630867166f0baeb5f995a5bb12d97a4a8f2808145": 1
     },
     ".github/workflows/release.yml": {
       "2260ebc9bc75ce856e69a76cc0d9d183f23bacd4f867b7f9850403e548e31982": 1
@@ -7805,7 +7805,10 @@
       "b56e0b92a9ff8d9b643f966b06dd46b872df5485ca0d20736865b5375df085f2": 1
     },
     "scripts/safe/import-signing-key.sh": {
-      "1908b2246fda7f503ad75001d051bbe402e081794920224bda7e1e278e8d636d": 1
+      "1bc342f445883abb8b66b609a25864a5d0945cff5b281e1e02b9a54bc2386991": 1
+    },
+    "scripts/safe/import-signing-key.test.ts": {
+      "222a6de08646545371f182dcde4f2d909b7789330f3a4006554aac6cf0e226fa": 1
     },
     "scripts/safe/install.test.ts": {
       "cf85cab6d68e0f72dbf4f4d3213227e2f7621069a7eb7a820f5609f171063154": 1

@@ -7,6 +7,10 @@ Each change to a security file requires a new entry naming that exact path and t
 - baseline-update: security/egress-inventory.md — Records explicit maintainer dispatch on main as the only release trigger. Merges and tag pushes start no release build; publication destinations and payloads are unchanged.
 - baseline-update: security/network-baseline.json — Reviews the release workflow removing all push triggers and tag-event handling, and restricting planning to refs/heads/main. Retains main-tip, monotonic-version, published-release and explicit-tag retry checks, plus the already-tagged skip when no tag is supplied. Signing, updater policy and other workflows are unchanged.
 
+## 2026-11-12 — release signing keychain lookup
+
+- baseline-update: security/network-baseline.json — Reviews the release importer adding its ephemeral signing keychain to the user search list while preserving existing entries, then requiring a valid code-signing identity and a successful binary sign/verify probe before export. The five isolated command-fake regressions run in PR checks and never invoke real trust commands. Only these three source fingerprints change; certificate pin, PKCS#12 encoding, runner trust policy, release triggers and runtime network grants remain unchanged.
+
 ## 2026-11-11 — provider PATH discovery ordering
 
 - baseline-update: security/network-baseline.json — Reviews the desktop backend waiting for existing bounded shell discovery before spawning, plus a focused regression using a synthetic PATH. Managed provider telemetry denials still copy and sanitize the environment. Only two source fingerprints change; literal hosts, URLs, dependencies, runtime capabilities and signing remain unchanged.
