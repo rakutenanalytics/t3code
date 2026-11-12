@@ -1,5 +1,5 @@
 {
-  "justification": "Only T3-owned domains and the explicit telemetryDomains denylist fail. Telemetry literals under the directory prefixes in providerSdkPaths are provider-owned and trusted; T3-owned hosts never gain this exemption. Other hosts are trusted by default; seenHosts is informational. Ledger keys bind host + artifact-relative filePattern with normalized 8-character chunk suffix + SHA-256 of the literal plus 80 characters on each side. For normalized encoded hosts the literal spans the full URL. The same chunk normalization applies to context, and embedded build versions (N.N.N-safe.N) normalize to 0.0.0-safe.* so releases need no ledger edits. Adjacent changes require renewed review. Acceptance requires a source review note and packaged policy verification. DMG paths and stable CLI bin.mjs/client paths have separate entries, accepted from real CI extraction on 2026-10-23.",
+  "justification": "Only T3-owned domains and the explicit telemetryDomains denylist fail. Telemetry literals under the directory prefixes in providerSdkPaths are provider-owned and trusted; T3-owned hosts never gain this exemption. Other hosts are trusted by default; seenHosts is informational. Ledger keys bind host + artifact-relative filePattern with normalized 8-character chunk suffix + SHA-256 of the literal plus 80 characters on each side. For normalized encoded hosts the literal spans the full URL. The same chunk normalization applies to context, and embedded build versions (N.N.N-safe.N) normalize to 0.0.0-safe.* so releases need no ledger edits. Adjacent changes require renewed review. Acceptance requires a source review note and packaged policy verification. DMG paths and stable CLI bin.mjs/client paths have separate entries, accepted from real CI extraction on 2026-10-23. Issue #17: desktop update metadata and assets are restricted at source to public rakutenanalytics/t3code releases on latest; GitHub redirects to objects.githubusercontent.com and release-assets.githubusercontent.com. This inventory grants no host firewall exception.",
   "seenHosts": [
     {
       "host": "*.example.com",
@@ -739,6 +739,10 @@
       "category": "unexpected/other"
     },
     {
+      "host": "objects.githubusercontent.com",
+      "category": "unexpected/other"
+    },
+    {
       "host": "open-vsx.org",
       "category": "unexpected/other"
     },
@@ -840,6 +844,10 @@
     },
     {
       "host": "relay.invalid",
+      "category": "unexpected/other"
+    },
+    {
+      "host": "release-assets.githubusercontent.com",
       "category": "unexpected/other"
     },
     {
@@ -1905,6 +1913,20 @@
       "filePattern": "client/assets/runtime-*.js",
       "contextSha256": "f9a30767010819ff5e2152b090f2cc3cec7a8861254cef219d377f70b41015f3",
       "note": "v0.1.7 PR19 artifact review 2026-11-10: apps/web/src/branding.ts:28 and components/HostedEmptyState.tsx:155, components/promptLinks/HostedPromptLinkLanding.tsx:174: download anchors, user-initiated navigation only, no automatic request. Rebuilt final-head desktop/CLI source policy and identity verified; full DMG extraction and native SEA smoke remain unverified locally."
+    },
+    {
+      "host": "t3.codes",
+      "file": "apps/server/dist/client/assets/index-CsIjyXi1.js",
+      "filePattern": "apps/server/dist/client/assets/index-*.js",
+      "contextSha256": "1d58ea6c32f38b23253c86e9fbeb52cb28dcbaade2ff4e89608fb96018101ed8",
+      "note": "Issue #17: fresh PR-version source emission with both baked allowances and safe app identity verified. The changed t3.codes index context is the existing packages/contracts/src/t3ProjectFile.ts T3_PROJECT_FILE_SCHEMA_URL metadata constant, not a fetch or navigation. Policy literal insertion changes minified bindings only; no new T3 destination or runtime permission. Native DMG packaging is pending CI."
+    },
+    {
+      "host": "t3.codes",
+      "file": "client/assets/index-CsIjyXi1.js",
+      "filePattern": "client/assets/index-*.js",
+      "contextSha256": "1d58ea6c32f38b23253c86e9fbeb52cb28dcbaade2ff4e89608fb96018101ed8",
+      "note": "Issue #17: same reviewed schema URL metadata constant from packages/contracts/src/t3ProjectFile.ts:10, at the CLI client index path. PR-version single-file CLI source and web source have the exact baked policy/identity. No request, no new host, no extra permission. Native SEA packaging remains CI-only."
     }
   ]
 }

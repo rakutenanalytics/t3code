@@ -88,6 +88,9 @@ verify_signature() {
   codesign --verify --deep "$target"
 }
 for asset in t3safe managed-policy.json app-identity.json VERSION; do download_verified "$asset"; done
+if awk '$2 == "signing-certificate.sha256" || $2 == "./signing-certificate.sha256" { found=1 } END { exit !found }' "$work/SHA256SUMS"; then
+  download_verified signing-certificate.sha256
+fi
 [[ $(cat "$work/VERSION") == "$version" ]] || fail 'Release VERSION does not match selected tag.'
 mkdir -p "$install_root"
 install_root=$(cd "$install_root" && pwd -P)
@@ -129,6 +132,7 @@ fi
 mkdir -p "$release_dir"
 ditto "$work/payload" "$release_dir"
 for asset in t3safe managed-policy.json app-identity.json VERSION; do cp "$work/$asset" "$release_dir/$asset"; done
+if [[ -f "$work/signing-certificate.sha256" ]]; then cp "$work/signing-certificate.sha256" "$release_dir/"; fi
 chmod +x "$release_dir/t3safe"
 ln -sfn "$release_dir/t3safe" "$install_root/bin/t3safe"
 # Earlier releases linked the bundled CLI as `t3`, shadowing the official command. Remove only

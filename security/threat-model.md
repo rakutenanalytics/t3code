@@ -2,7 +2,9 @@
 
 A leak is disclosure of workspace content, conversation text, attachments, terminal or browser data, credentials, project/thread titles, identifying metadata, or operational logs to an unapproved destination. Cloud tunnels also disclose a reachable control surface, even before content moves.
 
-This build permits direct network access and keeps normal agent/provider use. It denies product analytics, T3 Connect (including saved tunnels, activity publishing and tracing), desktop auto-update, OTLP export, provider feedback uploads, unmanaged runtime updates, automatic remote chat/PR media and favicon loads, provider metadata probes and supported provider telemetry. Environment variables, CLI flags and saved preferences cannot grant these capabilities.
+This build permits direct network access and keeps normal agent/provider use. It denies product analytics, T3 Connect (including saved tunnels, activity publishing and tracing), OTLP export, provider feedback uploads, unmanaged runtime updates, automatic remote chat/PR media and favicon loads, provider metadata probes and supported provider telemetry. Environment variables, CLI flags and saved preferences cannot grant these capabilities.
+
+Desktop auto-update is allowed only in the safe app, pinned to public GitHub releases from `rakutenanalytics/t3code` on `latest`. GitHub release asset redirects use its CDN. Machine policy can disable updates but cannot select another feed. Squirrel verifies each candidate against the installed app's certificate-pinned designated requirement. Existing ad-hoc installs require manual migration to the first signed release.
 
 The boundary is T3-owned feature execution in desktop, web and server/CLI artifacts and source execution. This is not a host firewall, provider sandbox, browser destination filter, or defense against arbitrary code execution. Agent subprocesses, user-selected URLs, provider APIs, SSH, Git hosting and optional installers still need destination approval. A person able to replace the application can replace its policy.
 

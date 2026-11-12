@@ -4,7 +4,9 @@ import * as NodeFS from "node:fs";
 import { finishScan, repositoryFiles, root, sourceText } from "./repository.ts";
 
 const violations: string[] = [];
-const workflows = repositoryFiles().filter((file) => /^\.github\/workflows\/.*\.ya?ml$/.test(file));
+const workflows = repositoryFiles().filter((file) =>
+  /^\.github\/(?:workflows\/.*|actions\/build-safe\/action)\.ya?ml$/.test(file),
+);
 for (const file of workflows) {
   const lines = sourceText(file).split("\n");
   let runIndent: number | undefined;

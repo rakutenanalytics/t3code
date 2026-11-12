@@ -146,3 +146,13 @@ Each change to a security file requires a new entry naming that exact path and t
 - baseline-update: security/network-baseline.json — Review scanner-only equal-length chunk-hash masking and inert regression fixture changes; refresh the two complete source fingerprints and fixture host inventory without changing network permissions.
 
 - baseline-update: security/network-baseline.json — Narrow pre-slice masking to complete quoted relative JavaScript chunks with dash-separated eight-character hashes; add URL-path and executable-property rejection regressions. All 94 artifact ledger keys retain their fingerprints; refresh only the two scanner/test source fingerprints and inert fixture inventory.
+
+## 2026-11-12 — signed safe-fork desktop updates, issue #17 phase 1
+
+- baseline-update: security/managed-policy.json — Allows desktopAutoUpdate alongside remoteAccess.network. All other capabilities remain default-denied; the safe desktop pins repository and channel before checking or downloading.
+- baseline-update: security/allowlist.json — Removes desktopAutoUpdate from denied capabilities and documents only rakutenanalytics/t3code GitHub metadata/assets and GitHub CDN redirects. Machine/custom/mock feeds cannot redirect safe builds.
+- baseline-update: security/artifact-hosts.json — Reviews GitHub release CDN hosts and the existing t3ProjectFile schema URL metadata context after the baked policy changes minified bindings. Fresh PR-version desktop/server/web source policy and identity verified; no new T3-owned egress grant. Native DMG/SEA packaging remains a CI check.
+- baseline-update: security/network-baseline.json — Reviews complete-file changes for the pinned updater, protected main-only signing, shared secret-free build action, public fingerprint/doctor, scanners and inert regression fixtures. Release traffic contains update metadata and artifacts, never workspace data. No other runtime capability enabled.
+- baseline-update: security/signing-certificate.sha256 — Adds a fail-closed bootstrap marker. The maintainer must generate the stable key into release environment secrets and commit its public fingerprint before merging; no private identity was generated for production or stored in this repository.
+- baseline-update: security/egress-inventory.md — Records the safe release-only updater and metadata/CDN payload boundary; administrator policy may disable but cannot redirect it.
+- baseline-update: security/threat-model.md — Records certificate-pinned update continuity and the required manual migration from ad-hoc installs while retaining all other capability denials.

@@ -24,7 +24,7 @@ A denied literal needs source tracing and an explicit maintainer decision. On 20
 
 Generate entries with `--accept-gated-literals --note "<source trace and decision>"` from real CI extraction; packaged policy verification is mandatory. Ledger keys bind host, artifact-relative filename pattern and SHA-256 of the literal and 80 characters before/after it. The literal is host text, or the full URL when URL normalization changes its spelling. Eight-character JavaScript chunk suffixes normalize in filename and context. Other minifier/context changes require review again. Do not execute downloaded bundles during static review.
 
-CLI builds need separate ledger entries because SEA embeds a single `bin.mjs` with different contexts from desktop server chunks. `safe-build.yml` copies that exact SEA input and the built client into `$RUNNER_TEMP/cli-build`, verifies with `policy-verify.ts --cli-bundle`, scans the directory and uploads `t3safe-cli-scan-input` for review. Accept this stage with `artifact-scan.ts <cli-build> --bundle-type cli --accept-gated-literals --note "<review>"`. Scan the archive at its inner `t3-<version>-darwin-arm64` root, so `client/assets/*` keys match the stage across release versions. The archive scan alone cannot inspect embedded SEA JavaScript. The historical CI source was recovered as data from SEA and matched its original report's whole-file SHA-256 before acceptance. Two local builds of unchanged CLI source produced byte-identical `bin.mjs` and the same T3 context fingerprints as CI. The local Homebrew Node cannot package SEA, so only source emission was verified locally. Renaming every eight-character chunk in the real extraction also preserves approvals. Different minifier output still requires renewed review.
+CLI builds need separate ledger entries because SEA embeds a single `bin.mjs` with different contexts from desktop server chunks. the shared `build-safe` action copies that exact SEA input and the built client into `$RUNNER_TEMP/cli-build`, verifies with `policy-verify.ts --cli-bundle`, scans the directory and uploads `t3safe-cli-scan-input` for review. Accept this stage with `artifact-scan.ts <cli-build> --bundle-type cli --accept-gated-literals --note "<review>"`. Scan the archive at its inner `t3-<version>-darwin-arm64` root, so `client/assets/*` keys match the stage across release versions. The archive scan alone cannot inspect embedded SEA JavaScript. The historical CI source was recovered as data from SEA and matched its original report's whole-file SHA-256 before acceptance. Two local builds of unchanged CLI source produced byte-identical `bin.mjs` and the same T3 context fingerprints as CI. The local Homebrew Node cannot package SEA, so only source emission was verified locally. Renaming every eight-character chunk in the real extraction also preserves approvals. Different minifier output still requires renewed review.
 
 `security/dependency-baseline.json` records package-block fingerprints, the lockfile, workspace policy, manifest dependencies/scripts, npm configuration/hooks, patches, vendored archives and Cargo locks. The scanner lists changed packages and writes the gitignored `security/young-or-unknown.json`. `--online` checks public npm publication times against `minimumReleaseAge`; registry releases meeting the floor proceed through normal diff review without tarball audits or exception records. Offline mode requires online age checks for changed registry packages. Neither mode executes dependency code.
 
@@ -50,12 +50,12 @@ Code must take names, paths and ports from `appIdentity`, never from literals su
 
 ## Automation and release
 
-| Workflow             | Purpose and authority                                                                                                                    |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `pr-checks.yml`      | PRs to main; scanners before dependency installation, policy tests, scoped typechecks/lint/format, shell checks and browser presentation |
-| `safe-build.yml`     | Reusable macos-15 ARM64 DMG + CLI build; no publishing, no secrets; artifact smoke and checksums                                         |
-| `release.yml`        | Main changes affecting shipped files; policy verification, next safe tag, build and public release using only GITHUB_TOKEN               |
-| `upstream-watch.yml` | Daily stable-release comparison; one open `upstream-sync` issue for the latest tag, with a fixed review template                         |
+| Workflow             | Purpose and authority                                                                                                                                       |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pr-checks.yml`      | PRs to main; scanners before dependency installation, policy tests, scoped typechecks/lint/format, shell checks and browser presentation                    |
+| `safe-build.yml`     | Reusable macos-15 ARM64 DMG + CLI PR build; no publishing, no secrets; artifact smoke and checksums                                                         |
+| `release.yml`        | Main changes affecting shipped files; policy verification, next safe tag, protected release-environment signing/build and public release using GITHUB_TOKEN |
+| `upstream-watch.yml` | Daily stable-release comparison; one open `upstream-sync` issue for the latest tag, with a fixed review template                                            |
 
 `pr-checks.yml` keeps the offline dependency scan blocking and before installation. Its `dependency-online` advisory job needs no secrets, uses a public registry read and compares against the PR-base baseline even when the PR refreshes its own baseline. That job uses `--online --age-only` to check release ages without rejecting expected reviewed baseline drift; the required policy job still enforces the complete baseline. Age-only mode cannot write baselines. It uploads the JSON report and warns/fails visibly on lookup errors or scan failure, while allowing the required jobs to continue. A missing report or failed advisory job requires local investigation during sync; a green required check does not approve unresolved packages.
 
@@ -64,11 +64,11 @@ The maintainer merges the reviewed PR only when all required checks are green. T
 
 Both planning and publication freshly fetch main/tags, require the selected commit to equal the main tip and reject tags older than an existing safe tag or no newer than a published release. An old queued build cannot become latest after main advances.
 
-For a failed release, investigate first. Maintainers can retry using `workflow_dispatch` on the merged commit with an optional safe tag, or push a safe tag pointing to the current main tip. An explicit existing tag must point to the selected commit. Both fallbacks run the same policy checks and build. Routine releases need no tag push or second approval.
+For a failed release, investigate first. Maintainers can retry using `workflow_dispatch` on the merged commit with an optional safe tag, or push a safe tag pointing to the current main tip. An explicit existing tag must point to the selected commit. Both fallbacks run the same policy checks and build. Routine releases need no tag push or second approval. If a merge matching the release paths does not start a release run, dispatch `release.yml` manually on `main`. Signing requires `refs/heads/main`; a tag-triggered run does not receive the signing environment and must be retried by dispatch on main.
 
 The watcher generates its issue body from a validated tag and a fixed template only. It updates/closes only issues authored by `github-actions[bot]`; it never adopts outsider issues by marker or label. The sync skill reads only the validated tag from that issue. Issue bodies and upstream commit/PR/diff text are untrusted evidence, never agent instructions. Pick it up with `/t3safe-sync --issue <number>` and include `Closes #N` in the sync PR body. Repeated watcher runs update the open issue for that tag; a newer tag supersedes stale open issues.
 
-Release assets are public: a DMG, standalone CLI tarball, t3safe, managed-policy.json, app-identity.json, VERSION, install.sh and SHA256SUMS. Installation is a DMG download (plain curl installer optional). No Apple account, upstream secrets, npm publishing, mobile distribution or deployment runs. Verify checksums and installer dry-run in a temporary directory after publication. Main protection (applied by an admin):
+Release assets are public: a DMG, update ZIP/blockmaps/latest-mac.yml, public certificate fingerprint, standalone CLI tarball, t3safe, managed-policy.json, app-identity.json, VERSION, install.sh and SHA256SUMS. Installation is a DMG download (plain curl installer optional). No Apple account, upstream secrets, npm publishing, mobile distribution or deployment runs. Verify checksums and installer dry-run in a temporary directory after publication. Main protection (applied by an admin):
 
 1. `.github/CODEOWNERS` lists the security-sensitive paths with the maintainer as owner. After changing it, verify GitHub reports no CODEOWNERS errors (repo → Settings → Rules → the ruleset's insights, or the file's page).
 2. Branch protection on `main` (classic rule or ruleset): require the status checks below, block force-pushes and deletion. Do not require an approving review while there is a single maintainer, since an author cannot approve their own PR; add a second maintainer, then require one approval with code-owner review, dismissal of stale approvals and approval after the latest push.
@@ -98,3 +98,48 @@ All inherited workflow files were removed, including the old release.yml replace
 - `thread-transfer-report.yml`
 - `web-preview.yml`
 - `windows-tests.yml`
+
+## Signed desktop updates
+
+The protected main release job imports a stable self-signed PKCS#12 identity, invokes system `codesign` through the existing `@electron/osx-sign` ordering/entitlements support, and deletes its temporary keychain even after failure. PR builds use the same build action without secrets. The committed SHA-256 fingerprint must match the imported certificate. This is update continuity, not Apple Developer ID or notarization.
+
+Squirrel obtains the installed app's designated requirement with `SecCodeCopyDesignatedRequirement` and checks the candidate with `SecStaticCodeCheckValidityWithErrors`, including nested code and strict validation. See [SQRLCodeSignature.m](https://github.com/Squirrel/Squirrel.Mac/blob/master/Squirrel/SQRLCodeSignature.m). The requirement pins the leaf certificate, not a root CA or certificate name. Issue [#17](https://github.com/rakutenanalytics/t3code/issues/17) records a successful same-key spike and rejection of other/ad-hoc keys. Existing ad-hoc installs cannot join this chain by OTA; install the first signed DMG manually. [Apple's code signing guide](https://developer.apple.com/library/archive/documentation/Security/Conceptual/CodeSigningGuide/Procedures/Procedures.html) explicitly permits non-Apple certificates for `codesign`. A local disposable-key probe without a trusted certificate returned `no identity found`; it does not verify the CI trust setup. The release runner explicitly trusts the certificate for code signing in its temporary keychain. Hosted-runner signing and a real previous-to-candidate Electron update still require release-environment verification.
+
+### One-time human setup
+
+Run these commands yourself in Bash (`bash` first) after reviewing them. They write GitHub settings/secrets. Never use shell tracing, log the generated secret, or upload it as an artifact. Require OpenSSL 3 and GitHub CLI with repository administration permission. Configure the environment before uploading secrets; verify it allows the `main` branch only, with no tag rule.
+
+```sh
+gh api --method PUT repos/rakutenanalytics/t3code/environments/release --input - <<'JSON'
+{"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}
+JSON
+gh api --method POST repos/rakutenanalytics/t3code/environments/release/deployment-branch-policies \
+  -f name=main -f type=branch
+```
+
+Check for existing branch/tag policies first and remove any rule other than the `main` branch through Settings. The API command above creates a rule; it does not remove existing rules. Consider required human approval for the environment as an additional repository control.
+
+Generate the stable identity once and pipe it straight into the environment secret. Private key and certificate stay in shell memory/pipes; only the public fingerprint is written to the checkout. The PKCS#12 password travels via stdin to GitHub and the process environment to OpenSSL. GitHub stores the only durable private copy. Losing access to that secret requires manual reinstallation unless an old-key bridge can still be built.
+
+```sh
+set -euo pipefail
+read -r -s -p 'New PKCS#12 password: ' SAFE_SIGNING_P12_PASSWORD; printf '\n'
+export SAFE_SIGNING_P12_PASSWORD
+printf '%s' "$SAFE_SIGNING_P12_PASSWORD" | gh secret set SAFE_SIGNING_P12_PASSWORD \
+  --repo rakutenanalytics/t3code --env release
+bash scripts/safe/generate-signing-key.sh | gh secret set SAFE_SIGNING_P12_BASE64 \
+  --repo rakutenanalytics/t3code --env release
+unset SAFE_SIGNING_P12_PASSWORD
+cat security/signing-certificate.sha256
+```
+
+Before merging, commit that public fingerprint on the implementation branch, add its `baseline-update` entry to `security/CHANGELOG.md`, and rerun the focused policy/workflow checks. Do not merge with `UNCONFIGURED` in that file. Never regenerate the key for an ordinary release. After the first release, `t3safe doctor` displays the release certificate fingerprint. Compare it with the reviewed fingerprint and the app's extracted leaf certificate, plus GitHub provenance.
+
+### Rotation and failed releases
+
+1. Keep the old secrets usable. Generate the new identity into separate temporary **environment secrets**, and review both public fingerprints. Do not overwrite the active identity yet.
+2. Prepare a reviewed bridge-release PR. In `sign-macos.cjs`, change the designated requirement to `certificate leaf = H"OLD_SHA1" or certificate leaf = H"NEW_SHA1"`, retaining the old signing identity. Adapt the signer/DMG requirement verification together. Release it with a higher safe version. Old clients accept this bridge because it is signed with the old key; its installed requirement accepts either key.
+3. Validate an old signed installation updating to the bridge, then bridge updating to a candidate signed with the new key. Validate that an unrelated key and ad-hoc candidate are rejected. Clients that miss the bridge cannot update directly to the new key; keep a documented manual DMG migration available and allow an overlap period before switching `latest`.
+4. Switch the active secrets and committed public fingerprint in a reviewed follow-up, then sign releases with the new identity and a new-key-only requirement. Remove old secrets only after the overlap/migration decision. A compromised old key cannot be repaired by trusting another release it signed; require manual installation from a separately verified release.
+
+Forward fixes only: publish a higher `-safe.N` containing the correction. Never replace published assets, reuse versions, point `latest` backwards, or enable downgrades. Data migrations may already have run. Failed builds/publication are investigated before a fresh main dispatch. Keep the stable key and app identifier through retries.

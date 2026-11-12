@@ -420,7 +420,7 @@ function createScannerFixture() {
     NodeFS.writeFileSync(destination, text);
   };
   const identityJson = NodeFS.readFileSync("security/app-identity.json", "utf8");
-  const policy = `const policy = {allow:["remoteAccess.network"]};const identity = ${identityJson};`;
+  const policy = `const policy = {allow:["remoteAccess.network","desktopAutoUpdate"]};const identity = ${identityJson};`;
   write("apps/desktop/dist-electron/main.cjs", policy);
   write("apps/desktop/dist-electron/preload.cjs", policy);
   write("apps/server/dist/bin.mjs", policy);

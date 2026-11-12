@@ -62,7 +62,10 @@ case "${1:-help}" in
     status=0
     printf 'Installed version: '; cat "$release_dir/VERSION"
     printf 'Verify release provenance: gh attestation verify <asset> --repo rakutenanalytics/t3code\n'
-    printf 'Release policy: '; cat "$release_dir/managed-policy.json"
+    if [[ -f "$release_dir/signing-certificate.sha256" ]]; then
+      printf 'Release signing certificate SHA-256: '; cat "$release_dir/signing-certificate.sha256"
+    fi
+    printf 'Release policy: ' ; cat "$release_dir/managed-policy.json"
     prefix=$(cd "$release_dir/../../../.." && pwd -P)
     # The identity file ships with the release, so app-only installs report it too.
     identity="$release_dir/app-identity.json"

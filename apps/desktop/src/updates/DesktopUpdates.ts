@@ -1,3 +1,4 @@
+import { appIdentity } from "@t3tools/shared/appIdentity";
 import { managedPolicy } from "@t3tools/shared/managedPolicy";
 import {
   DESKTOP_UPDATE_RESTART_MARKER_FILE,
@@ -374,7 +375,8 @@ export const make = Effect.gen(function* () {
   const desktopSettings = yield* DesktopAppSettings.DesktopAppSettings;
   const policy = yield* DesktopUpdatePolicy.DesktopUpdatePolicy;
   // Any user can set the mock flag, so it never replaces an administrator's update source.
-  const mockUpdates = config.mockUpdates && policy.message === null;
+  const isSafeBuild = appIdentity.slug === "t3code-safe";
+  const mockUpdates = !isSafeBuild && config.mockUpdates && policy.message === null;
 
   const appUpdateYmlConfigRef = yield* Ref.make<Option.Option<AppUpdateYmlConfig>>(Option.none());
   const activeUpdateActionRef = yield* Ref.make<Option.Option<UpdateAction>>(Option.none());
@@ -456,7 +458,10 @@ export const make = Effect.gen(function* () {
   const hasUpdateFeedConfig = Ref.get(appUpdateYmlConfigRef).pipe(
     Effect.map(
       (appUpdateYmlConfig) =>
-        Option.isSome(appUpdateYmlConfig) || mockUpdates || policy.feedUrl !== undefined,
+        isSafeBuild ||
+        Option.isSome(appUpdateYmlConfig) ||
+        mockUpdates ||
+        policy.feedUrl !== undefined,
     ),
   );
 
@@ -479,7 +484,7 @@ export const make = Effect.gen(function* () {
   // Without nightly, an install on that channel stays put until its user picks stable: moving it
   // silently would be a downgrade nobody asked for, and checking nightly would break the policy.
   const channelBlockedReason = (channel: DesktopUpdateChannel): Option.Option<string> =>
-    channel === "nightly" && !policy.allowNightly
+    channel === "nightly" && (isSafeBuild || !policy.allowNightly)
       ? Option.some(
           `${policy.message ?? "Nightly updates are turned off on this machine."} Switch to the stable channel to keep getting updates.`,
         )
@@ -515,6 +520,8 @@ export const make = Effect.gen(function* () {
     channel: DesktopUpdateChannel,
   ) {
     yield* Effect.annotateCurrentSpan({ channel });
+    // [#17] false keeps GitHubProvider on latest-mac.yml even when a normal release tag is -safe.N.
+    // https://github.com/electron-userland/electron-builder/blob/v26.16.1/packages/electron-updater/src/providers/GitHubProvider.ts
     const allowsPrerelease = channel === "nightly";
     yield* electronUpdater.setChannel(channel);
     yield* electronUpdater.setAllowPrerelease(allowsPrerelease);
@@ -1131,7 +1138,15 @@ export const make = Effect.gen(function* () {
         });
       }
 
-      if (mockUpdates) {
+      if (isSafeBuild) {
+        yield* electronUpdater.setFeedURL({
+          provider: "github",
+          owner: "rakutenanalytics",
+          repo: "t3code",
+          channel: "latest",
+          private: false,
+        });
+      } else if (mockUpdates) {
         yield* electronUpdater.setFeedURL({
           provider: "generic",
           url: `http://localhost:${config.mockUpdateServerPort}`,
@@ -1145,11 +1160,12 @@ export const make = Effect.gen(function* () {
       }
 
       const settings = yield* desktopSettings.get;
+      const updateChannel = isSafeBuild ? "latest" : settings.updateChannel;
       const disabledReason = yield* resolveDisabledReason;
       yield* setState(
         yield* baseUpdateState(
-          settings.updateChannel,
-          Option.orElse(disabledReason, () => channelBlockedReason(settings.updateChannel)),
+          updateChannel,
+          Option.orElse(disabledReason, () => channelBlockedReason(updateChannel)),
         ),
       );
       if (Option.isSome(disabledReason)) {
@@ -1159,7 +1175,7 @@ export const make = Effect.gen(function* () {
 
       yield* electronUpdater.setAutoDownload(false);
       yield* electronUpdater.setAutoInstallOnAppQuit(false);
-      yield* applyAutoUpdaterChannel(settings.updateChannel);
+      yield* applyAutoUpdaterChannel(updateChannel);
       yield* electronUpdater.setDisableDifferentialDownload(
         isArm64HostRunningIntelBuild(environment.runtimeInfo),
       );

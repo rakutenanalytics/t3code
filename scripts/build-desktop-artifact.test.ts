@@ -507,54 +507,58 @@ it.layer(NodeServices.layer)("build-desktop-artifact", (it) => {
     }),
   );
 
-  it.effect("omits update feeds for pull request preview builds", () =>
-    Effect.gen(function* () {
-      const preview = yield* createBuildConfig(
-        "mac",
-        "dmg",
-        "0.0.33-pr.8182.1",
-        false,
-        false,
-        undefined,
-        undefined,
-      );
-      const release = yield* createBuildConfig(
-        "mac",
-        "dmg",
-        "0.0.33",
-        false,
-        false,
-        undefined,
-        undefined,
-      );
+  it.effect(
+    "pins release feeds to rakutenanalytics/t3code latest despite an upstream repository override",
+    () =>
+      Effect.gen(function* () {
+        const preview = yield* createBuildConfig(
+          "mac",
+          "dmg",
+          "0.0.33-pr.8182.1",
+          false,
+          false,
+          undefined,
+          undefined,
+        );
+        const release = yield* createBuildConfig(
+          "mac",
+          "dmg",
+          "0.0.33",
+          false,
+          false,
+          undefined,
+          undefined,
+        );
 
-      const previewChannel = yield* createBuildConfig(
-        "mac",
-        "dmg",
-        "0.0.41-preview.20260912.1589",
-        false,
-        false,
-        undefined,
-        undefined,
-      );
+        const previewChannel = yield* createBuildConfig(
+          "mac",
+          "dmg",
+          "0.0.41-preview.20260912.1589",
+          false,
+          false,
+          undefined,
+          undefined,
+        );
 
-      assert.isNull(preview.publish);
-      assert.isNull(previewChannel.publish);
-      assert.deepStrictEqual(release.publish, [
-        {
-          provider: "github",
-          owner: "pingdotgg",
-          repo: "t3code",
-          releaseType: "release",
-        },
-      ]);
-    }).pipe(
-      Effect.provide(
-        ConfigProvider.layer(
-          ConfigProvider.fromEnv({ env: { GITHUB_REPOSITORY: "pingdotgg/t3code" } }),
+        assert.propertyVal(release.mac, "artifactName", "t3safe-${version}-darwin-${arch}.${ext}");
+        assert.isNull(preview.publish);
+        assert.isNull(previewChannel.publish);
+        assert.deepStrictEqual(release.publish, [
+          {
+            provider: "github",
+            owner: "rakutenanalytics",
+            repo: "t3code",
+            releaseType: "release",
+            channel: "latest",
+          },
+        ]);
+      }).pipe(
+        Effect.provide(
+          ConfigProvider.layer(
+            ConfigProvider.fromEnv({ env: { GITHUB_REPOSITORY: "pingdotgg/t3code" } }),
+          ),
         ),
       ),
-    ),
   );
 
   // pnpm writes "set this to true or false" placeholders into allowBuilds when a

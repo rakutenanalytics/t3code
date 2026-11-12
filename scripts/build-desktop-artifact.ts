@@ -2685,30 +2685,15 @@ export function resolveDesktopRuntimeDependencies(
   );
 }
 
-export const resolveGitHubPublishConfig = Effect.fn("resolveGitHubPublishConfig")(function* (
-  updateChannel: "latest" | "nightly",
-) {
-  const env = yield* Config.all({
-    updateRepository: Config.String("T3CODE_DESKTOP_UPDATE_REPOSITORY").pipe(Config.option),
-    githubRepository: Config.String("GITHUB_REPOSITORY").pipe(Config.option),
-  });
-  const rawRepo = (
-    Option.getOrUndefined(env.updateRepository)?.trim() ||
-    Option.getOrUndefined(env.githubRepository)?.trim() ||
-    ""
-  ).trim();
-  if (!rawRepo) return undefined;
-
-  const [owner, repo, ...rest] = rawRepo.split("/");
-  if (!owner || !repo || rest.length > 0) return undefined;
-
-  return {
+export const resolveGitHubPublishConfig = Effect.fn("resolveGitHubPublishConfig")(function () {
+  // [#17] Build inputs cannot redirect the safe updater to another repository or channel.
+  return Effect.succeed({
     provider: "github",
-    owner,
-    repo,
-    releaseType: updateChannel === "nightly" ? "prerelease" : "release",
-    ...(updateChannel === "nightly" ? { channel: "nightly" as const } : {}),
-  };
+    owner: "rakutenanalytics",
+    repo: "t3code",
+    releaseType: "release",
+    channel: "latest",
+  });
 });
 
 export function resolveDesktopUpdateChannel(version: string): "latest" | "nightly" {
@@ -2811,7 +2796,7 @@ export const createBuildConfig = Effect.fn("createBuildConfig")(function* (
   // Missing publish config infers a GitHub feed from tokens; staging has no repository, so manifest generation would crash.
   buildConfig.publish = null;
   if (!isDesktopPreviewVersion(version)) {
-    const publishConfig = yield* resolveGitHubPublishConfig(updateChannel);
+    const publishConfig = yield* resolveGitHubPublishConfig();
     if (publishConfig) {
       buildConfig.publish = [publishConfig];
     } else if (mockUpdates) {
@@ -2827,7 +2812,17 @@ export const createBuildConfig = Effect.fn("createBuildConfig")(function* (
   if (platform === "mac") {
     const path = yield* Path.Path;
     const repoRoot = yield* RepoRoot;
+    const macSigningConfig: { identity?: string; sign?: string } = {};
+    if (process.env.SAFE_SIGNING_KEYCHAIN) {
+      // [#17] electron-builder skips a custom signer without a discovered identity or this explicit placeholder.
+      // https://github.com/electron-userland/electron-builder/blob/v26.16.1/packages/app-builder-lib/src/mac/MacTargetHelper.ts
+      macSigningConfig.identity = "-";
+      macSigningConfig.sign = path.join(repoRoot, "scripts/safe/sign-macos.cjs");
+    } else if (signed) {
+      macSigningConfig.sign = path.join(repoRoot, "scripts/sign-macos.ts");
+    }
     buildConfig.mac = {
+      artifactName: "t3safe-${version}-darwin-${arch}.${ext}",
       target: target === "dmg" ? [target, "zip"] : [target],
       icon: "icon.icns",
       category: "public.app-category.developer-tools",
@@ -2864,7 +2859,7 @@ export const createBuildConfig = Effect.fn("createBuildConfig")(function* (
           role: "Viewer",
         },
       ],
-      ...(signed ? { sign: path.join(repoRoot, "scripts/sign-macos.ts") } : {}),
+      ...macSigningConfig,
       ...(macPasskeySigning
         ? {
             entitlements: macPasskeySigning.entitlementsPath,

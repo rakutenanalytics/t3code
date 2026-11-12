@@ -10,6 +10,9 @@
     ".github/ISSUE_TEMPLATE/via-triage.yml": {
       "ad36dde32934eea848c017ff39c6a5f0564eaffd4ecf5068d6c2ad945a966306": 1
     },
+    ".github/actions/build-safe/action.yml": {
+      "153c26393fe0777b10caa94cb927003d36aa4f2d23fa39396ccdecb3676632b2": 1
+    },
     ".github/actions/ci-changes/action.yml": {
       "bdfc779581d689f5dba2282a3c08e55dd1802ce5e35331de71997b1d7026fa1a": 1
     },
@@ -38,13 +41,13 @@
       "d1d840b6a2dae8762b64f15b480d4c5b7826104b5895dcba3a2ab87cd75d4758": 1
     },
     ".github/workflows/pr-checks.yml": {
-      "3942c96927f39adcd1e7a9cfa7fbc01935589c58416b60ae9bbb2ef33e806cf1": 1
+      "be29035e2160bf7e1d01fb58e99ab5e73d04e5cbd2f9c6ef0167e6814e2c0a44": 1
     },
     ".github/workflows/release.yml": {
-      "d365ed2f759a7db675d70060db065bb3d8a412c96489ebbf543eedd1df918ec8": 1
+      "015dc870ce4b7b0fc43c4355895a2eabbaaccf78b915d3617a76fc18b7f9fd85": 1
     },
     ".github/workflows/safe-build.yml": {
-      "c4ab60d45564d5754b887fb50c09ed626d28d9a725e5d5794168585de87e2d0e": 1
+      "2234900e0d6f4a99f2ab6550a23b558552dd97361879ff7f27f0f181e2796752": 1
     },
     ".github/workflows/upstream-watch.yml": {
       "b8f09d94311798ae73abcf6446f4282f474f1f260087726ddce4ae68d05c87b6": 1
@@ -509,10 +512,10 @@
       "2d83f0ab1035db67dca15ab8d73a0149c72947dcf70bbd57764ea1b12b1b76cc": 1
     },
     "apps/desktop/src/updates/DesktopUpdates.ts": {
-      "3d4568d9b5bf4e01dc28ff5ef8b119c569e9e7c92de7c258e844c06e31f846c7": 1
+      "f6d987148ae084eda4a268cebd7b7ee129704de9fa095c5b87de8afd9319bf49": 1
     },
     "apps/desktop/src/updates/ManagedUpdates.test.ts": {
-      "700c5e33e3dc08792fd464e53c4dc49fa5f9328dafc62ebbd3677375a66b86ed": 1
+      "9be7bf75472ca27949ed92e885b6f5ebb551e53d892140767390de42400fb600": 1
     },
     "apps/desktop/src/updates/releaseNotes.test.ts": {
       "b020290b1830f7c09cdb7a4e605746f2345a7c4f57ebeb6dd7c0ef2038d9211b": 1
@@ -530,7 +533,7 @@
       "eda047fbb52162c3ec00ef768f8585099d46b447f7b849b47558745fd8786f13": 1
     },
     "apps/desktop/src/updates/updatesTestHarness.ts": {
-      "89d810613aeb139d75e884fd035c29e8ee1233710c9fa340565172ab57c05b7a": 1
+      "7d17e09f36d3e24ef5b0043106199db951a73bfff09b65df916ead57409ac1cb": 1
     },
     "apps/desktop/src/window/ContextMenuImage.test.ts": {
       "a0c5d3a18ffedc9a193dd2e7f88b89a4e9eb9db2512cf0029f79de54bc08f972": 1
@@ -5606,7 +5609,7 @@
       "24d89fe103057be8357038f59fbcccc48ee1199f37ea5f7ac4e2866cfc5fc22d": 1
     },
     "install.sh": {
-      "341de96fbcc714d0763138ea0c1aaf90d997da21c7a46f010b499ffa37e958be": 1
+      "1490f3969d3d4867f8f62c3e63ac567fd4554a4f0e406454e268f0037f4e676a": 1
     },
     "native/hyprland-snap-shot/src/feedback.rs": {
       "57cc7f6f85ed9a3eca0c4dfc7cdbceaa1bc82dc242942055dcbcdba4c31a604a": 1
@@ -7547,10 +7550,10 @@
       "0e9753b2e29d20f5f5bf911497fb8fbba87a452a1a0aabc89209723823e69ca2": 1
     },
     "scripts/build-desktop-artifact.test.ts": {
-      "d33010b1254d2dab2659fb230cfdb11b6820236e54dc0fd4b6064a35cfd7f530": 1
+      "c72cf81aebd5f6248090c85cb54e3697298fe67ad5f62a38e3868b6b2405c553": 1
     },
     "scripts/build-desktop-artifact.ts": {
-      "fa745632f1847305f264bcb15a508319e92056785ce6551b8b0de3c4bd674183": 1
+      "c58314125ee3ed88966292a3c8b1d3e8ab1a18efa1464adfcb4301edddaf07ff": 1
     },
     "scripts/build-npm-launcher.test.ts": {
       "b0b0ff767964a269cd99c42183fde4fd2dec9e1b6dd7683e6a7bd885f547f7bb": 1
@@ -7766,13 +7769,13 @@
       "1ca632ead2e7f849f15ae89a516136388f6412ff7a0c34c383a9ad084d9faf68": 1
     },
     "scripts/safe/artifact-scan.test.ts": {
-      "bf4853747e5e089a94e25b7a5f9328c1d901f77a71d7826d7d722c0ea5a1595d": 1
+      "2e508feee415e26cd87b8cbad0f1f2d771fabddf70d3d353c9909fee763096ac": 1
     },
     "scripts/safe/artifact-scan.ts": {
       "5ffcd54a5fe7bda86cc093bd9d24adcf3294ca406904873fd1785b4ca12740e5": 1
     },
     "scripts/safe/bundle-policy.test.ts": {
-      "07c6399565c8c4c5dd9b39bcab5aa66740c1fb12554ffa61a3b0a25f1d587b3e": 1
+      "f67785a8f94e8342e22bfdd95f2e05c5a3cef712e34fdd193ae094662df9a258": 1
     },
     "scripts/safe/dependency-lockfile.ts": {
       "f5df7375a18e9f2e2c831b268e3e801e77b41f75f6e7d945db45709812924257": 1
@@ -7793,7 +7796,7 @@
       "bf943d453c1b780925a936c70d3fadaffca7a8f96f826f21b2ff265bc09a0cd2": 1
     },
     "scripts/safe/desktop-smoke.ts": {
-      "e0897d55a7ff5580703655d20780b86caa643063ab236f89df8ebbd7a632b1cf": 1
+      "6e97e0bf84f5e25189347486ceb15321a2eea6a605bc34b1c22fd06ac5ed4c98": 1
     },
     "scripts/safe/egress-detection.ts": {
       "c8d08140441dd4aa8242cc08cc4c4b5401e74d135a100cb529a275d48a653752": 1
@@ -7801,11 +7804,14 @@
     "scripts/safe/egress-smoke.ts": {
       "b56e0b92a9ff8d9b643f966b06dd46b872df5485ca0d20736865b5375df085f2": 1
     },
+    "scripts/safe/import-signing-key.sh": {
+      "1908b2246fda7f503ad75001d051bbe402e081794920224bda7e1e278e8d636d": 1
+    },
     "scripts/safe/install.test.ts": {
       "cf85cab6d68e0f72dbf4f4d3213227e2f7621069a7eb7a820f5609f171063154": 1
     },
     "scripts/safe/managed-policy.test.ts": {
-      "85864c473f202592544a95ba75c3a38e28f16426a782bbdfc8ba5c3eba4c6ddf": 1
+      "e3a7f370c4f092d5de022ece84cdb748d165c20cec655d3d65c71da61d02fe7c": 1
     },
     "scripts/safe/release-guard.ts": {
       "802a29709ca71b7cd085b52b4fd4eb07bde94bbdf19255ef27c476b475061f02": 1
@@ -7816,11 +7822,14 @@
     "scripts/safe/repository.ts": {
       "b00f0128c20474317e429f4a495dc9606db4d42bc666fdc04db471341d5f0ee7": 1
     },
+    "scripts/safe/sign-macos.cjs": {
+      "92efe9252749afb267fd24e50856dbb1bc578d36b47c77c673c47776174aa7e5": 1
+    },
     "scripts/safe/stage-lock-scan.ts": {
       "74bc4cbc35d4fb135f3d4ce68e1667e86e091f5148af70d3b11a372348b09f8a": 1
     },
     "scripts/safe/t3safe": {
-      "b3ffc6296a225082c7bd1206d4b7a6a32d2f7129c5b845a7cb7f4caf2c5cfc66": 1
+      "41afa35457a84f208b6bcd20f98dcf7b83c325a6cdc4e73a67cbe299e66a17aa": 1
     },
     "scripts/safe/t3safe.test.ts": {
       "257294e35575942ecb099b3dd233ace8642499131a6caa0df75fd9fd88ff693b": 1
@@ -7829,7 +7838,7 @@
       "3b3ba37c989b601373b95ea7e3ec0436a69ed8aa502b3dad1101a235151d3e16": 1
     },
     "scripts/safe/workflow-scan.ts": {
-      "aa307747b9b28b687e9597b10f7d6fd18289a814081fc1536f2b5a530eb2847f": 1
+      "ab82d390985db5cdd58113c48b821cb8f852cc7e06dbbaea117e0955b9005ef9": 1
     },
     "scripts/setup-worktree.ts": {
       "73f8e86a244c267637fbcb5f620e367785b1cabd90bae40ccde711d1bc57681f": 1
@@ -7980,6 +7989,8 @@
     "apps/desktop/src/snapShot/LinuxSnapShot.test.ts": ["example.com"],
     "apps/desktop/src/telemetry/DesktopTelemetryPublisher.test.ts": ["private.invalid"],
     "apps/desktop/src/updates/DesktopUpdates.test.ts": ["updates.example.com"],
+    "apps/desktop/src/updates/DesktopUpdates.ts": ["github.com"],
+    "apps/desktop/src/updates/ManagedUpdates.test.ts": ["mirror.example.com"],
     "apps/desktop/src/updates/releaseNotes.test.ts": ["example.com", "github.com"],
     "apps/desktop/src/window/ContextMenuImage.test.ts": ["example.com"],
     "apps/desktop/src/window/DesktopWindow.test.ts": ["127.0.0.1", "accounts.microsoft.com"],
@@ -9953,6 +9964,7 @@
       "example.clerk.accounts.dev"
     ],
     "scripts/build-desktop-artifact.ts": [
+      "github.com",
       "rustup.rs",
       "t3.codes",
       "timestamp.acs.microsoft.com",
@@ -10027,6 +10039,7 @@
       "www.w3.org"
     ],
     "scripts/safe/dependency-registry.ts": ["registry.npmjs.org"],
+    "scripts/safe/sign-macos.cjs": ["github.com"],
     "scripts/safe/t3safe": ["api.github.com", "github.com", "www.gnu.org"],
     "scripts/safe/t3safe.test.ts": ["api.github.com", "github.com"],
     "scripts/smoke-cli-archive.ts": ["127.0.0.1"],
@@ -10254,7 +10267,11 @@
       "https://user:secret@example.com/update?token=secret",
       "https://user:url-secret@example.com/update?token=query-secret"
     ],
-    "apps/desktop/src/updates/DesktopUpdates.ts": ["http://localhost:"],
+    "apps/desktop/src/updates/DesktopUpdates.ts": [
+      "http://localhost:",
+      "https://github.com/electron-userland/electron-builder/blob/v26.16.1/packages/electron-updater/src/providers/GitHubProvider.ts"
+    ],
+    "apps/desktop/src/updates/ManagedUpdates.test.ts": ["https://mirror.example.com/updates"],
     "apps/desktop/src/updates/releaseNotes.test.ts": [
       "https://example.com/compare/x...y",
       "https://github.com/a",
@@ -14207,6 +14224,7 @@
       "http://localhost:",
       "http://timestamp.acs.microsoft.com",
       "http://www.apple.com/DTDs/PropertyList-1.0.dtd",
+      "https://github.com/electron-userland/electron-builder/blob/v26.16.1/packages/app-builder-lib/src/mac/MacTargetHelper.ts",
       "https://rustup.rs",
       "https://t3.codes"
     ],
@@ -14329,6 +14347,9 @@
       "https://www.w3.org/TR/SVG2/"
     ],
     "scripts/safe/dependency-registry.ts": ["https://registry.npmjs.org/"],
+    "scripts/safe/sign-macos.cjs": [
+      "https://github.com/Squirrel/Squirrel.Mac/blob/master/Squirrel/SQRLCodeSignature.m"
+    ],
     "scripts/safe/t3safe": [
       "https://api.github.com/repos/rakutenanalytics/t3code/releases/latest",
       "https://github.com/rakutenanalytics/t3code/releases/download/",
