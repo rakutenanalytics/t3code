@@ -14,9 +14,11 @@ issue or stable tag → preflight → merge tag → diff review + age check → 
                                                                          ↓
                                   mergeable, reviewed head → hand to maintainer
                                                                          ↓
-                                  maintainer merges = release approval
+                                  maintainer merges = no release build
                                                                          ↓
-                                  release.yml → verify → tag + publish
+                                  maintainer dispatches release.yml on main
+                                                                         ↓
+                                  verify → build → tag + publish
 ```
 
 ## Rules
@@ -27,7 +29,7 @@ issue or stable tag → preflight → merge tag → diff review + age check → 
 - Never skip scanners or regenerate baselines merely to make them pass. Every new destination and network action needs a gate or a justified review entry.
 - No dev servers, browsers, real credentials or live T3 data. Use focused tests and isolated fixture state. Keep scratch material outside the repository.
 - Invoking this skill authorizes pushing `sync/<tag>` to the fork, creating/updating its PR, and in-scope fix commits, pushes, review requests, replies and thread resolutions until it is ready for maintainer review and merge. Do not ask for a separate draft, push or PR approval. This standing authorization is specific to this workflow; unrelated remote actions remain outside scope.
-- Never merge for the user. Hand the green PR to the maintainer; their merge approves the automatic public release. Never advise merging with failing or skipped required checks.
+- Never merge for the user. Hand the green PR to the maintainer; merging starts no release build. The maintainer separately dispatches `release.yml` on `main` to approve a release. Never advise merging with failing or skipped required checks.
 
 ## 1. Preflight and target
 
@@ -114,13 +116,13 @@ With the app PR watcher, handle existing findings, call `watch_pull_request`, an
 
 Done when the latest head has passed every required check, is conflict-free, has completed the requested automated reviews, and has no unresolved material finding. Verify exact head/check/review state; do not describe pending, failing or skipped required checks as mergeable. Then unwatch and tell the maintainer to review and merge. Never merge for them.
 
-## 4. Hand off the PR and verify the automatic release
+## 4. Hand off the PR and verify the dispatched release
 
 Show the reviewed PR URL, green head SHA/checks and resolved findings. Hand the PR to the maintainer and stop until they merge it. Do not merge the PR, create or push release tags, or dispatch release workflows for the user. If a required check is red, failing or skipped, fix it within the approved scope before handoff.
 
-Merging the PR is release approval. On main changes affecting shipped files, release.yml verifies the policy and egress/dependency scans before building, chooses the next unused `v<upstream-version>-safe.<N>` tag from `security/last-approved-upstream`, and tags the merged commit and publishes with GITHUB_TOKEN. It skips automatic publication when that commit already has a safe tag. There is no second release approval pause.
+Merging the PR starts no release build. The maintainer separately approves publication by dispatching `release.yml` on `main` with GitHub Actions "Run workflow" or `gh workflow run release.yml --repo rakutenanalytics/t3code --ref main`. Tag pushes do not trigger releases. The workflow verifies the policy and egress/dependency scans before building, chooses the next unused `v<upstream-version>-safe.<N>` tag from `security/last-approved-upstream`, and tags the main-tip commit and publishes with GITHUB_TOKEN. A dispatch without a `tag` input skips a commit that already has a safe tag.
 
-When the maintainer resumes after merging, inspect the automatic release run using read-only commands. Verify every expected asset plus SHA256SUMS exists via `gh release view --repo rakutenanalytics/t3code <safe-tag>`. A failed run needs investigation; manual dispatch with an optional safe tag and pushed safe tags remain maintainer-operated fallbacks.
+When the maintainer resumes after dispatching, inspect that release run using read-only commands. Verify every expected asset plus SHA256SUMS exists via `gh release view --repo rakutenanalytics/t3code <safe-tag>`. A failed run needs investigation; the maintainer can retry by dispatching on `main` with the optional `tag` input, or `-f tag=vX.Y.Z-safe.N` on the command above. An existing tag must point to the current main tip; monotonic version and published-release checks still apply. Signing is restricted to `refs/heads/main`.
 
 Download that release’s install.sh and SHA256SUMS with public curl into a temporary directory and verify the installer’s exact checksum before executing it. Run `bash install.sh --version <safe-tag> --dry-run --prefix <temporary-directory>`. Download selected assets/checksums separately and verify SHA256 without installing. Dry-run confirms the plan, not launch/Gatekeeper behavior. Do not claim a real installation was tested. Stop on a mismatch or failed release; show the failure before considering a replacement tag.
 
