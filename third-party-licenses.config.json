@@ -245,6 +245,15 @@
       }
     },
     {
+      "name": "@nodable/entities",
+      "version": "3.1.0",
+      "sourceUrl": "https://github.com/nodable/val-parsers",
+      "generatedNotice": {
+        "licenseId": "MIT",
+        "copyrights": ["Copyright (c) 2026 Nodable"]
+      }
+    },
+    {
       "name": "xml-naming",
       "version": "0.1.0",
       "sourceUrl": "https://github.com/NaturalIntelligence/xml-naming",

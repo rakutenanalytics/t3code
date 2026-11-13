@@ -3611,7 +3611,7 @@
       "0e9e5babddbe34afe81994af32ae9c893c0be58035f6baa8d8a7aba8be01c3f1": 1
     },
     "apps/web/package.json": {
-      "36baaace067479c2d57fd16f7617d4b159e8d7a890df200ace56f055def4c588": 1
+      "312b5488f14f6bcd91a25419c406912e35a96063e29eb3d6742633ddb269feb1": 1
     },
     "apps/web/scripts/build-libghostty-wasm.sh": {
       "2476f622fcde8eea47d24a0fb0bf0877de1f4292d88d3b41cae2b32233f3b57e": 1
@@ -7553,10 +7553,10 @@
       "5e9cb673245b0e28cdc26d3b5dd661d4565487f12a50ad58346e8094f9369fa6": 1
     },
     "pnpm-lock.yaml": {
-      "f24bc9a96a3ad8966cdf12679655a33e34ad4b48f834d7559882a915c7e2f71b": 1
+      "8b231a72d33b351e9e29becc3104ad80fc3133d97522be66baafb863b3005cbe": 1
     },
     "pnpm-workspace.yaml": {
-      "fb176586134c2e1ba39155c4d94d9283dc4d3f31c0c85f80502e735e17722b35": 1
+      "7365e1f9d04830ca496b3bca3f371e04bdd1068ed81424f3c52e400a23109695": 1
     },
     "scripts/apply-web-brand-assets.test.ts": {
       "e43e344c4d631cc9a4bac26888b10ea36cc7adb161bdc7d0ff6c75a879721ee1": 1
@@ -7883,7 +7883,7 @@
       "12f06742f637bbb45ecbd6cfce6eba6bb29c840034c73650f075478f2dded16a": 1
     },
     "third-party-licenses.config.json": {
-      "41aa0528862aa093fa075992d6e412f2dbf58e0dc1f307a8a623382902309f8c": 1
+      "112851c5ce682eec758f0e9c3bba14c8564679742583d311fcc3c661928c376d": 1
     },
     "tsconfig.base.json": {
       "fe63978960437d6b93ab0580f80939d974fb727e75454397211307cfdaaadd0c": 1

@@ -39,10 +39,10 @@
     "patches/react-native-pdf-jsi@5.0.0.patch": "6f52854210f61bef499850ebd498229a111bc34ec5b2a4925e644f2f48f42760",
     "patches/react-native-reanimated@4.7.1.patch": "95ee26e5fcab5f50bc4b4c47b3f7e6278a0b20850205efb9f6ee7e70a22d2b59",
     "patches/react-native-webview@14.0.1.patch": "81caa279ec3dc1f81209062133b66e8f824e13f106cca57f1fa732a72c2ab378",
-    "security/stage-lock-baseline.json": "b8eff64faa91d69a8e1a0c740e2448ea3be000a48830fbc6bc940d175ba595e6"
+    "security/stage-lock-baseline.json": "001f9bfe5d2b0411644b3c0d6d343bf5bc0c88e51f6064d8cef112e8f34239fc"
   },
-  "lockfileSha256": "f24bc9a96a3ad8966cdf12679655a33e34ad4b48f834d7559882a915c7e2f71b",
-  "workspaceSha256": "fb176586134c2e1ba39155c4d94d9283dc4d3f31c0c85f80502e735e17722b35",
+  "lockfileSha256": "8b231a72d33b351e9e29becc3104ad80fc3133d97522be66baafb863b3005cbe",
+  "workspaceSha256": "7365e1f9d04830ca496b3bca3f371e04bdd1068ed81424f3c52e400a23109695",
   "packages": {
     "2g@1.0.1": "dd9e2275fbceb46fcb134a1527ba81631029df395a04f585412696c2d6fb88a3",
     "@ai-sdk/provider-utils@4.0.57": "91292c891dae156203129fe67afa901dab73d870d77dc2462f6cba854a0840d2",
@@ -1279,7 +1279,7 @@
     "fast-string-width@3.0.2": "2e2cba3ea0f8156b62c20381e4ace419a531fa3b1b163d761c033cf3151bbb13",
     "fast-wrap-ansi@0.2.2": "6d50bd20cc13a2d65ff2005fc85aa5d869d203460e6279de0997e93e53cbf6be",
     "fast-xml-builder@1.2.0": "01c612f9cef572ac2be84a03bcf96cef54a066733208231be1c90fc65ff26163",
-    "fast-xml-parser@5.7.3": "3c7a0930f00fa5ee8af7eba64d57fd101b02508a711d34c3507032ca0a7779d4",
+    "fast-xml-parser@5.12.0": "0c135e2ab40ed1b3f56a78d51c1b361fbb498ab5171aa0d7c01a5ef74e78c448",
     "fastest-levenshtein@1.0.16": "524703072f9ad33a077da6c439392b568099c91984824786f85b95930c166a56",
     "fb-dotslash@0.5.8": "19ad101aae3eead832069e9bdac39928839917e8f57660d1e38f4e76a7344fa8",
     "fb-watchman@2.0.2": "489353590df5752e2dfebfef5af7f5308d9b18e89585374d6026ff03dd4b1df0",
@@ -2088,7 +2088,7 @@
     "ip-address@10.7.4": "5c94379cb1ef69aa88546e3ccc520bf5e50f2b2e20189791273b539d90c3a472",
     "katex@0.18.2": "f329a002a7222d548e8bdec6911767be5767f5b230d6c67a39e33622c14c41d3",
     "minimatch@11.0.1": "7e7985dc02f38bc464c8d320aa37643b42e8cad61c466146d34d20fb3b27e50d",
-    "node-forge@1.4.1": "72920c69b162716490e980db298f96bcdb3f0d232850577702f5b748d06f4a9b",
+    "node-forge@1.4.3": "31ffff7db097447c059c6c08e516cb2e4e4de7ee5776fa9791d23fafa9707b01",
     "proxy-addr@2.0.8": "765100d40a147f130499dec89f7f9defc765dd029131bfa642dae425ff5ae377",
     "qs@6.16.1": "b5634f6242b7fb015d20ab7c6a46ca164499aed4c108321143bf2f881c11672b",
     "seroval@1.6.11": "267eb5d508102b6e043766fe2ccdfa14461d0ca2a31121da97eeefb480fa0083",
@@ -2104,7 +2104,12 @@
     "content-type@2.1.0": "c8c17a4abc41da749ef0023b9581bd65159560898af374f9a7e8d915148c2121",
     "iconv-lite@0.7.3": "f8f22f12c6a14c3ebefce0d942001dbcee41dab2f1413a72f459a161cb58ff91",
     "path-scurry@3.0.0": "bb711ba4f66d24e1646264872ea1937afa467a77232199ad8727da8473b5e6a7",
-    "@isaacs/nonrecursive-glob-match@1.1.0": "c6c71151185782722a66f9d02890e8a3108ce2b62966196d3298fce05f56518b"
+    "@isaacs/nonrecursive-glob-match@1.1.0": "c6c71151185782722a66f9d02890e8a3108ce2b62966196d3298fce05f56518b",
+    "@nodable/entities@3.1.0": "8ada7292d248b57a2206d06170a844c266ec4f6851cddfbffbde80f5234135fa",
+    "fast-xml-builder@1.3.1": "967a071b15cba423f656791a8f7107f554b7b76a9eb05e0863c7b5a6da3d7a4c",
+    "is-unsafe@2.0.3": "c6060308cf973695e0d8e7a51923082c5ae435be1787b4bb8108ca6fa68b930c",
+    "strnum@2.5.1": "5e5aa6b9bac71d5be0f8e2123cbee3f22a362c6902a965638bf3f4e06ccf8a40",
+    "xml-naming@0.3.0": "b96411c5c9fe77a618dd8c731a659d12ca6a9261e256032af23ac316b5ecd964"
   },
   "manifests": {
     "apps/desktop/package.json": {
@@ -2497,7 +2502,7 @@
         "dompurify": "^3.4.17",
         "effect": "catalog:",
         "entities": "8.1.0",
-        "fast-xml-parser": "5.7.3",
+        "fast-xml-parser": "5.12.0",
         "hast-util-to-html": "^9.0.5",
         "hast-util-to-jsx-runtime": "^2.3.6",
         "heic-to": "^1.5.2",

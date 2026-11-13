@@ -9,6 +9,13 @@ Each change to a security file requires a new entry naming that exact path and t
 - baseline-update: security/artifact-hosts.json — Updates the public-only updater description to include authenticated private reads with the same API/CDN destinations. Denylist, accepted contexts and seen hosts are unchanged; packaged validation remains in CI.
 - baseline-update: security/network-baseline.json — Reviews the desktop updater, composition, credential lookup, isolated-session guard and focused fake-only tests. The PR policy workflow runs the focused updater suites. Desktop typecheck and fake-only tests cover public fallback, policy denial, reserved lookup, token refresh, static errors and restricted Authorization. No dependency or runtime capability changes.
 
+## 2026-11-13 — eligible dependency and Office worker fixes
+
+- baseline-update: security/alert-ledger.json — Adds local remediation hashes and proof for fast-xml-parser, node-forge and the Office worker dispatch finding. Retains historical inventory and records seven newly reported Hono audit identities as unclassified-needs-triage; the fresh audit has nine residual records. Main verification remains pending human merge and fresh analysis, with no dismissal or risk acceptance.
+- baseline-update: security/dependency-baseline.json — Reviews the original eligible batch: fast-xml-parser 5.12.0, node-forge 1.4.3 and five required parser dependencies. Minimum release age, no-downgrade trust, strict missing-time/build rules and exact lifecycle grants are unchanged; no exception or unrelated resolution change.
+- baseline-update: security/stage-lock-baseline.json — Refreshes deterministic DMG/CLI projections for the reviewed dependency and override changes, preserving exact root resolutions and integrity.
+- baseline-update: security/network-baseline.json — Reviews only the dependency manifest/workspace/lock and exact @nodable/entities 3.1.0 MIT notice changes. Carries forward the tooling workflow configuration and main signing/release fingerprints unchanged; no runtime destination or capability grant is added.
+
 ## 2026-11-13 — security maintenance tooling
 
 - baseline-update: security/alert-ledger.json — Adds the dated 2026-11-11 inventory and review groups as baseline triage, with all dependency and worker fixes still required. No local remediation evidence or human risk acceptance is recorded in this tooling layer. New, changed and expired findings require a fresh agent audit.
