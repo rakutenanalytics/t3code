@@ -22,6 +22,9 @@
     ".github/actions/setup-ci-deps/action.yml": {
       "b82d343e67f37b5bdd774b01ac68c9a0bfcbb4fd7cbb87ab69f4a555bdd1539a": 1
     },
+    ".github/dependabot.yml": {
+      "a889939e3ed4c294dfc980e4105494088d70f82bfd8c1791708022386bd5fd1d": 1
+    },
     ".github/scripts/ci-changes.cjs": {
       "44915750b6c4b9dfefcd9684489477559a6af5d77ccfc7a441bbc89406fd9683": 1
     },
@@ -41,7 +44,7 @@
       "d1d840b6a2dae8762b64f15b480d4c5b7826104b5895dcba3a2ab87cd75d4758": 1
     },
     ".github/workflows/pr-checks.yml": {
-      "731aab8d8d6056509fa356b630867166f0baeb5f995a5bb12d97a4a8f2808145": 1
+      "73a9766c458484f1f264b78c3027481ae9319a4a68266d564a03708e90e45167": 1
     },
     ".github/workflows/release.yml": {
       "2260ebc9bc75ce856e69a76cc0d9d183f23bacd4f867b7f9850403e548e31982": 1

@@ -1,7 +1,7 @@
 name: Safe fork PR checks
 on:
   pull_request:
-    branches: [main]
+    branches: [main, safe/security-posture-automation]
 permissions:
   contents: read
 concurrency:

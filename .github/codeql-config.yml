@@ -1,0 +1,5 @@
+name: Safe fork source scope
+# Attach to default setup only after approval of the repository property change.
+# These tracked snapshots are reference material, outside workspaces and staging.
+paths-ignore:
+  - .repos/**

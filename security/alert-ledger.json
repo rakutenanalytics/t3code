@@ -1,0 +1,5296 @@
+{
+  "schemaVersion": 1,
+  "repository": "rakutenanalytics/t3code",
+  "reviewBasis": {
+    "sourceSha": "870329ecf86d2fa8f07447367743c723632cc6c6",
+    "upstreamSha": "322f6544dfad0a3c8a0c8cbecf2c7f7874b14268",
+    "collectedOn": "2026-11-11",
+    "codeql": {
+      "commitSha": "672126d6c7baad7dab14e8d04ef80161a21861b7",
+      "createdAt": "2026-11-10T06:52:33Z",
+      "analysisKey": "dynamic/github-code-scanning/codeql:analyze",
+      "category": "/language:javascript-typescript",
+      "toolVersion": "2.27.4"
+    },
+    "coverage": {
+      "dependabot": "complete-paginated-get",
+      "codeScanning": "complete-paginated-get",
+      "secretScanning": "successful-empty-open-get",
+      "dependencyPrs": "complete-open-inventory",
+      "pnpmAudit": "completed-with-advisories"
+    },
+    "rawEvidenceSha256": {
+      "dependabot.json": "021f99f507a9da9394ba3830ed81d0c38cd54d80642f927f32a52402ece6ffac",
+      "code-scanning.json": "a94444c8bbda64c111d9df1f62ccc4f3f46a9507a53e038b3745c2e66ffac14b",
+      "secret-scanning.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "pnpm-audit.json": "16a08234745d88cbaec95c62da2722c56f553e46f292ccbe8da2f761db800fd0"
+    }
+  },
+  "reviewedFiles": {
+    ".repos/alchemy-effect/packages/better-auth/package.json": "ddbcee5a44f20e793055b66d26a4422670aace2f05e39bbabc96ea5a349b8d28",
+    ".repos/alchemy-effect/packages/integration-tests/test/AWS/Lambda/fixtures/lockfile-pinning/npm/package-lock.json": "9a748789b0be4f9b0db77c6621852b6b66d83ca26c4a167104975589de257181",
+    ".repos/alchemy-effect/packages/integration-tests/test/AWS/Lambda/fixtures/lockfile-pinning/pnpm/pnpm-lock.yaml": "f0cda9607de2a635b2ce610da1dd098a57cdf2fedfb53cc101ad6cf34c8bfdda",
+    ".repos/alchemy-effect/packages/integration-tests/test/AWS/Lambda/fixtures/lockfile-pinning/yarn/yarn.lock": "2c907a4c41c50a3410d6cf957204cc396ef92a45e45220b855f36b7fcfedac46",
+    ".repos/alchemy-effect/packages/integration-tests/test/AWS/Website/fixtures/react-router-app/package.json": "3ecdedde1a40d4ecb6a9523c4208b526c0dd12bd478f377fa9a41fc8c3230c85",
+    ".repos/alchemy-effect/packages/integration-tests/test/Cloudflare/Website/fixtures/astro-app/package.json": "b8dafc103580db9d876a3527043d456826364e4c8eed758d025dbf0fd4018042",
+    ".repos/alchemy-effect/packages/integration-tests/test/Cloudflare/Website/fixtures/astro-static-app/package.json": "470d8cead00960c2bececabb13b9f04fe399ecf310e2af5d1c656b411a4dac35",
+    ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json": "4a44695aa417a6b0431689aad6625398233df8c97fac0be5db19e630f18b558e",
+    ".repos/alchemy-effect/pnpm-lock.yaml": "f37fadaad982cd26bdf53917f99728218de2b70e11cc0e66bb93c2365f25860c",
+    ".repos/alchemy-effect/test/cross-version-test/test/01-beta.39/package.json": "f50a26040519e8e66951c160b9b1c0f0575ba77e6d7a6b859871e10a15450f18",
+    ".repos/alchemy-effect/test/cross-version-test/test/02-beta.44/package.json": "b88d0345ddb0b5ca006181460312a7f7cdda79e1d1d4a585caf9c79ae9b77f28",
+    ".repos/alchemy-effect/test/cross-version-test/test/03-beta.45/package.json": "3336173cd9f9ecb6054539553d1f45655e24164e4c9832f0bb6e84dd03567345",
+    ".repos/alchemy-effect/test/cross-version-test/test/04-beta.59/package.json": "7ce2f73b3ca01bdf7fdc0db97ba04672d83fe44d7b943f043c2a51500a87a0b1",
+    ".repos/effect/pnpm-lock.yaml": "0af775648c356a092d1da685838cd1ee237988c3fef1b4bd3209585bcbf959c4",
+    "AGENTS.md": "47fe23fc25de357e8a69224310c33bb22601b3942ee2015cfceacfd88b7134b5",
+    "apps/desktop/package.json": "165d442a23a1bbea27fa2f683db7c440fd47571ef72ce93d298d4d41604fe6b3",
+    "apps/desktop/src/preview/GuestInput.ts": "59ec3f63327719dd7fb24d6b73bbc5a4578eaba8790c83736273e53c913d2f94",
+    "apps/desktop/src/updates/releaseNotes.ts": "4f71dcddac81d15bf69e653f742f455070fe834689da5d53b4d82d049b2db3bd",
+    "apps/marketing/package.json": "f4afeb0e7f25bb9cd04462d595099c86110b92a27251f3cb4461d157cf6f3ea8",
+    "apps/mobile/package.json": "184e92e94a6f1c5bd7da9145efd84467dd6c06d2f4b38c9de999454de44213b2",
+    "apps/mobile/src/features/cloud/cloudAccountService.ts": "12cc29537a68a7963b116186b3a87add3f62df686a9ddad479febe762618f94a",
+    "apps/mobile/src/features/devices/device-stream-document.test.ts": "ec34b1b7841caefe348a0cf7dd0244111c5180ceb49ec52954304f94779c2f3b",
+    "apps/mobile/src/features/threads/HtmlRenderWebView.tsx": "cad604660cc3c4406236bd8ed6943e24406b59959454d5b23ca065e5309165b6",
+    "apps/mobile/src/lib/markdownDetails.ts": "836ef94637336b60cef7c5e41bae668f32ac62ab149492b6ce457a80633677dc",
+    "apps/mobile/src/lib/markdownDocument.ts": "78bd2aea422bd0ee05b22416e6e08d38967e1b0504ca792ef242a48f368ee5a3",
+    "apps/mobile/src/state/use-composer-drafts.ts": "5690129fa15d0bda8e4541c68e76a1710772320ec60d38adcc33a5677d716489",
+    "apps/server/src/orchestration-v2/testkit/fixtures/web_search/claude_output.ts": "35e639cfa60f0ef432bcd3b244ccf6e26f1e29dcb09f776e636b0032b7e4f71a",
+    "apps/server/src/preview/PortScanner.test.ts": "47f68357f3a7955f542e45645ebb8f592924bccaf6ac9955787a5d625601066b",
+    "apps/server/src/provider/CodexChatGptAuth.test.ts": "c4e64d537bee67ab0a6e63d068771772c818183b66df014f37cc43b3dbd7f534",
+    "apps/server/src/provider/acp/AcpSessionRuntime.processTree.test.ts": "b8b7ba1f201bb3dde150383f82c63c115b4500fc31e1908c82cb23fe71a28090",
+    "apps/server/src/pullRequest/pullRequestReviewGuideInput.ts": "2247818da2dc6822a321ba029b3a0dd391a04794a997bf8a1f81cf18c95cde46",
+    "apps/server/src/usage/usageTranscriptReader.test.ts": "d83e323f54e643de504a54ee83055cc984d5fc12ca065bd8e192acd1768e1e0f",
+    "apps/web/package.json": "36baaace067479c2d57fd16f7617d4b159e8d7a890df200ace56f055def4c588",
+    "apps/web/src/components/files/FilePreviewPanel.test.ts": "da2e98c70364c9373522b5c7c0514776437a4aa86a2c9784118604d9e3ea60af",
+    "apps/web/src/components/files/binaryPreview.worker.ts": "917459a8d1aa027331a69383e6a16539d809bc0b57138b114843dc1059526928",
+    "apps/web/src/components/files/extendedDocumentPreview.ts": "591621bdd906f1288a10825d89627b2f1837fe26fd38e2614fff5ac54a1a53cc",
+    "apps/web/src/components/files/office/worker-rpc.ts": "96676cecef6563c085fbecb793b099af77d3406b798a115d5d94254cabb1d366",
+    "apps/web/src/components/media/MediaVideoPlayer.tsx": "17df4644ec1b4b80880e219505c888b60e9d3b5e671e0616256973b977d2f325",
+    "apps/web/src/components/media/OpenMediaLink.tsx": "daea71bf19c8581a527cbc255c1001b6f87305dab1639be09409a262d4eec3e7",
+    "apps/web/src/components/pullRequest/PullRequestMarkdown.tsx": "fe50cec871976220774795884f1dc7e3623ede6e863dea811c59ef7ffa8f5d0c",
+    "apps/web/src/components/pullRequest/PullRequestSummaryTab.tsx": "523c471112d9f464427f5da798978b0aa9ee6e2c4df7d261544b789df4fb0c56",
+    "apps/web/src/components/pullRequest/pullRequestDetail.logic.ts": "b4eb86df4f27aa5067bf5bbb79f11ef300d0c82ff9604033afa430ee272ffc8f",
+    "apps/web/src/themeBoot.test.ts": "1ceb6c3353ac5bfc697af38cce2b90e2ec58255e78bd01f213782157d5b61809",
+    "apps/web/src/vscodeThemeImport.test.ts": "b864589f329a579bce34ae87d18eb234fc9a7636b6bb281facd5846fc48cea23",
+    "evals/mcp-tool-use/device-grading.ts": "40996bed7cdbb56007abb20bbfde886d75ce9e2625ed983425a75376aa12f291",
+    "infra/task-cache/src/runHook.test.ts": "22f7ba3f28c4ae25f85dcc88ce5389f6d86bd316ae37053d87135ef4be152da0",
+    "packages/client-runtime/src/connection/routes.ts": "f4a2fb5060f6d15463c26dec7922ea0b53d5311ab715831e5dc6fdb7113ae451",
+    "packages/client-runtime/src/markdownImages.ts": "1ed481a60a79b094d38f3b47ccf8e11f18b881bfa8a166bfddd5a3d8fb83d27d",
+    "packages/client-runtime/src/operations/projects.ts": "d7213cb75944a30d11bf41c71ce2ce310e4634498fadd58dd52fe3c657272d2a",
+    "packages/client-runtime/src/pullRequestMarkdown.ts": "6ee6a9f33d96975f1ea94d8c58d25da750127d9ac05542f5e34270d4e1681df1",
+    "packages/client-runtime/src/state/providerInstanceDisplay.ts": "54ef1a76cf419c96efaa456003677c85835d859915d629eadc3aa17ee544bf56",
+    "packages/client-runtime/src/state/subagentRuntime.ts": "8cb7c971e77eef46a97d235e784a5a498fcc82a7ffe1f3cda7265e48184ea9df",
+    "packages/client-runtime/src/work-log/commandLabel.ts": "f828b6785139c5eec27722233c32d64af05dc3da39fc370014d7aa420c66e739",
+    "packages/client-runtime/src/work-log/presentation.ts": "142038efd739379221ca166924f428675590ce254feeba57f246ea3d97da38fa",
+    "packages/provider-acp/src/server/runtimeModel.ts": "3e9357bb9887e13c97313954d3084089fee0816e9c6e3bc86de7a8e85bc716dd",
+    "packages/provider-core/src/modelShortName.ts": "02b7af1b05d180a0b32a4a43ddb8e306bb3cfced9aad363e49744b248daba032",
+    "packages/provider-core/src/server/failure.ts": "5a71e663607209de4cc9a412584e25a32a9a2e39e3f79afb3e5d903208e56d2e",
+    "packages/provider-core/src/server/mcpToolPresentation.ts": "93d6513fb55c2f27ccba7122f2041d50464d324be04e381986dd917e0b680723",
+    "packages/provider-core/src/server/textGenerationUtils.ts": "d33a92cbb1cc959fc25aece318db7d2f1f5c4d7bb89f699edc315ffee707f008",
+    "packages/provider-grok/src/server/status.ts": "d5fa5fe5f179c880bcbd2b4a89642d184c952ad1124b261811595c4ea41bfc5e",
+    "packages/provider-grok/src/server/xaiAcpExtension.ts": "083640ae13c959af4e2976e522de6cb6184dff24594ff1f5401c94ab67c32702",
+    "packages/shared/src/cliRelease.ts": "61b5fd72fbd2fbcc9de81773174c49d22d47153b76a4d4e9ba0f070ae4ff8e30",
+    "packages/shared/src/composerContextLegacy.ts": "8a0a5cdbb228097864a35e558a9eeee096ae9a92f27288849f2aa895c65db9f6",
+    "packages/shared/src/composerContextReferences.ts": "6f892cb25ea101c5248b8df53ad7d084a3a6554fd397c9a2c9a9c33796197849",
+    "packages/shared/src/composerInlineTokens.ts": "18b7c757576c935ab5b475a409ea08d6ef0d87bbf63c39c11cd8eb321d0ee7ea",
+    "packages/shared/src/composerTrigger.ts": "240f148cee743fd5b33c6446d0f535e54769cdb91f85b1c3d83c340766346585",
+    "packages/shared/src/fileLinks.ts": "a3fc61051a12bc886a2ce61387f505a79a42d94ad1b30486bc03d3b5b5cd265d",
+    "packages/shared/src/generatedImageMarkdown.ts": "0d07ac465160d4c972d846d4e78b19ebb31a5e2aa9963d5db2cfcae2fd09ed1d",
+    "packages/shared/src/git.ts": "583a7bbdd9c1c8189711827206082c5f624e72c4ebdaef96a26ddfc87700bf61",
+    "packages/shared/src/htmlRender.ts": "2d4cb233d9a21be8030056350a496885f6015a4976059ca31d2d1027734bd0b0",
+    "packages/shared/src/markdownLinks.ts": "29c3b8480c5c78c7d71beb461a7a032e57640e9d149037ea8e3db9afb538e66c",
+    "packages/shared/src/mcpApp.test.ts": "11d1d51bb0281dd857892642ba5b3e934dd8db51e5eb32da448ff2428a603a6f",
+    "packages/shared/src/paletteSearch.ts": "10a5c2b91f58720b47afdba724912d0d5a189af149805ee43e8f879c5232a8b5",
+    "packages/shared/src/path.ts": "5d8e50477165341bff87df2c12208b87f6f4d1363b3497d141de1ed0cdb3261c",
+    "packages/shared/src/proposedPlanText.ts": "94e9f01b83f7e9d2aacbb579436bb3f8489c3df79f30180d67ae86835bcbd547",
+    "packages/shared/src/qrCode.ts": "e9bed7a84a820e767b2a08b66c4c3346afc9c0d85f1be8c6639715ce5f2ef80a",
+    "packages/shared/src/relayJwt.ts": "d0500768846e81dc983cb34da0a9dbbed38d128fd18a56c88c3dc45b8639b870",
+    "packages/shared/src/shell.ts": "4c75bd59e086b81cc82c4219f3bc0c698397d8800713065fba834aefab8a99be",
+    "packages/shared/src/t3McpToolPresentation.ts": "3215e846e75e9d095a858cc5b1dc70bbd097e82531ba8445f0ec387d0ed21eee",
+    "packages/shared/src/toolActivity.ts": "7a9bee465e0258cfc7e8bf5d89378b543777984d8f2071f1d91b485df4d1875d",
+    "packages/shared/src/toolOutput.ts": "bf328be7776e1121164f946c0e05408032f17d531acecc8cee5c86b822e90997",
+    "packages/source-control-core/src/server/discovery.ts": "2bd0e4c346d7df41f05cfabdb3ee9d7c4d69ac9399b62586766545a3ee456ef1",
+    "packages/source-control-core/src/server/mergeMessage.ts": "cbded06ca2d8b8cb577949527d79fb85ef6f5df4b2101643dd94e83978c8097a",
+    "packages/source-control-core/src/shared/definition.ts": "f9987617f712038954e6363e8f859ed1dc20e7a55a654594c34e3f3b70db6d71",
+    "packages/source-control-github/src/server/GitHubPullRequestProvider.ts": "5c0d7bc70a5de45e8590e9bfb6b70a8f4bc4a28afad5d47dbe43cc9bcf3763f0",
+    "packages/ssh/src/auth.ts": "a8592d3d52b0aee99aa264df40adb1b67d349c181e666fddebd5880b842db537",
+    "pnpm-lock.yaml": "f24bc9a96a3ad8966cdf12679655a33e34ad4b48f834d7559882a915c7e2f71b",
+    "pnpm-workspace.yaml": "fb176586134c2e1ba39155c4d94d9283dc4d3f31c0c85f80502e735e17722b35",
+    "scripts/build-desktop-artifact.ts": "fa745632f1847305f264bcb15a508319e92056785ce6551b8b0de3c4bd674183",
+    "scripts/lib/locked-stage-dependencies.ts": "51ab3fc7e9216a42bbdd82b85c35c53605b0e05756d13506d4281798f68de37f",
+    "scripts/lib/reference-repos.ts": "642d26a713b36066d72ed573cf506888a915545a62265d5ffeac09afffdae126",
+    "scripts/safe/install.test.ts": "cf85cab6d68e0f72dbf4f4d3213227e2f7621069a7eb7a820f5609f171063154",
+    "scripts/sync-reference-repos.ts": "8ec7fdb21e51cbc756bd4c545c265b79c3eff3b8e3e8d354bbde55687396fd02"
+  },
+  "reviewGroups": {
+    "reference-snapshots": {
+      "exposure": "vendored-reference",
+      "disposition": "proposed-dismissal",
+      "justification": ".repos contains tracked upstream source snapshots, not installed workspaces. The reference sync copies complete trees after stripping .git, including historical manifests and lockfiles. AGENTS.md prohibits edits/imports; workspace globs, root lock importers and production staging do not include .repos. Dependency graph discovery still sees these manifests. Excluding version updates does not clear security alerts. Revalidate if references become imported, built or shipped.",
+      "evidencePaths": [
+        "AGENTS.md",
+        "pnpm-workspace.yaml",
+        "pnpm-lock.yaml",
+        "scripts/lib/reference-repos.ts",
+        "scripts/sync-reference-repos.ts",
+        "scripts/lib/locked-stage-dependencies.ts",
+        "scripts/build-desktop-artifact.ts"
+      ],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-12-11",
+      "humanApproval": null,
+      "remoteAction": "none",
+      "proposedDismissal": {
+        "reason": "not_used",
+        "comment": "Tracked .repos snapshots are read-only upstream references. They are outside root workspaces, imports and DMG/CLI staging; their manifests are not installed or built. Retained as source reference, not product dependencies. Re-review if workspace/import/build scope changes."
+      }
+    },
+    "zod3-tooling": {
+      "exposure": "build-tooling-only",
+      "disposition": "unfixed-residual",
+      "justification": "Zod 3.25.76 is reached through Expo CLI and Vercel config tooling, not the audited server/desktop/web production closure. Those consumers use Zod 3 APIs; forcing Zod 4 is not a compatible fix. Registry metadata showed no patched Zod 3 release. Keep the alert open and recheck compatible upstream fixes every run. Human risk acceptance has not been granted.",
+      "evidencePaths": [
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "apps/mobile/package.json",
+        "apps/marketing/package.json",
+        "scripts/lib/locked-stage-dependencies.ts"
+      ],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    "deepmerge-tooling": {
+      "exposure": "build-tooling-only",
+      "disposition": "unfixed-residual",
+      "justification": "deepmerge 4.3.1 is reached through build/development tools and absent the audited server/desktop/web production closure. The advisory suggests 4.3.2, but that version was not published at review. Keep exposure open, recheck publication every run and review build input trust. Human risk acceptance has not been granted.",
+      "evidencePaths": [
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "scripts/lib/locked-stage-dependencies.ts"
+      ],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    "xml-parser-fix": {
+      "exposure": "shipped",
+      "disposition": "fix-required",
+      "justification": "Web extendedDocumentPreview uses XMLParser for ODS/EPUB, reached from the binary preview worker. It does not enable the advisory stopNodes option; locked defaults are empty. Upgrade the affected 5.7.3 to published age-qualified 5.12.0 nonetheless. Local audit and artifact checks must confirm the effective version; main remains affected until merge and fresh verification.",
+      "evidencePaths": [
+        "apps/web/package.json",
+        "apps/web/src/components/files/extendedDocumentPreview.ts",
+        "apps/web/src/components/files/binaryPreview.worker.ts",
+        "pnpm-lock.yaml"
+      ],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    "node-forge-fix": {
+      "exposure": "build-tooling-only",
+      "disposition": "fix-required",
+      "justification": "node-forge 1.4.1 is outside the audited server/desktop/web production closure, reached by signing/build tools. Update the frozen lock and conditional override to published age-qualified 1.4.3, addressing all four current advisories. No lifecycle grant change. Keep pending until validation and main merge.",
+      "evidencePaths": [
+        "pnpm-workspace.yaml",
+        "pnpm-lock.yaml",
+        "apps/desktop/package.json",
+        "apps/mobile/package.json"
+      ],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    "polynomial-regex": {
+      "exposure": "unknown",
+      "disposition": "unresolved-runtime-triage",
+      "justification": "Reported runtime-source regular expressions include parsers, trailing-run normalizers and Git/SSH/provider helpers. Upstream provenance is verified, but attacker input bounds and final reachability are not proved for every sink. No rule-wide false-positive or inherited-code waiver. Triage bounded groups and retain each alert identity.",
+      "evidencePaths": [
+        "packages/client-runtime/src/connection/routes.ts",
+        "packages/client-runtime/src/markdownImages.ts",
+        "packages/client-runtime/src/operations/projects.ts",
+        "packages/client-runtime/src/pullRequestMarkdown.ts",
+        "packages/client-runtime/src/state/providerInstanceDisplay.ts",
+        "packages/client-runtime/src/state/subagentRuntime.ts",
+        "packages/client-runtime/src/work-log/commandLabel.ts",
+        "packages/client-runtime/src/work-log/presentation.ts",
+        "packages/provider-acp/src/server/runtimeModel.ts",
+        "packages/provider-core/src/modelShortName.ts",
+        "packages/provider-core/src/server/failure.ts",
+        "packages/provider-core/src/server/mcpToolPresentation.ts",
+        "packages/provider-core/src/server/textGenerationUtils.ts",
+        "packages/provider-grok/src/server/status.ts",
+        "packages/provider-grok/src/server/xaiAcpExtension.ts",
+        "packages/shared/src/cliRelease.ts",
+        "packages/shared/src/composerContextLegacy.ts",
+        "packages/shared/src/composerContextReferences.ts",
+        "packages/shared/src/composerInlineTokens.ts",
+        "packages/shared/src/composerTrigger.ts",
+        "packages/shared/src/fileLinks.ts",
+        "packages/shared/src/git.ts",
+        "packages/shared/src/markdownLinks.ts",
+        "packages/shared/src/paletteSearch.ts",
+        "packages/shared/src/path.ts",
+        "packages/shared/src/proposedPlanText.ts",
+        "packages/shared/src/relayJwt.ts",
+        "packages/shared/src/shell.ts",
+        "packages/shared/src/t3McpToolPresentation.ts",
+        "packages/shared/src/toolActivity.ts",
+        "packages/shared/src/toolOutput.ts",
+        "packages/source-control-core/src/server/discovery.ts",
+        "packages/source-control-core/src/server/mergeMessage.ts",
+        "packages/source-control-core/src/shared/definition.ts",
+        "packages/ssh/src/auth.ts"
+      ],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-12",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    "runtime-redos": {
+      "exposure": "unknown",
+      "disposition": "fix-required",
+      "justification": "The workflow recognizer has nested repetition over whitespace/comments; the scoped-package recognizer repeats a slash-containing character class. Reported expressions occur in upstream runtime source. Replace with linear recognition preserving behavior and add focused adversarial regression proof before claiming fixed.",
+      "evidencePaths": [
+        "packages/client-runtime/src/state/subagentRuntime.ts",
+        "packages/shared/src/composerInlineTokens.ts"
+      ],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-12",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    "tooling-redos": {
+      "exposure": "build-tooling-only",
+      "disposition": "unresolved-tooling-triage",
+      "justification": "Eval shell-grading parser processes provider output. Tooling placement does not prove trusted input or bounded work; assess input bounds and replace hazardous recognition rather than dismissing as a test.",
+      "evidencePaths": ["evals/mcp-tool-use/device-grading.ts"],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-12",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    "constant-script-input": {
+      "exposure": "unknown",
+      "disposition": "proposed-dismissal",
+      "justification": "Reported bootstrap script substitutions are fixed module-owned CSS/message/key constants; GuestInput editing commands are selected from selectAll/undo/redo, and the mobile overflow message is fixed. Source supports false positives at these serialization boundaries, not a general HTML safety claim. Retain JSON serialization and inspect changed flows on re-review.",
+      "evidencePaths": [
+        "apps/desktop/src/preview/GuestInput.ts",
+        "apps/mobile/src/features/threads/HtmlRenderWebView.tsx",
+        "packages/shared/src/htmlRender.ts"
+      ],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none",
+      "proposedDismissal": {
+        "reason": "false positive",
+        "comment": "At the reported serialization boundary the interpolated value is a fixed module constant or an allowlisted editing command; no attacker-owned executable text reaches that substitution. Preserve the existing JSON/script boundary."
+      }
+    },
+    "test-shell": {
+      "exposure": "build-tooling-only",
+      "disposition": "proposed-dismissal",
+      "justification": "Test subprocesses execute reviewed fixture shells under the test runner. The fork installer test passes its temporary prefix as positional argv, not shell source. Trusted checkout/process.execPath and fixture-controlled environment are the test boundary; untrusted dependency/PR content must not be interpolated into executable shell text. This is a test disposition, not an install.sh production approval.",
+      "evidencePaths": [
+        "apps/server/src/preview/PortScanner.test.ts",
+        "apps/server/src/provider/acp/AcpSessionRuntime.processTree.test.ts",
+        "infra/task-cache/src/runHook.test.ts",
+        "scripts/safe/install.test.ts"
+      ],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none",
+      "proposedDismissal": {
+        "reason": "used in tests",
+        "comment": "This subprocess belongs to a fixture test. Shell source is reviewed fixture code; temporary paths/prefixes are passed as positional argv under the trusted test runner, not interpolated attacker shell input."
+      }
+    },
+    "test-transformations": {
+      "exposure": "build-tooling-only",
+      "disposition": "proposed-dismissal",
+      "justification": "Reported sanitization/tag-filter/URL operations are assertions or extraction of known fixture scripts for VM tests, not authorization or safe rendering of attacker HTML. Preserve test assertions; do not rewrite them merely to hide a scan result.",
+      "evidencePaths": [
+        "apps/mobile/src/features/devices/device-stream-document.test.ts",
+        "apps/server/src/orchestration-v2/testkit/fixtures/web_search/claude_output.ts",
+        "apps/server/src/provider/CodexChatGptAuth.test.ts",
+        "apps/server/src/usage/usageTranscriptReader.test.ts",
+        "apps/web/src/components/files/FilePreviewPanel.test.ts",
+        "apps/web/src/themeBoot.test.ts",
+        "apps/web/src/vscodeThemeImport.test.ts",
+        "packages/shared/src/mcpApp.test.ts"
+      ],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none",
+      "proposedDismissal": {
+        "reason": "used in tests",
+        "comment": "The reported transformation is a test assertion or known fixture-script extraction, not a production sanitization or URL authorization boundary."
+      }
+    },
+    "display-text": {
+      "exposure": "unknown",
+      "disposition": "proposed-dismissal",
+      "justification": "Reported tag removal feeds plain prompt text, React/native text children or an emptiness decision. These consumers do not interpret the returned string as sanitized HTML. The release-notes update path is excluded from this group and remains separately unresolved.",
+      "evidencePaths": [
+        "apps/mobile/src/lib/markdownDetails.ts",
+        "apps/server/src/pullRequest/pullRequestReviewGuideInput.ts",
+        "apps/web/src/components/pullRequest/PullRequestSummaryTab.tsx",
+        "apps/web/src/components/pullRequest/pullRequestDetail.logic.ts",
+        "packages/source-control-github/src/server/GitHubPullRequestProvider.ts"
+      ],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none",
+      "proposedDismissal": {
+        "reason": "false positive",
+        "comment": "The result is plain text or an emptiness check, not HTML passed to an executable HTML sink; the reported replacement is not used as a security sanitizer."
+      }
+    },
+    "release-notes-owner": {
+      "exposure": "unknown",
+      "disposition": "owner-review-required",
+      "justification": "Release-notes conversion needs its final sink and release/update boundary reviewed with the signing/OTA owner. This task does not edit updater or installer code. Upstream origin does not waive the finding.",
+      "evidencePaths": ["apps/desktop/src/updates/releaseNotes.ts"],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-12",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    "markdown-backslash": {
+      "exposure": "unknown",
+      "disposition": "proposed-dismissal",
+      "justification": "generatedImageMarkdown explicitly percent-encodes backslashes before embedding a Markdown destination, contradicting the warning at this boundary. Preserve that encoding and recheck final renderer on source changes.",
+      "evidencePaths": ["packages/shared/src/generatedImageMarkdown.ts"],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none",
+      "proposedDismissal": {
+        "reason": "false positive",
+        "comment": "The destination is percent-encoded, including backslashes, before Markdown interpolation; the reported backslash bypass is addressed by the adjacent encoding."
+      }
+    },
+    "mobile-markdown": {
+      "exposure": "unknown",
+      "disposition": "unresolved-mobile-triage",
+      "justification": "Mobile Markdown link conversion needs backslash/label/destination parsing verified end-to-end. Mobile is not distributed by this fork release, but the source finding is retained; no blanket mobile exclusion or dismissal.",
+      "evidencePaths": ["apps/mobile/src/lib/markdownDocument.ts"],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-12",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    "qr-numeric-cells": {
+      "exposure": "unknown",
+      "disposition": "proposed-dismissal",
+      "justification": "QR generator writes boolean array cells using private numeric coordinates from bounded version/mask loops. The reported assignment does not take an attacker-selected string property such as __proto__. Preserve Nayuki attribution and generator behavior.",
+      "evidencePaths": ["packages/shared/src/qrCode.ts"],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none",
+      "proposedDismissal": {
+        "reason": "false positive",
+        "comment": "The reported key is a bounded numeric QR matrix coordinate generated by private loops, not an attacker-controlled property name; the assignment cannot select __proto__."
+      }
+    },
+    "protocol-gated-links": {
+      "exposure": "unknown",
+      "disposition": "proposed-dismissal",
+      "justification": "OpenMediaLink permits http/https/blob before href; PR attachment splitting permits http/https before rendering. These source protocol gates support the individual XSS dispositions. Remote-content policy is a separate boundary and remains enforced.",
+      "evidencePaths": [
+        "apps/web/src/components/media/OpenMediaLink.tsx",
+        "apps/web/src/components/pullRequest/PullRequestMarkdown.tsx"
+      ],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none",
+      "proposedDismissal": {
+        "reason": "false positive",
+        "comment": "The reported link receives a destination restricted to allowed non-script protocols by its source validation; it cannot become a javascript URL at this sink."
+      }
+    },
+    "video-callers": {
+      "exposure": "unknown",
+      "disposition": "unresolved-runtime-triage",
+      "justification": "SARIF traces a protocol-filtered PR attachment into video src, which is a media-fetch boundary. Inventory the other callers before final disposition. A proposed XSS false positive would not approve automatic remote content.",
+      "evidencePaths": ["apps/web/src/components/media/MediaVideoPlayer.tsx"],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-12",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    "mobile-draft-id": {
+      "exposure": "unknown",
+      "disposition": "unresolved-mobile-triage",
+      "justification": "Math.random originates in a local new-task draft key; account identity appears to come from session input. Confirm all ID consumers are non-security-sensitive before proposing false positive. Mobile is not part of safe DMG/CLI distribution.",
+      "evidencePaths": [
+        "apps/mobile/src/features/cloud/cloudAccountService.ts",
+        "apps/mobile/src/state/use-composer-drafts.ts"
+      ],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-12",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    "worker-method-dispatch": {
+      "exposure": "shipped",
+      "disposition": "fix-required",
+      "justification": "Office worker dispatch looks up a user-selected property on a plain handler object, accepting inherited Object methods. Dedicated worker callers are local Office components; broader security impact is unproved. Restrict dispatch to own handler keys with protocol-level regressions. Main CodeQL must reanalyze after merge.",
+      "evidencePaths": ["apps/web/src/components/files/office/worker-rpc.ts"],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-12",
+      "humanApproval": null,
+      "remoteAction": "none"
+    }
+  },
+  "entries": [
+    {
+      "key": "dependabot:38",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/better-auth/package.json",
+      "package": "better-auth",
+      "versionRequirement": "1.6.25",
+      "advisory": "GHSA-965c-763c-88jm",
+      "advisoryUpdatedAt": "2026-10-27T15:32:09Z",
+      "severity": "critical",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:39",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/better-auth/package.json",
+      "package": "better-auth",
+      "versionRequirement": "1.6.25",
+      "advisory": "GHSA-r4xp-prcw-77qf",
+      "advisoryUpdatedAt": "2026-10-27T15:32:17Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:40",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/better-auth/package.json",
+      "package": "better-auth",
+      "versionRequirement": "1.6.25",
+      "advisory": "GHSA-44jh-23m7-hpcf",
+      "advisoryUpdatedAt": "2026-10-27T15:32:27Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:42",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "diff",
+      "versionRequirement": "5.2.0",
+      "advisory": "GHSA-73rr-hh4g-fpgx",
+      "advisoryUpdatedAt": "2026-01-30T17:13:36Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:44",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "lodash",
+      "versionRequirement": "4.17.21",
+      "advisory": "GHSA-xxjr-mmjv-4gpg",
+      "advisoryUpdatedAt": "2026-11-04T03:08:57Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:45",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-r354-f388-2fhh",
+      "advisoryUpdatedAt": "2026-01-29T03:39:03Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:46",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-6wqw-2p9w-4vw4",
+      "advisoryUpdatedAt": "2026-01-29T03:39:38Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:47",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-w332-q679-j88p",
+      "advisoryUpdatedAt": "2026-02-04T19:53:49Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:48",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-9r54-q6cx-xmh5",
+      "advisoryUpdatedAt": "2026-01-28T16:10:24Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:51",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-gq3j-xvxp-8hrf",
+      "advisoryUpdatedAt": "2026-02-19T20:16:02Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:52",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-q5qw-h33p-qvwr",
+      "advisoryUpdatedAt": "2026-03-05T15:26:34Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:53",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-p6xx-57qc-3wxr",
+      "advisoryUpdatedAt": "2026-03-05T15:26:38Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:54",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-5pq2-9x2x-5p6w",
+      "advisoryUpdatedAt": "2026-03-05T15:26:44Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:55",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@hono/node-server",
+      "versionRequirement": "1.19.9",
+      "advisory": "GHSA-wc8c-qw6v-h7f6",
+      "advisoryUpdatedAt": "2026-03-06T22:43:59Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:58",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-v8w9-8mx6-g223",
+      "advisoryUpdatedAt": "2026-10-02T22:36:06Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:59",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "h3",
+      "versionRequirement": "2.0.1-rc.4",
+      "advisory": "GHSA-22cc-p3c6-wpvm",
+      "advisoryUpdatedAt": "2026-03-20T21:27:42Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:60",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "h3",
+      "versionRequirement": "2.0.1-rc.4",
+      "advisory": "GHSA-3vj8-jmxq-cgj5",
+      "advisoryUpdatedAt": "2026-03-20T21:28:02Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:61",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "h3",
+      "versionRequirement": "2.0.1-rc.4",
+      "advisory": "GHSA-wr4h-v87w-p3r7",
+      "advisoryUpdatedAt": "2026-03-18T16:18:33Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:62",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "h3",
+      "versionRequirement": "2.0.1-rc.4",
+      "advisory": "GHSA-2j6q-whv2-gh6w",
+      "advisoryUpdatedAt": "2026-03-27T20:58:29Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:63",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "h3",
+      "versionRequirement": "2.0.1-rc.4",
+      "advisory": "GHSA-4hxc-9384-m385",
+      "advisoryUpdatedAt": "2026-03-20T20:50:41Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:64",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "h3",
+      "versionRequirement": "2.0.1-rc.4",
+      "advisory": "GHSA-q5pr-72pq-83v3",
+      "advisoryUpdatedAt": "2026-09-30T23:46:51Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:65",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "srvx",
+      "versionRequirement": "0.9.8",
+      "advisory": "GHSA-p36q-q72m-gchr",
+      "advisoryUpdatedAt": "2026-03-27T21:11:11Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:66",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "lodash",
+      "versionRequirement": "4.17.21",
+      "advisory": "GHSA-r5fr-rjxr-66jc",
+      "advisoryUpdatedAt": "2026-04-01T23:51:13Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:67",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@hono/node-server",
+      "versionRequirement": "1.19.9",
+      "advisory": "GHSA-92pp-h63x-v22m",
+      "advisoryUpdatedAt": "2026-04-08T15:34:25Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:68",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-wmmm-f939-6g9c",
+      "advisoryUpdatedAt": "2026-04-08T15:34:35Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:69",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-xf4j-xp2r-rqqx",
+      "advisoryUpdatedAt": "2026-04-08T15:34:40Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:70",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-26pp-8wgv-hjvm",
+      "advisoryUpdatedAt": "2026-09-24T18:25:35Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:71",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-xpcf-pg52-r92g",
+      "advisoryUpdatedAt": "2026-04-24T21:06:14Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:72",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-r5rp-j6wh-rvv4",
+      "advisoryUpdatedAt": "2026-04-08T15:34:50Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:73",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-458j-xx4x-4375",
+      "advisoryUpdatedAt": "2026-06-24T13:10:58Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:75",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "nitro",
+      "versionRequirement": "3.0.260415-beta",
+      "advisory": "GHSA-5w89-w975-hf9q",
+      "advisoryUpdatedAt": "2026-05-14T20:42:51Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:76",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "nitro",
+      "versionRequirement": "3.0.260415-beta",
+      "advisory": "GHSA-9phm-9p8f-hw5m",
+      "advisoryUpdatedAt": "2026-06-09T01:58:51Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:77",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-69xw-7hcm-h432",
+      "advisoryUpdatedAt": "2026-05-14T20:32:03Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:78",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-9vqf-7f2p-gf9v",
+      "advisoryUpdatedAt": "2026-05-14T20:32:03Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:79",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-p77w-8qqv-26rm",
+      "advisoryUpdatedAt": "2026-05-14T20:35:44Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:80",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-hm8q-7f3q-5f36",
+      "advisoryUpdatedAt": "2026-05-14T20:35:49Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:81",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-qp7p-654g-cw7p",
+      "advisoryUpdatedAt": "2026-05-09T00:46:44Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:82",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-f577-qrjj-4474",
+      "advisoryUpdatedAt": "2026-06-04T17:52:06Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:83",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-3hrh-pfw6-9m5x",
+      "advisoryUpdatedAt": "2026-06-04T17:59:27Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:84",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-xrhx-7g5j-rcj5",
+      "advisoryUpdatedAt": "2026-06-04T18:00:23Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:85",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-2gcr-mfcq-wcc3",
+      "advisoryUpdatedAt": "2026-06-04T18:01:03Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:87",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-j6c9-x7qj-28xf",
+      "advisoryUpdatedAt": "2026-07-21T15:26:49Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:88",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-wwfh-h76j-fc44",
+      "advisoryUpdatedAt": "2026-07-21T15:27:08Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:89",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-88fw-hqm2-52qc",
+      "advisoryUpdatedAt": "2026-07-21T15:27:04Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:90",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-wgpf-jwqj-8h8p",
+      "advisoryUpdatedAt": "2026-07-21T15:26:59Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:91",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-rv63-4mwf-qqc2",
+      "advisoryUpdatedAt": "2026-07-21T15:26:54Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:96",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-xgm2-5f3f-mvvc",
+      "advisoryUpdatedAt": "2026-07-21T18:18:14Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:97",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-w62v-xxxg-mg59",
+      "advisoryUpdatedAt": "2026-07-21T18:33:50Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:98",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@hono/node-server",
+      "versionRequirement": "2.0.4",
+      "advisory": "GHSA-9mqv-5hh9-4cgg",
+      "advisoryUpdatedAt": "2026-08-13T17:37:35Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:114",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "valibot",
+      "versionRequirement": "1.2.0",
+      "advisory": "GHSA-5qjj-4xww-7phc",
+      "advisoryUpdatedAt": "2026-07-24T16:14:33Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:118",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.28.0",
+      "advisory": "GHSA-4cwx-7wf7-3272",
+      "advisoryUpdatedAt": "2026-08-03T19:24:25Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:119",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.28.0",
+      "advisory": "GHSA-8xcm-r25x-g524",
+      "advisoryUpdatedAt": "2026-08-03T19:24:35Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:120",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.28.0",
+      "advisory": "GHSA-v3r7-h72x-cjcm",
+      "advisoryUpdatedAt": "2026-08-03T19:30:53Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:121",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.28.0",
+      "advisory": "GHSA-jr45-8vmc-qm54",
+      "advisoryUpdatedAt": "2026-08-03T19:32:13Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:122",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.28.0",
+      "advisory": "GHSA-m8rv-5g2x-5cg5",
+      "advisoryUpdatedAt": "2026-08-03T19:33:56Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:123",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-8j4g-w8fx-2239",
+      "advisoryUpdatedAt": "2026-08-03T20:23:59Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:126",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-79qm-7rj5-m7r9",
+      "advisoryUpdatedAt": "2026-08-07T18:38:49Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:127",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-f23p-vx2j-j53r",
+      "advisoryUpdatedAt": "2026-08-07T18:42:04Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:128",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@hono/node-server",
+      "versionRequirement": "2.0.4",
+      "advisory": "GHSA-frvp-7c67-39w9",
+      "advisoryUpdatedAt": "2026-08-12T18:26:51Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:129",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@hono/node-server",
+      "versionRequirement": "1.19.9",
+      "advisory": "GHSA-frvp-7c67-39w9",
+      "advisoryUpdatedAt": "2026-08-12T18:26:51Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:130",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "extract-zip",
+      "versionRequirement": "2.0.1",
+      "advisory": "GHSA-jmr9-qjv8-65gv",
+      "advisoryUpdatedAt": "2026-08-12T19:22:04Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:131",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "qs",
+      "versionRequirement": "6.15.3",
+      "advisory": "GHSA-4mjr-xmp4-gh2g",
+      "advisoryUpdatedAt": "2026-09-02T14:45:15Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:132",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "qs",
+      "versionRequirement": "6.15.3",
+      "advisory": "GHSA-x5fp-wj9c-mxmx",
+      "advisoryUpdatedAt": "2026-09-02T14:46:58Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:133",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "fast-uri",
+      "versionRequirement": "3.1.5",
+      "advisory": "GHSA-jqff-g426-hqxp",
+      "advisoryUpdatedAt": "2026-09-02T15:41:56Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:134",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "fast-uri",
+      "versionRequirement": "3.1.5",
+      "advisory": "GHSA-fph4-wmhf-6fwf",
+      "advisoryUpdatedAt": "2026-09-02T15:42:41Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:135",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "fast-uri",
+      "versionRequirement": "3.1.5",
+      "advisory": "GHSA-f65p-4m7j-42xc",
+      "advisoryUpdatedAt": "2026-09-02T15:43:32Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:136",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "fast-uri",
+      "versionRequirement": "3.1.5",
+      "advisory": "GHSA-5jgf-p345-68v8",
+      "advisoryUpdatedAt": "2026-09-02T15:44:32Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:137",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "toml",
+      "versionRequirement": "3.0.0",
+      "advisory": "GHSA-v5mp-jgw5-2x6j",
+      "advisoryUpdatedAt": "2026-09-03T20:55:34Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:138",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "toml",
+      "versionRequirement": "3.0.0",
+      "advisory": "GHSA-82x6-q7mm-w9cf",
+      "advisoryUpdatedAt": "2026-09-03T20:56:14Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:139",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "extract-zip",
+      "versionRequirement": "2.0.1",
+      "advisory": "GHSA-7pqw-9j4j-h8q3",
+      "advisoryUpdatedAt": "2026-09-08T20:42:53Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:140",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@vitest/mocker",
+      "versionRequirement": "4.1.10",
+      "advisory": "GHSA-82fw-gwwq-j7x9",
+      "advisoryUpdatedAt": "2026-09-08T20:46:47Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:141",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "vitest",
+      "versionRequirement": "4.1.10",
+      "advisory": "GHSA-82fw-gwwq-j7x9",
+      "advisoryUpdatedAt": "2026-09-08T20:46:47Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:146",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-crvj-82cr-hjcx",
+      "advisoryUpdatedAt": "2026-09-08T21:22:51Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:147",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-g6gw-c38x-mqfc",
+      "advisoryUpdatedAt": "2026-09-08T21:23:04Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:148",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-gqvv-2mrq-wpjv",
+      "advisoryUpdatedAt": "2026-09-08T21:23:51Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:149",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "js-yaml",
+      "versionRequirement": "4.3.1",
+      "advisory": "GHSA-2883-xcg3-v3hh",
+      "advisoryUpdatedAt": "2026-09-08T21:24:52Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:150",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "sharp",
+      "versionRequirement": "0.35.2",
+      "advisory": "GHSA-rgj7-g3m4-5g8c",
+      "advisoryUpdatedAt": "2026-09-08T21:25:12Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:151",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "devalue",
+      "versionRequirement": "5.8.1",
+      "advisory": "GHSA-9rgm-9g3h-6x36",
+      "advisoryUpdatedAt": "2026-09-17T20:28:22Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:152",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "image-size",
+      "versionRequirement": "2.0.2",
+      "advisory": "GHSA-w3rx-r6r6-pgpr",
+      "advisoryUpdatedAt": "2026-09-24T18:23:12Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:153",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "image-size",
+      "versionRequirement": "2.0.2",
+      "advisory": "GHSA-5p2g-fcmc-qvqq",
+      "advisoryUpdatedAt": "2026-09-24T18:28:06Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:154",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "ip-address",
+      "versionRequirement": "10.5.0",
+      "advisory": "GHSA-2vr4-cq9g-pvrc",
+      "advisoryUpdatedAt": "2026-09-28T20:43:07Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:155",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "ip-address",
+      "versionRequirement": "10.5.0",
+      "advisory": "GHSA-rpw4-54j3-4h4q",
+      "advisoryUpdatedAt": "2026-09-28T20:43:57Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:156",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "fast-uri",
+      "versionRequirement": "3.1.5",
+      "advisory": "GHSA-qw65-cvwx-89v3",
+      "advisoryUpdatedAt": "2026-09-28T21:24:40Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:157",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.28.0",
+      "advisory": "GHSA-3wwx-pv8p-q78v",
+      "advisoryUpdatedAt": "2026-09-28T21:42:38Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:158",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.28.0",
+      "advisory": "GHSA-rx4f-c7p8-82vq",
+      "advisoryUpdatedAt": "2026-09-29T18:10:33Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:159",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.28.0",
+      "advisory": "GHSA-8436-99hf-9mmv",
+      "advisoryUpdatedAt": "2026-09-29T18:16:29Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:160",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.28.0",
+      "advisory": "GHSA-w293-vg96-wgc3",
+      "advisoryUpdatedAt": "2026-09-29T18:17:16Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:161",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.28.0",
+      "advisory": "GHSA-2gqq-gqf2-x968",
+      "advisoryUpdatedAt": "2026-09-29T18:18:52Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:162",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.28.0",
+      "advisory": "GHSA-2jfj-6hjv-fm6j",
+      "advisoryUpdatedAt": "2026-09-29T18:19:59Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:163",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.28.0",
+      "advisory": "GHSA-3xpg-4rpp-hhhm",
+      "advisoryUpdatedAt": "2026-09-29T18:20:38Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:164",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.28.0",
+      "advisory": "GHSA-rfgv-xxqx-mfg5",
+      "advisoryUpdatedAt": "2026-09-29T18:21:41Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:165",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.28.0",
+      "advisory": "GHSA-r53p-7pc4-xj5r",
+      "advisoryUpdatedAt": "2026-09-29T18:22:08Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:166",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.28.0",
+      "advisory": "GHSA-pmjh-fq2x-6v4x",
+      "advisoryUpdatedAt": "2026-09-29T18:22:35Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:167",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "brace-expansion",
+      "versionRequirement": "5.0.9",
+      "advisory": "GHSA-6j4f-fj2g-mc7p",
+      "advisoryUpdatedAt": "2026-09-29T23:44:59Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:168",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "brace-expansion",
+      "versionRequirement": "2.1.4",
+      "advisory": "GHSA-6j4f-fj2g-mc7p",
+      "advisoryUpdatedAt": "2026-09-29T23:44:59Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:169",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "brace-expansion",
+      "versionRequirement": "5.0.9",
+      "advisory": "GHSA-qhr7-859c-m2p7",
+      "advisoryUpdatedAt": "2026-09-29T23:45:19Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:170",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "brace-expansion",
+      "versionRequirement": "2.1.4",
+      "advisory": "GHSA-qhr7-859c-m2p7",
+      "advisoryUpdatedAt": "2026-09-29T23:45:19Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:171",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "brace-expansion",
+      "versionRequirement": "5.0.9",
+      "advisory": "GHSA-q2hr-2g5m-vwhr",
+      "advisoryUpdatedAt": "2026-09-29T23:45:39Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:172",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "brace-expansion",
+      "versionRequirement": "2.1.4",
+      "advisory": "GHSA-q2hr-2g5m-vwhr",
+      "advisoryUpdatedAt": "2026-09-29T23:45:39Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:173",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "ip-address",
+      "versionRequirement": "10.5.0",
+      "advisory": "GHSA-h3mg-xc3c-68pw",
+      "advisoryUpdatedAt": "2026-09-29T23:46:40Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:174",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "ip-address",
+      "versionRequirement": "10.5.0",
+      "advisory": "GHSA-j6r3-76f7-8jcv",
+      "advisoryUpdatedAt": "2026-09-29T23:46:54Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:175",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "fast-uri",
+      "versionRequirement": "3.1.5",
+      "advisory": "GHSA-hrr3-gc8f-f4qj",
+      "advisoryUpdatedAt": "2026-09-29T23:54:26Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:177",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "hono",
+      "versionRequirement": "4.11.4",
+      "advisory": "GHSA-hxh3-vqpv-xpqv",
+      "advisoryUpdatedAt": "2026-09-30T23:46:17Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:178",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "basic-ftp",
+      "versionRequirement": "5.3.1",
+      "advisory": "GHSA-c475-qrg2-pj4r",
+      "advisoryUpdatedAt": "2026-10-01T14:42:45Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:179",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "devalue",
+      "versionRequirement": "5.8.1",
+      "advisory": "GHSA-4q55-j62x-fr9h",
+      "advisoryUpdatedAt": "2026-10-01T15:13:25Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:180",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "devalue",
+      "versionRequirement": "5.8.1",
+      "advisory": "GHSA-x5rw-q4pp-hg5g",
+      "advisoryUpdatedAt": "2026-10-01T15:15:15Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:181",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "devalue",
+      "versionRequirement": "5.8.1",
+      "advisory": "GHSA-wf3x-273g-mvxv",
+      "advisoryUpdatedAt": "2026-10-01T15:17:16Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:182",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "devalue",
+      "versionRequirement": "5.8.1",
+      "advisory": "GHSA-mcm9-63f2-9j32",
+      "advisoryUpdatedAt": "2026-10-01T15:17:30Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:183",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "devalue",
+      "versionRequirement": "5.8.1",
+      "advisory": "GHSA-hx4r-w6wj-j8fg",
+      "advisoryUpdatedAt": "2026-10-01T15:17:43Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:184",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "devalue",
+      "versionRequirement": "5.8.1",
+      "advisory": "GHSA-j22f-vq7h-c4qm",
+      "advisoryUpdatedAt": "2026-10-01T15:18:07Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:185",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "node-forge",
+      "versionRequirement": "1.4.0",
+      "advisory": "GHSA-86w9-cpqp-85rv",
+      "advisoryUpdatedAt": "2026-10-01T21:09:10Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:189",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "proxy-addr",
+      "versionRequirement": "2.0.7",
+      "advisory": "GHSA-jqcg-44mw-7w3h",
+      "advisoryUpdatedAt": "2026-10-05T23:30:27Z",
+      "severity": "critical",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:198",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "shell-quote",
+      "versionRequirement": "1.10.0",
+      "advisory": "GHSA-pqg4-j6r4-53mv",
+      "advisoryUpdatedAt": "2026-10-06T13:40:37Z",
+      "severity": "critical",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:199",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "sharp",
+      "versionRequirement": "0.35.2",
+      "advisory": "GHSA-wq5f-xc86-pv6w",
+      "advisoryUpdatedAt": "2026-10-06T13:43:58Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:200",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@modelcontextprotocol/sdk",
+      "versionRequirement": "1.30.0",
+      "advisory": "GHSA-6qxp-vccf-f47h",
+      "advisoryUpdatedAt": "2026-10-06T15:35:44Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:210",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "devalue",
+      "versionRequirement": "5.8.1",
+      "advisory": "GHSA-r9w8-h9r3-54w4",
+      "advisoryUpdatedAt": "2026-10-17T05:04:12Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:212",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@modelcontextprotocol/sdk",
+      "versionRequirement": "1.30.0",
+      "advisory": "GHSA-6prh-2h8m-c8cw",
+      "advisoryUpdatedAt": "2026-11-03T22:10:25Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:213",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@modelcontextprotocol/sdk",
+      "versionRequirement": "1.30.0",
+      "advisory": "GHSA-22jm-h49p-29qw",
+      "advisoryUpdatedAt": "2026-10-20T18:26:55Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:217",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@modelcontextprotocol/sdk",
+      "versionRequirement": "1.30.0",
+      "advisory": "GHSA-rvq5-wwqv-78pq",
+      "advisoryUpdatedAt": "2026-10-20T19:43:37Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:224",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@modelcontextprotocol/sdk",
+      "versionRequirement": "1.30.0",
+      "advisory": "GHSA-46jr-4wx8-v453",
+      "advisoryUpdatedAt": "2026-10-20T20:06:38Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:230",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@vitest/mocker",
+      "versionRequirement": "4.1.10",
+      "advisory": "GHSA-qxg6-89mg-rqv8",
+      "advisoryUpdatedAt": "2026-10-21T19:54:27Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:233",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "ip-address",
+      "versionRequirement": "10.5.0",
+      "advisory": "GHSA-rxp7-6hxx-x8q5",
+      "advisoryUpdatedAt": "2026-10-22T16:19:41Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:236",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "toml",
+      "versionRequirement": "3.0.0",
+      "advisory": "GHSA-9qmh-m7c6-f92p",
+      "advisoryUpdatedAt": "2026-10-22T16:36:51Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:237",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "toml",
+      "versionRequirement": "3.0.0",
+      "advisory": "GHSA-9j65-hcg3-gc64",
+      "advisoryUpdatedAt": "2026-10-22T16:38:06Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:238",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "toml",
+      "versionRequirement": "3.0.0",
+      "advisory": "GHSA-4qx8-w7c3-pj3p",
+      "advisoryUpdatedAt": "2026-10-22T16:38:47Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:244",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "zod",
+      "versionRequirement": "4.5.4",
+      "advisory": "GHSA-mrhx-c7xc-m3w5",
+      "advisoryUpdatedAt": "2026-10-23T18:26:52Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:246",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "body-parser",
+      "versionRequirement": "2.3.0",
+      "advisory": "GHSA-27r3-jxmh-p828",
+      "advisoryUpdatedAt": "2026-10-23T20:53:12Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:248",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "fast-uri",
+      "versionRequirement": "3.1.5",
+      "advisory": "GHSA-333x-w4r6-6crp",
+      "advisoryUpdatedAt": "2026-10-23T21:36:41Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:249",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "fast-uri",
+      "versionRequirement": "3.1.5",
+      "advisory": "GHSA-wjr9-j795-jxcr",
+      "advisoryUpdatedAt": "2026-10-23T21:38:02Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:250",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "fast-uri",
+      "versionRequirement": "3.1.5",
+      "advisory": "GHSA-xhq7-xmqj-769h",
+      "advisoryUpdatedAt": "2026-10-23T21:39:38Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:251",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "fast-uri",
+      "versionRequirement": "3.1.5",
+      "advisory": "GHSA-w74x-v6f9-j3xg",
+      "advisoryUpdatedAt": "2026-10-23T21:41:38Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:252",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "serialize-javascript",
+      "versionRequirement": "7.1.0",
+      "advisory": "GHSA-m5mm-p8h7-m29v",
+      "advisoryUpdatedAt": "2026-10-23T22:09:53Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:253",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.1",
+      "advisory": "GHSA-f72v-6w45-q472",
+      "advisoryUpdatedAt": "2026-10-23T22:13:18Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:255",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "6.28.1",
+      "advisory": "GHSA-4qv8-2p9j-2685",
+      "advisoryUpdatedAt": "2026-10-23T22:13:31Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:256",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.1",
+      "advisory": "GHSA-4qv8-2p9j-2685",
+      "advisoryUpdatedAt": "2026-10-23T22:13:31Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:258",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "6.28.1",
+      "advisory": "GHSA-xjj6-f33q-929c",
+      "advisoryUpdatedAt": "2026-10-23T22:14:32Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:259",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.1",
+      "advisory": "GHSA-xjj6-f33q-929c",
+      "advisoryUpdatedAt": "2026-10-23T22:14:32Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:261",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "postcss-selector-parser",
+      "versionRequirement": "7.1.5",
+      "advisory": "GHSA-rj75-hqrm-r3gf",
+      "advisoryUpdatedAt": "2026-10-26T14:07:57Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:262",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "postcss-selector-parser",
+      "versionRequirement": "6.0.10",
+      "advisory": "GHSA-rj75-hqrm-r3gf",
+      "advisoryUpdatedAt": "2026-10-26T14:07:57Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:264",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "better-auth",
+      "versionRequirement": "1.6.25",
+      "advisory": "GHSA-q84f-53jg-9ppm",
+      "advisoryUpdatedAt": "2026-10-27T14:49:54Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:265",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "better-auth",
+      "versionRequirement": "1.6.25",
+      "advisory": "GHSA-965c-763c-88jm",
+      "advisoryUpdatedAt": "2026-10-27T15:32:09Z",
+      "severity": "critical",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:266",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "better-auth",
+      "versionRequirement": "1.6.25",
+      "advisory": "GHSA-r4xp-prcw-77qf",
+      "advisoryUpdatedAt": "2026-10-27T15:32:17Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:267",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@better-auth/drizzle-adapter",
+      "versionRequirement": "1.6.25",
+      "advisory": "GHSA-44jh-23m7-hpcf",
+      "advisoryUpdatedAt": "2026-10-27T15:32:27Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:268",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@better-auth/kysely-adapter",
+      "versionRequirement": "1.6.23",
+      "advisory": "GHSA-44jh-23m7-hpcf",
+      "advisoryUpdatedAt": "2026-10-27T15:32:27Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:269",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "better-auth",
+      "versionRequirement": "1.6.25",
+      "advisory": "GHSA-44jh-23m7-hpcf",
+      "advisoryUpdatedAt": "2026-10-27T15:32:27Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:270",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "qs",
+      "versionRequirement": "6.15.3",
+      "advisory": "GHSA-6pq8-jhm2-2vcw",
+      "advisoryUpdatedAt": "2026-10-29T02:22:33Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:271",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@modelcontextprotocol/sdk",
+      "versionRequirement": "1.30.0",
+      "advisory": "GHSA-f897-62hf-6gxq",
+      "advisoryUpdatedAt": "2026-10-27T19:02:02Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:272",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.1",
+      "advisory": "GHSA-55wc-3pg8-jfw6",
+      "advisoryUpdatedAt": "2026-10-27T19:02:12Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:274",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "6.28.1",
+      "advisory": "GHSA-9fm3-97px-rjf6",
+      "advisoryUpdatedAt": "2026-10-27T19:02:17Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:275",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.1",
+      "advisory": "GHSA-9fm3-97px-rjf6",
+      "advisoryUpdatedAt": "2026-10-27T19:02:17Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:277",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "6.28.1",
+      "advisory": "GHSA-qrxm-fqhp-jwvm",
+      "advisoryUpdatedAt": "2026-10-27T19:02:22Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:278",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.1",
+      "advisory": "GHSA-qrxm-fqhp-jwvm",
+      "advisoryUpdatedAt": "2026-10-27T19:02:22Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:280",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "6.28.1",
+      "advisory": "GHSA-2m5v-pch6-74hx",
+      "advisoryUpdatedAt": "2026-10-27T19:02:27Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:281",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.1",
+      "advisory": "GHSA-2m5v-pch6-74hx",
+      "advisoryUpdatedAt": "2026-10-27T19:02:27Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:283",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.1",
+      "advisory": "GHSA-4w7w-5xrc-9h26",
+      "advisoryUpdatedAt": "2026-10-27T19:02:32Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:285",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "deepmerge",
+      "versionRequirement": "4.3.1",
+      "advisory": "GHSA-gcqx-w48m-w2h4",
+      "advisoryUpdatedAt": "2026-10-27T21:34:58Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:286",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@hono/node-server",
+      "versionRequirement": "2.0.4",
+      "advisory": "GHSA-rmxm-3fg6-px4f",
+      "advisoryUpdatedAt": "2026-10-28T21:05:02Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:290",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "seroval",
+      "versionRequirement": "1.6.9",
+      "advisory": "GHSA-9wx9-5pv9-3349",
+      "advisoryUpdatedAt": "2026-10-28T21:17:32Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:291",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "seroval",
+      "versionRequirement": "1.6.9",
+      "advisory": "GHSA-f86p-h4j2-7qgj",
+      "advisoryUpdatedAt": "2026-10-28T21:17:37Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:292",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@nuxt/vite-builder",
+      "versionRequirement": "4.6.2",
+      "advisory": "GHSA-648h-gw55-m2g7",
+      "advisoryUpdatedAt": "2026-10-30T23:00:44Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:293",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "node-forge",
+      "versionRequirement": "1.4.0",
+      "advisory": "GHSA-5x38-2vff-x55p",
+      "advisoryUpdatedAt": "2026-10-30T23:01:48Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:294",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "node-forge",
+      "versionRequirement": "1.4.0",
+      "advisory": "GHSA-hqq3-7jhf-c5jx",
+      "advisoryUpdatedAt": "2026-10-30T23:01:54Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:295",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "node-forge",
+      "versionRequirement": "1.4.0",
+      "advisory": "GHSA-8hrf-8g6f-7xwp",
+      "advisoryUpdatedAt": "2026-10-30T23:02:04Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:296",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "node-forge",
+      "versionRequirement": "1.4.0",
+      "advisory": "GHSA-jc66-7q78-782g",
+      "advisoryUpdatedAt": "2026-10-30T23:02:09Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:297",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "node-forge",
+      "versionRequirement": "1.4.0",
+      "advisory": "GHSA-5cwg-6vw7-rj6p",
+      "advisoryUpdatedAt": "2026-10-30T23:02:10Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:298",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "node-forge",
+      "versionRequirement": "1.4.0",
+      "advisory": "GHSA-4487-j8r4-4g2f",
+      "advisoryUpdatedAt": "2026-10-30T23:02:15Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:299",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "node-forge",
+      "versionRequirement": "1.4.0",
+      "advisory": "GHSA-h6cr-wjv9-3cpp",
+      "advisoryUpdatedAt": "2026-10-30T23:02:24Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:300",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "node-forge",
+      "versionRequirement": "1.4.0",
+      "advisory": "GHSA-7wch-p9px-956x",
+      "advisoryUpdatedAt": "2026-10-30T23:02:29Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:301",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "node-forge",
+      "versionRequirement": "1.4.0",
+      "advisory": "GHSA-525v-9gp9-w22h",
+      "advisoryUpdatedAt": "2026-10-30T23:02:34Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:302",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "node-forge",
+      "versionRequirement": "1.4.0",
+      "advisory": "GHSA-6wvx-3r32-xmcg",
+      "advisoryUpdatedAt": "2026-10-30T23:02:39Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:303",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "node-forge",
+      "versionRequirement": "1.4.0",
+      "advisory": "GHSA-4642-5mcj-2rqw",
+      "advisoryUpdatedAt": "2026-10-30T23:02:44Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:304",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "glob",
+      "versionRequirement": "13.0.6",
+      "advisory": "GHSA-3g3m-2fjr-6pw4",
+      "advisoryUpdatedAt": "2026-10-30T23:09:15Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:305",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "minimatch",
+      "versionRequirement": "10.2.6",
+      "advisory": "GHSA-g3hv-75wg-m249",
+      "advisoryUpdatedAt": "2026-11-04T16:50:04Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:421",
+      "group": "zod3-tooling",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "zod",
+      "versionRequirement": "3.25.76",
+      "advisory": "GHSA-mrhx-c7xc-m3w5",
+      "advisoryUpdatedAt": "2026-10-23T18:26:52Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:450",
+      "group": "deepmerge-tooling",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "deepmerge",
+      "versionRequirement": "4.3.1",
+      "advisory": "GHSA-gcqx-w48m-w2h4",
+      "advisoryUpdatedAt": "2026-10-27T21:34:58Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:469",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/AWS/Lambda/fixtures/lockfile-pinning/npm/package-lock.json",
+      "package": "semver",
+      "versionRequirement": "6.3.0",
+      "advisory": "GHSA-c2qf-rxjj-qqgw",
+      "advisoryUpdatedAt": "2026-02-04T20:39:10Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:470",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/AWS/Lambda/fixtures/lockfile-pinning/pnpm/pnpm-lock.yaml",
+      "package": "semver",
+      "versionRequirement": "6.3.0",
+      "advisory": "GHSA-c2qf-rxjj-qqgw",
+      "advisoryUpdatedAt": "2026-02-04T20:39:10Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:471",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/AWS/Lambda/fixtures/lockfile-pinning/yarn/yarn.lock",
+      "package": "semver",
+      "versionRequirement": "6.3.0",
+      "advisory": "GHSA-c2qf-rxjj-qqgw",
+      "advisoryUpdatedAt": "2026-02-04T20:39:10Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:472",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/AWS/Website/fixtures/react-router-app/package.json",
+      "package": "react-router",
+      "versionRequirement": "7.16.0",
+      "advisory": "GHSA-337j-9hxr-rhxg",
+      "advisoryUpdatedAt": "2026-07-23T19:34:16Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:473",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/AWS/Website/fixtures/react-router-app/package.json",
+      "package": "react-router",
+      "versionRequirement": "7.16.0",
+      "advisory": "GHSA-h8fp-f39c-q6mh",
+      "advisoryUpdatedAt": "2026-07-23T19:35:59Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:474",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/AWS/Website/fixtures/react-router-app/package.json",
+      "package": "react-router",
+      "versionRequirement": "7.16.0",
+      "advisory": "GHSA-wrjc-x8rr-h8h6",
+      "advisoryUpdatedAt": "2026-07-23T19:38:29Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:475",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/AWS/Website/fixtures/react-router-app/package.json",
+      "package": "react-router",
+      "versionRequirement": "7.16.0",
+      "advisory": "GHSA-chx6-hx7r-mcp5",
+      "advisoryUpdatedAt": "2026-07-24T14:06:58Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:476",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/AWS/Website/fixtures/react-router-app/package.json",
+      "package": "react-router",
+      "versionRequirement": "7.16.0",
+      "advisory": "GHSA-qwww-vcr4-c8h2",
+      "advisoryUpdatedAt": "2026-08-07T18:16:54Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:477",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Cloudflare/Website/fixtures/astro-app/package.json",
+      "package": "astro",
+      "versionRequirement": "7.1.0",
+      "advisory": "GHSA-376h-93r7-7g6f",
+      "advisoryUpdatedAt": "2026-09-08T21:26:04Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:478",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Cloudflare/Website/fixtures/astro-app/package.json",
+      "package": "astro",
+      "versionRequirement": "7.1.0",
+      "advisory": "GHSA-26w7-cxv4-gfx2",
+      "advisoryUpdatedAt": "2026-09-08T21:26:18Z",
+      "severity": "critical",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:479",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Cloudflare/Website/fixtures/astro-app/package.json",
+      "package": "astro",
+      "versionRequirement": "7.1.0",
+      "advisory": "GHSA-mpr7-6m5w-76rw",
+      "advisoryUpdatedAt": "2026-10-22T16:29:29Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:480",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Cloudflare/Website/fixtures/astro-app/package.json",
+      "package": "astro",
+      "versionRequirement": "7.1.0",
+      "advisory": "GHSA-98hj-9722-w3j8",
+      "advisoryUpdatedAt": "2026-10-22T16:30:27Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:481",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Cloudflare/Website/fixtures/astro-static-app/package.json",
+      "package": "astro",
+      "versionRequirement": "7.1.0",
+      "advisory": "GHSA-376h-93r7-7g6f",
+      "advisoryUpdatedAt": "2026-09-08T21:26:04Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:482",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Cloudflare/Website/fixtures/astro-static-app/package.json",
+      "package": "astro",
+      "versionRequirement": "7.1.0",
+      "advisory": "GHSA-26w7-cxv4-gfx2",
+      "advisoryUpdatedAt": "2026-09-08T21:26:18Z",
+      "severity": "critical",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:483",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Cloudflare/Website/fixtures/astro-static-app/package.json",
+      "package": "astro",
+      "versionRequirement": "7.1.0",
+      "advisory": "GHSA-mpr7-6m5w-76rw",
+      "advisoryUpdatedAt": "2026-10-22T16:29:29Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:484",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Cloudflare/Website/fixtures/astro-static-app/package.json",
+      "package": "astro",
+      "versionRequirement": "7.1.0",
+      "advisory": "GHSA-98hj-9722-w3j8",
+      "advisoryUpdatedAt": "2026-10-22T16:30:27Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:485",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-m99w-x7hq-7vfj",
+      "advisoryUpdatedAt": "2026-07-22T22:59:03Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:486",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-6gpp-xcg3-4w24",
+      "advisoryUpdatedAt": "2026-07-22T22:59:39Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:487",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-955p-x3mx-jcvp",
+      "advisoryUpdatedAt": "2026-07-22T23:00:35Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:488",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-q8wf-6r8g-63ch",
+      "advisoryUpdatedAt": "2026-07-22T23:02:06Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:489",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-p9j2-gv94-2wf4",
+      "advisoryUpdatedAt": "2026-07-22T23:02:25Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:490",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-4c39-4ccg-62r3",
+      "advisoryUpdatedAt": "2026-07-22T23:02:45Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:491",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-4633-3j49-mh5q",
+      "advisoryUpdatedAt": "2026-07-22T23:06:14Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:492",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-68g3-v927-f742",
+      "advisoryUpdatedAt": "2026-07-22T23:08:20Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:493",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-89xv-2m56-2m9x",
+      "advisoryUpdatedAt": "2026-07-22T23:09:50Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:494",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-p293-qw3h-jr36",
+      "advisoryUpdatedAt": "2026-09-08T20:51:43Z",
+      "severity": "critical",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:495",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-2xp9-vwfh-vxw4",
+      "advisoryUpdatedAt": "2026-09-08T21:21:13Z",
+      "severity": "critical",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:496",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-vcvr-r3jv-pc5j",
+      "advisoryUpdatedAt": "2026-09-30T14:48:31Z",
+      "severity": "critical",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:497",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-cjq9-62q9-8jv4",
+      "advisoryUpdatedAt": "2026-10-07T20:30:56Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:498",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-mcj8-r9mp-w47p",
+      "advisoryUpdatedAt": "2026-10-07T20:31:15Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:499",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-f87g-xv8r-7p7x",
+      "advisoryUpdatedAt": "2026-10-07T20:31:35Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:500",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-39w2-rjm5-chcv",
+      "advisoryUpdatedAt": "2026-10-07T20:31:52Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:501",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-4jqv-mc3x-m676",
+      "advisoryUpdatedAt": "2026-10-07T20:32:07Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:502",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-p3m5-59mp-jv5r",
+      "advisoryUpdatedAt": "2026-10-22T15:50:35Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:503",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-2464-fhr4-w9xw",
+      "advisoryUpdatedAt": "2026-10-22T15:52:56Z",
+      "severity": "critical",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:504",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/packages/integration-tests/test/Prisma/fixtures/website-artifact/next/package.json",
+      "package": "next",
+      "versionRequirement": "16.2.10",
+      "advisory": "GHSA-673q-mjm6-r5xr",
+      "advisoryUpdatedAt": "2026-10-22T16:42:32Z",
+      "severity": "critical",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:505",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "fflate",
+      "versionRequirement": "0.7.3",
+      "advisory": "GHSA-px8p-9vwx-vf98",
+      "advisoryUpdatedAt": "2026-09-03T14:58:15Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:506",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@modelcontextprotocol/client",
+      "versionRequirement": "2.0.0",
+      "advisory": "GHSA-6qxp-vccf-f47h",
+      "advisoryUpdatedAt": "2026-10-06T15:35:44Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:507",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@modelcontextprotocol/client",
+      "versionRequirement": "2.0.0",
+      "advisory": "GHSA-6prh-2h8m-c8cw",
+      "advisoryUpdatedAt": "2026-11-03T22:10:25Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:508",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@modelcontextprotocol/server",
+      "versionRequirement": "2.0.0",
+      "advisory": "GHSA-rvq5-wwqv-78pq",
+      "advisoryUpdatedAt": "2026-10-20T19:43:37Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:509",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@modelcontextprotocol/server",
+      "versionRequirement": "2.0.0",
+      "advisory": "GHSA-46jr-4wx8-v453",
+      "advisoryUpdatedAt": "2026-10-20T20:06:38Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:510",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@modelcontextprotocol/server",
+      "versionRequirement": "2.0.0",
+      "advisory": "GHSA-jm63-cq47-j5jp",
+      "advisoryUpdatedAt": "2026-10-20T20:08:02Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:511",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@modelcontextprotocol/server",
+      "versionRequirement": "2.0.0",
+      "advisory": "GHSA-f897-62hf-6gxq",
+      "advisoryUpdatedAt": "2026-10-27T19:02:02Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:512",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@nuxt/vite-builder",
+      "versionRequirement": "4.6.2",
+      "advisory": "GHSA-x287-wcfc-q46c",
+      "advisoryUpdatedAt": "2026-10-30T23:00:49Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:513",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "nuxt",
+      "versionRequirement": "4.6.2",
+      "advisory": "GHSA-9v7c-q64q-vv33",
+      "advisoryUpdatedAt": "2026-10-30T23:00:54Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:514",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@nuxt/nitro-server",
+      "versionRequirement": "4.6.2",
+      "advisory": "GHSA-9v7c-q64q-vv33",
+      "advisoryUpdatedAt": "2026-10-30T23:00:54Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:515",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/pnpm-lock.yaml",
+      "package": "@nuxt/vite-builder",
+      "versionRequirement": "4.6.2",
+      "advisory": "GHSA-3xf4-9g3c-4h4w",
+      "advisoryUpdatedAt": "2026-10-30T23:01:13Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:516",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "brace-expansion",
+      "versionRequirement": "1.1.16",
+      "advisory": "GHSA-mh99-v99m-4gvg",
+      "advisoryUpdatedAt": "2026-07-31T19:37:57Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:517",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "brace-expansion",
+      "versionRequirement": "1.1.16",
+      "advisory": "GHSA-rgw5-rvv9-x895",
+      "advisoryUpdatedAt": "2026-08-03T20:17:20Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:518",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "stream-json",
+      "versionRequirement": "1.9.1",
+      "advisory": "GHSA-528h-pc64-c93x",
+      "advisoryUpdatedAt": "2026-09-03T20:27:54Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:519",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "image-size",
+      "versionRequirement": "1.2.1",
+      "advisory": "GHSA-w3rx-r6r6-pgpr",
+      "advisoryUpdatedAt": "2026-09-24T18:23:12Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:520",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "image-size",
+      "versionRequirement": "1.2.1",
+      "advisory": "GHSA-5p2g-fcmc-qvqq",
+      "advisoryUpdatedAt": "2026-09-24T18:28:06Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:521",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-3wwx-pv8p-q78v",
+      "advisoryUpdatedAt": "2026-09-28T21:42:38Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:522",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-rx4f-c7p8-82vq",
+      "advisoryUpdatedAt": "2026-09-29T18:10:33Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:523",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-8436-99hf-9mmv",
+      "advisoryUpdatedAt": "2026-09-29T18:16:29Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:524",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-w293-vg96-wgc3",
+      "advisoryUpdatedAt": "2026-09-29T18:17:16Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:525",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-2gqq-gqf2-x968",
+      "advisoryUpdatedAt": "2026-09-29T18:18:52Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:526",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-2jfj-6hjv-fm6j",
+      "advisoryUpdatedAt": "2026-09-29T18:19:59Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:527",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-3xpg-4rpp-hhhm",
+      "advisoryUpdatedAt": "2026-09-29T18:20:38Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:528",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-rfgv-xxqx-mfg5",
+      "advisoryUpdatedAt": "2026-09-29T18:21:41Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:529",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-r53p-7pc4-xj5r",
+      "advisoryUpdatedAt": "2026-09-29T18:22:08Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:530",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-pmjh-fq2x-6v4x",
+      "advisoryUpdatedAt": "2026-09-29T18:22:35Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:531",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "brace-expansion",
+      "versionRequirement": "1.1.16",
+      "advisory": "GHSA-6j4f-fj2g-mc7p",
+      "advisoryUpdatedAt": "2026-09-29T23:44:59Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:532",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "brace-expansion",
+      "versionRequirement": "1.1.16",
+      "advisory": "GHSA-qhr7-859c-m2p7",
+      "advisoryUpdatedAt": "2026-09-29T23:45:19Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:533",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "brace-expansion",
+      "versionRequirement": "1.1.16",
+      "advisory": "GHSA-q2hr-2g5m-vwhr",
+      "advisoryUpdatedAt": "2026-09-29T23:45:39Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:534",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "stream-json",
+      "versionRequirement": "1.9.1",
+      "advisory": "GHSA-mjw6-4jj6-33hc",
+      "advisoryUpdatedAt": "2026-10-05T22:49:20Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:535",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "stream-json",
+      "versionRequirement": "1.9.1",
+      "advisory": "GHSA-hqr4-qq8f-hg3x",
+      "advisoryUpdatedAt": "2026-10-05T22:49:28Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:536",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "sharp",
+      "versionRequirement": "0.35.4",
+      "advisory": "GHSA-wq5f-xc86-pv6w",
+      "advisoryUpdatedAt": "2026-10-06T13:43:58Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:537",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "fast-uri",
+      "versionRequirement": "3.1.8",
+      "advisory": "GHSA-333x-w4r6-6crp",
+      "advisoryUpdatedAt": "2026-10-23T21:36:41Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:538",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "fast-uri",
+      "versionRequirement": "3.1.8",
+      "advisory": "GHSA-wjr9-j795-jxcr",
+      "advisoryUpdatedAt": "2026-10-23T21:38:02Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:539",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "fast-uri",
+      "versionRequirement": "3.1.8",
+      "advisory": "GHSA-xhq7-xmqj-769h",
+      "advisoryUpdatedAt": "2026-10-23T21:39:38Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:540",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "fast-uri",
+      "versionRequirement": "3.1.8",
+      "advisory": "GHSA-w74x-v6f9-j3xg",
+      "advisoryUpdatedAt": "2026-10-23T21:41:38Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:541",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "serialize-javascript",
+      "versionRequirement": "7.1.2",
+      "advisory": "GHSA-m5mm-p8h7-m29v",
+      "advisoryUpdatedAt": "2026-10-23T22:09:53Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:542",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-f72v-6w45-q472",
+      "advisoryUpdatedAt": "2026-10-23T22:13:18Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:543",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-4qv8-2p9j-2685",
+      "advisoryUpdatedAt": "2026-10-23T22:13:31Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:544",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-xjj6-f33q-929c",
+      "advisoryUpdatedAt": "2026-10-23T22:14:32Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:545",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "@azure/msal-node",
+      "versionRequirement": "6.0.1",
+      "advisory": "GHSA-xcx6-jx8p-x3h5",
+      "advisoryUpdatedAt": "2026-10-23T22:16:45Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:546",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-55wc-3pg8-jfw6",
+      "advisoryUpdatedAt": "2026-10-27T19:02:12Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:547",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-9fm3-97px-rjf6",
+      "advisoryUpdatedAt": "2026-10-27T19:02:17Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:548",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-qrxm-fqhp-jwvm",
+      "advisoryUpdatedAt": "2026-10-27T19:02:22Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:549",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-2m5v-pch6-74hx",
+      "advisoryUpdatedAt": "2026-10-27T19:02:27Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:550",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "undici",
+      "versionRequirement": "7.29.0",
+      "advisory": "GHSA-4w7w-5xrc-9h26",
+      "advisoryUpdatedAt": "2026-10-27T19:02:32Z",
+      "severity": "high",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:551",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "deepmerge",
+      "versionRequirement": "4.3.1",
+      "advisory": "GHSA-gcqx-w48m-w2h4",
+      "advisoryUpdatedAt": "2026-10-27T21:34:58Z",
+      "severity": "low",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:552",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "glob",
+      "versionRequirement": "10.5.0",
+      "advisory": "GHSA-3g3m-2fjr-6pw4",
+      "advisoryUpdatedAt": "2026-10-30T23:09:15Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:553",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/effect/pnpm-lock.yaml",
+      "package": "minimatch",
+      "versionRequirement": "9.0.9",
+      "advisory": "GHSA-g3hv-75wg-m249",
+      "advisoryUpdatedAt": "2026-11-04T16:50:04Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:554",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/test/cross-version-test/test/02-beta.44/package.json",
+      "package": "effect",
+      "versionRequirement": "4.0.0-beta.66",
+      "advisory": "GHSA-chp3-j5qr-2vfr",
+      "advisoryUpdatedAt": "2026-11-10T15:57:33Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:555",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/test/cross-version-test/test/01-beta.39/package.json",
+      "package": "effect",
+      "versionRequirement": "4.0.0-beta.66",
+      "advisory": "GHSA-chp3-j5qr-2vfr",
+      "advisoryUpdatedAt": "2026-11-10T15:57:33Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:556",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/test/cross-version-test/test/03-beta.45/package.json",
+      "package": "effect",
+      "versionRequirement": "4.0.0-beta.74",
+      "advisory": "GHSA-chp3-j5qr-2vfr",
+      "advisoryUpdatedAt": "2026-11-10T15:57:33Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "dependabot:557",
+      "group": "reference-snapshots",
+      "ownership": "third-party",
+      "manifest": ".repos/alchemy-effect/test/cross-version-test/test/04-beta.59/package.json",
+      "package": "effect",
+      "versionRequirement": "4.0.0-beta.84",
+      "advisory": "GHSA-chp3-j5qr-2vfr",
+      "advisoryUpdatedAt": "2026-11-10T15:57:33Z",
+      "severity": "medium",
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:1",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/client-runtime/src/connection/routes.ts",
+      "location": {
+        "start_line": 246,
+        "end_line": 246,
+        "start_column": 39,
+        "end_column": 62
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:2",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/client-runtime/src/markdownImages.ts",
+      "location": {
+        "start_line": 28,
+        "end_line": 28,
+        "start_column": 16,
+        "end_column": 52
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:3",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/client-runtime/src/operations/projects.ts",
+      "location": {
+        "start_line": 196,
+        "end_line": 196,
+        "start_column": 39,
+        "end_column": 79
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:4",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/client-runtime/src/pullRequestMarkdown.ts",
+      "location": {
+        "start_line": 61,
+        "end_line": 61,
+        "start_column": 18,
+        "end_column": 79
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:5",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/client-runtime/src/state/subagentRuntime.ts",
+      "location": {
+        "start_line": 311,
+        "end_line": 311,
+        "start_column": 59,
+        "end_column": 99
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:6",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/client-runtime/src/work-log/commandLabel.ts",
+      "location": {
+        "start_line": 205,
+        "end_line": 205,
+        "start_column": 35,
+        "end_column": 72
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:7",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/client-runtime/src/work-log/presentation.ts",
+      "location": {
+        "start_line": 131,
+        "end_line": 131,
+        "start_column": 10,
+        "end_column": 61
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:8",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/client-runtime/src/work-log/presentation.ts",
+      "location": {
+        "start_line": 658,
+        "end_line": 659,
+        "start_column": 16,
+        "end_column": 47
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:9",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/provider-acp/src/server/runtimeModel.ts",
+      "location": {
+        "start_line": 1153,
+        "end_line": 1153,
+        "start_column": 23,
+        "end_column": 58
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:10",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/provider-acp/src/server/runtimeModel.ts",
+      "location": {
+        "start_line": 1172,
+        "end_line": 1172,
+        "start_column": 19,
+        "end_column": 54
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:11",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/provider-core/src/server/failure.ts",
+      "location": {
+        "start_line": 200,
+        "end_line": 200,
+        "start_column": 20,
+        "end_column": 45
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:12",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/provider-core/src/server/mcpToolPresentation.ts",
+      "location": {
+        "start_line": 38,
+        "end_line": 38,
+        "start_column": 42,
+        "end_column": 84
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:13",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/provider-core/src/server/textGenerationUtils.ts",
+      "location": {
+        "start_line": 30,
+        "end_line": 30,
+        "start_column": 33,
+        "end_column": 65
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:14",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/provider-core/src/server/textGenerationUtils.ts",
+      "location": {
+        "start_line": 63,
+        "end_line": 67,
+        "start_column": 22,
+        "end_column": 37
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:15",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/provider-grok/src/server/status.ts",
+      "location": {
+        "start_line": 268,
+        "end_line": 268,
+        "start_column": 20,
+        "end_column": 55
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:16",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/provider-grok/src/server/xaiAcpExtension.ts",
+      "location": {
+        "start_line": 747,
+        "end_line": 748,
+        "start_column": 21,
+        "end_column": 65
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:17",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/provider-grok/src/server/xaiAcpExtension.ts",
+      "location": {
+        "start_line": 952,
+        "end_line": 952,
+        "start_column": 10,
+        "end_column": 62
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:21",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/composerContextLegacy.ts",
+      "location": {
+        "start_line": 184,
+        "end_line": 184,
+        "start_column": 23,
+        "end_column": 91
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:22",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/composerContextLegacy.ts",
+      "location": {
+        "start_line": 229,
+        "end_line": 229,
+        "start_column": 23,
+        "end_column": 63
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:23",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/composerContextLegacy.ts",
+      "location": {
+        "start_line": 264,
+        "end_line": 264,
+        "start_column": 17,
+        "end_column": 35
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:24",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/composerContextReferences.ts",
+      "location": {
+        "start_line": 40,
+        "end_line": 42,
+        "start_column": 16,
+        "end_column": 29
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:25",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/composerInlineTokens.ts",
+      "location": {
+        "start_line": 78,
+        "end_line": 78,
+        "start_column": 10,
+        "end_column": 51
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:26",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/composerTrigger.ts",
+      "location": {
+        "start_line": 68,
+        "end_line": 68,
+        "start_column": 10,
+        "end_column": 79
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:27",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/fileLinks.ts",
+      "location": {
+        "start_line": 61,
+        "end_line": 61,
+        "start_column": 21,
+        "end_column": 48
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:29",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/git.ts",
+      "location": {
+        "start_line": 47,
+        "end_line": 50,
+        "start_column": 7,
+        "end_column": 33
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:31",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/git.ts",
+      "location": {
+        "start_line": 222,
+        "end_line": 222,
+        "start_column": 20,
+        "end_column": 58
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:32",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/markdownLinks.ts",
+      "location": {
+        "start_line": 194,
+        "end_line": 195,
+        "start_column": 7,
+        "end_column": 32
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:33",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/path.ts",
+      "location": {
+        "start_line": 43,
+        "end_line": 43,
+        "start_column": 7,
+        "end_column": 33
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:34",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/path.ts",
+      "location": {
+        "start_line": 44,
+        "end_line": 44,
+        "start_column": 7,
+        "end_column": 36
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:35",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/path.ts",
+      "location": {
+        "start_line": 87,
+        "end_line": 87,
+        "start_column": 19,
+        "end_column": 46
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:36",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/path.ts",
+      "location": {
+        "start_line": 164,
+        "end_line": 164,
+        "start_column": 16,
+        "end_column": 52
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:37",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/proposedPlanText.ts",
+      "location": {
+        "start_line": 2,
+        "end_line": 2,
+        "start_column": 19,
+        "end_column": 64
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:39",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/relayJwt.ts",
+      "location": {
+        "start_line": 43,
+        "end_line": 43,
+        "start_column": 10,
+        "end_column": 44
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:40",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/shell.ts",
+      "location": {
+        "start_line": 409,
+        "end_line": 409,
+        "start_column": 10,
+        "end_column": 39
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:42",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/t3McpToolPresentation.ts",
+      "location": {
+        "start_line": 402,
+        "end_line": 402,
+        "start_column": 20,
+        "end_column": 69
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:45",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/toolActivity.ts",
+      "location": {
+        "start_line": 97,
+        "end_line": 97,
+        "start_column": 17,
+        "end_column": 93
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:46",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/toolActivity.ts",
+      "location": {
+        "start_line": 229,
+        "end_line": 231,
+        "start_column": 10,
+        "end_column": 60
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:47",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/toolOutput.ts",
+      "location": {
+        "start_line": 228,
+        "end_line": 228,
+        "start_column": 5,
+        "end_column": 49
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:49",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/source-control-core/src/server/mergeMessage.ts",
+      "location": {
+        "start_line": 37,
+        "end_line": 37,
+        "start_column": 20,
+        "end_column": 75
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:50",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/source-control-core/src/server/mergeMessage.ts",
+      "location": {
+        "start_line": 44,
+        "end_line": 47,
+        "start_column": 20,
+        "end_column": 6
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:51",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/source-control-core/src/server/mergeMessage.ts",
+      "location": {
+        "start_line": 52,
+        "end_line": 52,
+        "start_column": 20,
+        "end_column": 72
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:52",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/source-control-core/src/server/discovery.ts",
+      "location": {
+        "start_line": 180,
+        "end_line": 180,
+        "start_column": 19,
+        "end_column": 37
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:55",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/ssh/src/auth.ts",
+      "location": {
+        "start_line": 242,
+        "end_line": 244,
+        "start_column": 5,
+        "end_column": 6
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:56",
+      "group": "runtime-redos",
+      "ownership": "upstream",
+      "rule": "js/redos",
+      "path": "packages/client-runtime/src/state/subagentRuntime.ts",
+      "location": {
+        "start_line": 299,
+        "end_line": 299,
+        "start_column": 46,
+        "end_column": 52
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:57",
+      "group": "runtime-redos",
+      "ownership": "upstream",
+      "rule": "js/redos",
+      "path": "packages/client-runtime/src/state/subagentRuntime.ts",
+      "location": {
+        "start_line": 299,
+        "end_line": 299,
+        "start_column": 57,
+        "end_column": 65
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:58",
+      "group": "runtime-redos",
+      "ownership": "upstream",
+      "rule": "js/redos",
+      "path": "packages/shared/src/composerInlineTokens.ts",
+      "location": {
+        "start_line": 38,
+        "end_line": 38,
+        "start_column": 52,
+        "end_column": 60
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:59",
+      "group": "constant-script-input",
+      "ownership": "upstream",
+      "rule": "js/bad-code-sanitization",
+      "path": "apps/desktop/src/preview/GuestInput.ts",
+      "location": {
+        "start_line": 206,
+        "end_line": 206,
+        "start_column": 73,
+        "end_column": 97
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:60",
+      "group": "constant-script-input",
+      "ownership": "upstream",
+      "rule": "js/bad-code-sanitization",
+      "path": "apps/mobile/src/features/threads/HtmlRenderWebView.tsx",
+      "location": {
+        "start_line": 50,
+        "end_line": 50,
+        "start_column": 344,
+        "end_column": 381
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:61",
+      "group": "constant-script-input",
+      "ownership": "upstream",
+      "rule": "js/bad-code-sanitization",
+      "path": "packages/shared/src/htmlRender.ts",
+      "location": {
+        "start_line": 372,
+        "end_line": 372,
+        "start_column": 106,
+        "end_column": 130
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:62",
+      "group": "constant-script-input",
+      "ownership": "upstream",
+      "rule": "js/bad-code-sanitization",
+      "path": "packages/shared/src/htmlRender.ts",
+      "location": {
+        "start_line": 372,
+        "end_line": 372,
+        "start_column": 742,
+        "end_column": 785
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:63",
+      "group": "constant-script-input",
+      "ownership": "upstream",
+      "rule": "js/bad-code-sanitization",
+      "path": "packages/shared/src/htmlRender.ts",
+      "location": {
+        "start_line": 372,
+        "end_line": 372,
+        "start_column": 1300,
+        "end_column": 1332
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:64",
+      "group": "constant-script-input",
+      "ownership": "upstream",
+      "rule": "js/bad-code-sanitization",
+      "path": "packages/shared/src/htmlRender.ts",
+      "location": {
+        "start_line": 372,
+        "end_line": 372,
+        "start_column": 1718,
+        "end_column": 1753
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:65",
+      "group": "constant-script-input",
+      "ownership": "upstream",
+      "rule": "js/bad-code-sanitization",
+      "path": "packages/shared/src/htmlRender.ts",
+      "location": {
+        "start_line": 372,
+        "end_line": 372,
+        "start_column": 2357,
+        "end_column": 2390
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:66",
+      "group": "constant-script-input",
+      "ownership": "upstream",
+      "rule": "js/bad-code-sanitization",
+      "path": "packages/shared/src/htmlRender.ts",
+      "location": {
+        "start_line": 372,
+        "end_line": 372,
+        "start_column": 2461,
+        "end_column": 2501
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:67",
+      "group": "constant-script-input",
+      "ownership": "upstream",
+      "rule": "js/bad-code-sanitization",
+      "path": "packages/shared/src/htmlRender.ts",
+      "location": {
+        "start_line": 372,
+        "end_line": 372,
+        "start_column": 2640,
+        "end_column": 2672
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:68",
+      "group": "constant-script-input",
+      "ownership": "upstream",
+      "rule": "js/bad-code-sanitization",
+      "path": "packages/shared/src/htmlRender.ts",
+      "location": {
+        "start_line": 372,
+        "end_line": 372,
+        "start_column": 3467,
+        "end_column": 3498
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:70",
+      "group": "test-transformations",
+      "ownership": "upstream",
+      "rule": "js/incomplete-sanitization",
+      "path": "apps/server/src/provider/CodexChatGptAuth.test.ts",
+      "location": {
+        "start_line": 671,
+        "end_line": 671,
+        "start_column": 39,
+        "end_column": 65
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:71",
+      "group": "test-transformations",
+      "ownership": "upstream",
+      "rule": "js/incomplete-sanitization",
+      "path": "apps/server/src/usage/usageTranscriptReader.test.ts",
+      "location": {
+        "start_line": 518,
+        "end_line": 518,
+        "start_column": 36,
+        "end_column": 48
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:73",
+      "group": "test-transformations",
+      "ownership": "upstream",
+      "rule": "js/bad-tag-filter",
+      "path": "apps/mobile/src/features/devices/device-stream-document.test.ts",
+      "location": {
+        "start_line": 14,
+        "end_line": 14,
+        "start_column": 32,
+        "end_column": 59
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:74",
+      "group": "test-transformations",
+      "ownership": "upstream",
+      "rule": "js/bad-tag-filter",
+      "path": "apps/mobile/src/features/devices/device-stream-document.test.ts",
+      "location": {
+        "start_line": 15,
+        "end_line": 15,
+        "start_column": 24,
+        "end_column": 32
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:75",
+      "group": "test-transformations",
+      "ownership": "upstream",
+      "rule": "js/bad-tag-filter",
+      "path": "apps/mobile/src/features/devices/device-stream-document.test.ts",
+      "location": {
+        "start_line": 26,
+        "end_line": 26,
+        "start_column": 40,
+        "end_column": 67
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:76",
+      "group": "test-transformations",
+      "ownership": "upstream",
+      "rule": "js/bad-tag-filter",
+      "path": "apps/web/src/themeBoot.test.ts",
+      "location": {
+        "start_line": 25,
+        "end_line": 25,
+        "start_column": 34,
+        "end_column": 62
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:77",
+      "group": "test-transformations",
+      "ownership": "upstream",
+      "rule": "js/bad-tag-filter",
+      "path": "packages/shared/src/mcpApp.test.ts",
+      "location": {
+        "start_line": 212,
+        "end_line": 212,
+        "start_column": 41,
+        "end_column": 69
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:78",
+      "group": "release-notes-owner",
+      "ownership": "upstream",
+      "rule": "js/incomplete-multi-character-sanitization",
+      "path": "apps/desktop/src/updates/releaseNotes.ts",
+      "location": {
+        "start_line": 59,
+        "end_line": 65,
+        "start_column": 5,
+        "end_column": 31
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:80",
+      "group": "display-text",
+      "ownership": "upstream",
+      "rule": "js/incomplete-multi-character-sanitization",
+      "path": "apps/server/src/pullRequest/pullRequestReviewGuideInput.ts",
+      "location": {
+        "start_line": 7,
+        "end_line": 8,
+        "start_column": 16,
+        "end_column": 37
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:81",
+      "group": "display-text",
+      "ownership": "upstream",
+      "rule": "js/incomplete-multi-character-sanitization",
+      "path": "apps/web/src/components/pullRequest/PullRequestSummaryTab.tsx",
+      "location": {
+        "start_line": 263,
+        "end_line": 264,
+        "start_column": 16,
+        "end_column": 50
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:82",
+      "group": "display-text",
+      "ownership": "upstream",
+      "rule": "js/incomplete-multi-character-sanitization",
+      "path": "apps/web/src/components/pullRequest/pullRequestDetail.logic.ts",
+      "location": {
+        "start_line": 515,
+        "end_line": 515,
+        "start_column": 10,
+        "end_column": 47
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:83",
+      "group": "display-text",
+      "ownership": "upstream",
+      "rule": "js/incomplete-multi-character-sanitization",
+      "path": "packages/source-control-github/src/server/GitHubPullRequestProvider.ts",
+      "location": {
+        "start_line": 232,
+        "end_line": 232,
+        "start_column": 3,
+        "end_column": 39
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:84",
+      "group": "qr-numeric-cells",
+      "ownership": "upstream",
+      "rule": "js/prototype-polluting-assignment",
+      "path": "packages/shared/src/qrCode.ts",
+      "location": {
+        "start_line": 244,
+        "end_line": 244,
+        "start_column": 5,
+        "end_column": 21
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:85",
+      "group": "qr-numeric-cells",
+      "ownership": "upstream",
+      "rule": "js/prototype-polluting-assignment",
+      "path": "packages/shared/src/qrCode.ts",
+      "location": {
+        "start_line": 245,
+        "end_line": 245,
+        "start_column": 5,
+        "end_column": 24
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:86",
+      "group": "protocol-gated-links",
+      "ownership": "upstream",
+      "rule": "js/xss-through-dom",
+      "path": "apps/web/src/components/media/OpenMediaLink.tsx",
+      "location": {
+        "start_line": 33,
+        "end_line": 33,
+        "start_column": 17,
+        "end_column": 20
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:87",
+      "group": "video-callers",
+      "ownership": "upstream",
+      "rule": "js/xss-through-dom",
+      "path": "apps/web/src/components/media/MediaVideoPlayer.tsx",
+      "location": {
+        "start_line": 162,
+        "end_line": 162,
+        "start_column": 16,
+        "end_column": 19
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:88",
+      "group": "protocol-gated-links",
+      "ownership": "upstream",
+      "rule": "js/xss-through-dom",
+      "path": "apps/web/src/components/pullRequest/PullRequestMarkdown.tsx",
+      "location": {
+        "start_line": 130,
+        "end_line": 130,
+        "start_column": 19,
+        "end_column": 30
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:90",
+      "group": "test-transformations",
+      "ownership": "upstream",
+      "rule": "js/incomplete-url-substring-sanitization",
+      "path": "apps/server/src/orchestration-v2/testkit/fixtures/web_search/claude_output.ts",
+      "location": {
+        "start_line": 55,
+        "end_line": 55,
+        "start_column": 40,
+        "end_column": 71
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:92",
+      "group": "mobile-draft-id",
+      "ownership": "upstream",
+      "rule": "js/insecure-randomness",
+      "path": "apps/mobile/src/state/use-composer-drafts.ts",
+      "location": {
+        "start_line": 765,
+        "end_line": 765,
+        "start_column": 53,
+        "end_column": 74
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:93",
+      "group": "mobile-draft-id",
+      "ownership": "upstream",
+      "rule": "js/insecure-randomness",
+      "path": "apps/mobile/src/state/use-composer-drafts.ts",
+      "location": {
+        "start_line": 1121,
+        "end_line": 1121,
+        "start_column": 16,
+        "end_column": 21
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:94",
+      "group": "test-shell",
+      "ownership": "upstream",
+      "rule": "js/shell-command-injection-from-environment",
+      "path": "apps/server/src/provider/acp/AcpSessionRuntime.processTree.test.ts",
+      "location": {
+        "start_line": 197,
+        "end_line": 204,
+        "start_column": 24,
+        "end_column": 11
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:95",
+      "group": "test-shell",
+      "ownership": "upstream",
+      "rule": "js/shell-command-injection-from-environment",
+      "path": "apps/server/src/provider/acp/AcpSessionRuntime.processTree.test.ts",
+      "location": {
+        "start_line": 249,
+        "end_line": 256,
+        "start_column": 22,
+        "end_column": 9
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:96",
+      "group": "test-shell",
+      "ownership": "upstream",
+      "rule": "js/shell-command-injection-from-environment",
+      "path": "apps/server/src/provider/acp/AcpSessionRuntime.processTree.test.ts",
+      "location": {
+        "start_line": 271,
+        "end_line": 273,
+        "start_column": 30,
+        "end_column": 9
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:97",
+      "group": "test-shell",
+      "ownership": "upstream",
+      "rule": "js/shell-command-injection-from-environment",
+      "path": "apps/server/src/provider/acp/AcpSessionRuntime.processTree.test.ts",
+      "location": {
+        "start_line": 282,
+        "end_line": 288,
+        "start_column": 35,
+        "end_column": 8
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:98",
+      "group": "test-shell",
+      "ownership": "upstream",
+      "rule": "js/shell-command-injection-from-environment",
+      "path": "apps/server/src/provider/acp/AcpSessionRuntime.processTree.test.ts",
+      "location": {
+        "start_line": 291,
+        "end_line": 293,
+        "start_column": 33,
+        "end_column": 9
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:99",
+      "group": "test-shell",
+      "ownership": "fork",
+      "rule": "js/shell-command-injection-from-environment",
+      "path": "scripts/safe/install.test.ts",
+      "location": {
+        "start_line": 30,
+        "end_line": 36,
+        "start_column": 10,
+        "end_column": 4
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:100",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/provider-core/src/modelShortName.ts",
+      "location": {
+        "start_line": 63,
+        "end_line": 64,
+        "start_column": 10,
+        "end_column": 30
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:101",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/cliRelease.ts",
+      "location": {
+        "start_line": 50,
+        "end_line": 50,
+        "start_column": 13,
+        "end_column": 82
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:102",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/composerContextReferences.ts",
+      "location": {
+        "start_line": 337,
+        "end_line": 337,
+        "start_column": 65,
+        "end_column": 96
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:103",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/git.ts",
+      "location": {
+        "start_line": 21,
+        "end_line": 27,
+        "start_column": 22,
+        "end_column": 43
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:104",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/git.ts",
+      "location": {
+        "start_line": 126,
+        "end_line": 128,
+        "start_column": 10,
+        "end_column": 26
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:105",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/path.ts",
+      "location": {
+        "start_line": 104,
+        "end_line": 108,
+        "start_column": 26,
+        "end_column": 24
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:106",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/path.ts",
+      "location": {
+        "start_line": 111,
+        "end_line": 111,
+        "start_column": 7,
+        "end_column": 41
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:107",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/path.ts",
+      "location": {
+        "start_line": 147,
+        "end_line": 147,
+        "start_column": 17,
+        "end_column": 46
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:108",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/paletteSearch.ts",
+      "location": {
+        "start_line": 139,
+        "end_line": 139,
+        "start_column": 22,
+        "end_column": 56
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:109",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/paletteSearch.ts",
+      "location": {
+        "start_line": 463,
+        "end_line": 464,
+        "start_column": 18,
+        "end_column": 34
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:110",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/proposedPlanText.ts",
+      "location": {
+        "start_line": 12,
+        "end_line": 12,
+        "start_column": 29,
+        "end_column": 74
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:111",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/t3McpToolPresentation.ts",
+      "location": {
+        "start_line": 380,
+        "end_line": 380,
+        "start_column": 10,
+        "end_column": 61
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:112",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/shared/src/t3McpToolPresentation.ts",
+      "location": {
+        "start_line": 413,
+        "end_line": 415,
+        "start_column": 5,
+        "end_column": 6
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:113",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/source-control-core/src/shared/definition.ts",
+      "location": {
+        "start_line": 414,
+        "end_line": 414,
+        "start_column": 13,
+        "end_column": 40
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:114",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/ssh/src/auth.ts",
+      "location": {
+        "start_line": 253,
+        "end_line": 255,
+        "start_column": 10,
+        "end_column": 4
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:115",
+      "group": "polynomial-regex",
+      "ownership": "upstream",
+      "rule": "js/polynomial-redos",
+      "path": "packages/client-runtime/src/state/providerInstanceDisplay.ts",
+      "location": {
+        "start_line": 36,
+        "end_line": 36,
+        "start_column": 20,
+        "end_column": 55
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:116",
+      "group": "tooling-redos",
+      "ownership": "upstream",
+      "rule": "js/redos",
+      "path": "evals/mcp-tool-use/device-grading.ts",
+      "location": {
+        "start_line": 280,
+        "end_line": 280,
+        "start_column": 9,
+        "end_column": 22
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:117",
+      "group": "markdown-backslash",
+      "ownership": "upstream",
+      "rule": "js/incomplete-sanitization",
+      "path": "packages/shared/src/generatedImageMarkdown.ts",
+      "location": {
+        "start_line": 20,
+        "end_line": 20,
+        "start_column": 19,
+        "end_column": 83
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:118",
+      "group": "mobile-markdown",
+      "ownership": "upstream",
+      "rule": "js/incomplete-sanitization",
+      "path": "apps/mobile/src/lib/markdownDocument.ts",
+      "location": {
+        "start_line": 80,
+        "end_line": 80,
+        "start_column": 14,
+        "end_column": 25
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:119",
+      "group": "test-transformations",
+      "ownership": "upstream",
+      "rule": "js/incomplete-sanitization",
+      "path": "apps/web/src/vscodeThemeImport.test.ts",
+      "location": {
+        "start_line": 105,
+        "end_line": 105,
+        "start_column": 35,
+        "end_column": 49
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:120",
+      "group": "display-text",
+      "ownership": "upstream",
+      "rule": "js/incomplete-multi-character-sanitization",
+      "path": "apps/mobile/src/lib/markdownDetails.ts",
+      "location": {
+        "start_line": 86,
+        "end_line": 86,
+        "start_column": 48,
+        "end_column": 83
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:121",
+      "group": "test-transformations",
+      "ownership": "upstream",
+      "rule": "js/incomplete-multi-character-sanitization",
+      "path": "apps/web/src/components/files/FilePreviewPanel.test.ts",
+      "location": {
+        "start_line": 187,
+        "end_line": 187,
+        "start_column": 12,
+        "end_column": 43
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:122",
+      "group": "mobile-draft-id",
+      "ownership": "upstream",
+      "rule": "js/insecure-randomness",
+      "path": "apps/mobile/src/features/cloud/cloudAccountService.ts",
+      "location": {
+        "start_line": 96,
+        "end_line": 96,
+        "start_column": 27,
+        "end_column": 60
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:123",
+      "group": "test-shell",
+      "ownership": "upstream",
+      "rule": "js/shell-command-injection-from-environment",
+      "path": "apps/server/src/preview/PortScanner.test.ts",
+      "location": {
+        "start_line": 839,
+        "end_line": 843,
+        "start_column": 21,
+        "end_column": 8
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:124",
+      "group": "test-shell",
+      "ownership": "upstream",
+      "rule": "js/shell-command-injection-from-environment",
+      "path": "infra/task-cache/src/runHook.test.ts",
+      "location": {
+        "start_line": 169,
+        "end_line": 172,
+        "start_column": 21,
+        "end_column": 9
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "codeql:125",
+      "group": "worker-method-dispatch",
+      "ownership": "upstream",
+      "rule": "js/unvalidated-dynamic-method-call",
+      "path": "apps/web/src/components/files/office/worker-rpc.ts",
+      "location": {
+        "start_line": 224,
+        "end_line": 224,
+        "start_column": 21,
+        "end_column": 28
+      },
+      "observedState": "open"
+    },
+    {
+      "key": "audit:GHSA-mrhx-c7xc-m3w5:zod@3.25.76",
+      "group": "zod3-tooling",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "zod",
+      "version": "3.25.76",
+      "advisory": "GHSA-mrhx-c7xc-m3w5",
+      "severity": "high",
+      "observedState": "affected-at-audit"
+    },
+    {
+      "key": "audit:GHSA-gcqx-w48m-w2h4:deepmerge@4.3.1",
+      "group": "deepmerge-tooling",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "deepmerge",
+      "version": "4.3.1",
+      "advisory": "GHSA-gcqx-w48m-w2h4",
+      "severity": "low",
+      "observedState": "affected-at-audit"
+    },
+    {
+      "key": "audit:GHSA-474x-hrwr-fgx4:fast-xml-parser@5.7.3",
+      "group": "xml-parser-fix",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "fast-xml-parser",
+      "version": "5.7.3",
+      "advisory": "GHSA-474x-hrwr-fgx4",
+      "severity": "low",
+      "observedState": "affected-at-audit"
+    },
+    {
+      "key": "audit:GHSA-6889-vf6x-f3g5:node-forge@1.4.1",
+      "group": "node-forge-fix",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "node-forge",
+      "version": "1.4.1",
+      "advisory": "GHSA-6889-vf6x-f3g5",
+      "severity": "low",
+      "observedState": "affected-at-audit"
+    },
+    {
+      "key": "audit:GHSA-w4xr-hqv8-ch44:node-forge@1.4.1",
+      "group": "node-forge-fix",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "node-forge",
+      "version": "1.4.1",
+      "advisory": "GHSA-w4xr-hqv8-ch44",
+      "severity": "moderate",
+      "observedState": "affected-at-audit"
+    },
+    {
+      "key": "audit:GHSA-6cv4-p8m7-4r25:node-forge@1.4.1",
+      "group": "node-forge-fix",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "node-forge",
+      "version": "1.4.1",
+      "advisory": "GHSA-6cv4-p8m7-4r25",
+      "severity": "moderate",
+      "observedState": "affected-at-audit"
+    },
+    {
+      "key": "audit:GHSA-j8rw-jp99-435v:node-forge@1.4.1",
+      "group": "node-forge-fix",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "node-forge",
+      "version": "1.4.1",
+      "advisory": "GHSA-j8rw-jp99-435v",
+      "severity": "moderate",
+      "observedState": "affected-at-audit"
+    }
+  ],
+  "dependencyPrs": [
+    {
+      "number": 20,
+      "disposition": "proposed-close",
+      "justification": "Main already resolves sharp 0.35.5 after PR #19; this manifest-only PR is superseded.",
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    {
+      "number": 21,
+      "disposition": "proposed-close",
+      "justification": "Only a .repos/effect reference lock is changed; not a product dependency update.",
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    {
+      "number": 22,
+      "disposition": "proposed-close",
+      "justification": "Only a .repos/effect reference lock is changed; not a product dependency update.",
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    {
+      "number": 25,
+      "disposition": "proposed-close",
+      "justification": "Historical Effect version fixture under .repos/alchemy-effect; bumping changes reference fixture meaning.",
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    {
+      "number": 26,
+      "disposition": "proposed-close",
+      "justification": "Historical Effect version fixture under .repos/alchemy-effect; bumping changes reference fixture meaning.",
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none"
+    },
+    {
+      "number": 27,
+      "disposition": "proposed-close",
+      "justification": "Historical Effect version fixture under .repos/alchemy-effect; bumping changes reference fixture meaning.",
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-11",
+      "reviewBy": "2026-11-18",
+      "humanApproval": null,
+      "remoteAction": "none"
+    }
+  ]
+}

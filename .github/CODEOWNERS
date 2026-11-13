@@ -9,3 +9,4 @@
 /packages/*/src/managedPolicy*.ts @paulsenon-r
 /apps/**/managed* @paulsenon-r
 /.agents/skills/t3safe-sync/** @paulsenon-r
+/.agents/skills/t3safe-security/** @paulsenon-r
