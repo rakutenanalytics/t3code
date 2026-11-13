@@ -37,6 +37,7 @@ import * as ElectronWindow from "../electron/ElectronWindow.ts";
 import * as IpcChannels from "../ipc/channels.ts";
 import * as DesktopAppSettings from "../settings/DesktopAppSettings.ts";
 import * as DesktopUpdatePolicy from "./DesktopUpdatePolicy.ts";
+import * as SafeGitHubUpdates from "./SafeGitHubUpdates.ts";
 import { normalizeDesktopUpdateReleaseNotes } from "./releaseNotes.ts";
 import { desktopUpdateChannelOf } from "@t3tools/shared/cliRelease";
 import { compareSemverVersions } from "@t3tools/shared/semver";
@@ -227,7 +228,7 @@ const {
 function redactMessage(message: string): string {
   return (message.split(/[\r\n]/, 1)[0] ?? "")
     .replace(/\b(?:https?|file):\/\/[^\s"'<>]+/gi, "[redacted URL]")
-    .replace(/\b(?:Bearer|Basic)\s+[^\s,;]+/gi, "[redacted credential]")
+    .replace(/\b(?:Bearer|Basic|token)\s+[^\s,;]+/gi, "[redacted credential]")
     .replace(
       /\b(?:authorization|proxy-authorization|cookie|set-cookie)\s*[:=].*$/gi,
       "[redacted header]",
@@ -369,6 +370,7 @@ export const make = Effect.gen(function* () {
   const pool = yield* DesktopBackendPool.DesktopBackendPool;
   const desktopState = yield* DesktopState.DesktopState;
   const electronUpdater = yield* ElectronUpdater.ElectronUpdater;
+  const safeGitHubUpdates = yield* SafeGitHubUpdates.SafeGitHubUpdates;
   const electronWindow = yield* ElectronWindow.ElectronWindow;
   const environment = yield* DesktopEnvironment.DesktopEnvironment;
   const fileSystem = yield* FileSystem.FileSystem;
@@ -566,7 +568,8 @@ export const make = Effect.gen(function* () {
       // The flag is shared updater state, so it flips only while this check holds the reservation.
       const restoreDowngrade = yield* electronUpdater.allowDowngrade;
       if (allowDowngrade) yield* electronUpdater.setAllowDowngrade(true);
-      return yield* electronUpdater.checkForUpdates.pipe(
+      const updateCheck = isSafeBuild ? safeGitHubUpdates.check : electronUpdater.checkForUpdates;
+      return yield* updateCheck.pipe(
         Effect.ensuring(electronUpdater.setAllowDowngrade(restoreDowngrade).pipe(Effect.ignore)),
         Effect.as(true),
         Effect.catchTags({
@@ -609,7 +612,7 @@ export const make = Effect.gen(function* () {
     return yield* Effect.gen(function* () {
       yield* setState(reduceDesktopUpdateStateOnDownloadStart(state));
       yield* electronUpdater.setDisableDifferentialDownload(
-        isArm64HostRunningIntelBuild(environment.runtimeInfo),
+        isSafeBuild || isArm64HostRunningIntelBuild(environment.runtimeInfo),
       );
       yield* logUpdaterInfo("downloading update");
       yield* electronUpdater.downloadUpdate;
@@ -1177,7 +1180,7 @@ export const make = Effect.gen(function* () {
       yield* electronUpdater.setAutoInstallOnAppQuit(false);
       yield* applyAutoUpdaterChannel(updateChannel);
       yield* electronUpdater.setDisableDifferentialDownload(
-        isArm64HostRunningIntelBuild(environment.runtimeInfo),
+        isSafeBuild || isArm64HostRunningIntelBuild(environment.runtimeInfo),
       );
 
       if (isArm64HostRunningIntelBuild(environment.runtimeInfo)) {

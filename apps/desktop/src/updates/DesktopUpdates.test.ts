@@ -923,6 +923,7 @@ describe("describeUpdateErrorCause", () => {
       "Cannot download https://user:url-secret@example.com/update?token=query-secret, status 403",
       "Request failed: Bearer bearer-secret",
       "Request failed: Basic basic-secret",
+      "Request failed: token github-secret",
       "Request failed: Authorization: Bearer header-secret",
       "Request failed: Cookie=session-secret",
       "Request failed: api_key=\"key-secret\" password='password-secret' access_token=token-secret",
