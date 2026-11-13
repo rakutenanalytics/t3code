@@ -31,27 +31,16 @@ case "${1:-help}" in
     work=$(mktemp -d "${TMPDIR:-/tmp}/t3safe-update.XXXXXX")
     trap 'rm -rf "$work"' EXIT
     repository=rakutenanalytics/t3code
-    use_gh=false
-    if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then use_gh=true; fi
-    curl_public() { curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' "$@"; }
+    command -v gh >/dev/null 2>&1 || fail 'GitHub CLI required. Install gh, then run: gh auth login --hostname github.com'
+    gh auth status --hostname github.com >/dev/null 2>&1 || fail 'GitHub CLI login required. Run: gh auth login --hostname github.com'
     if [[ -z "$version" ]]; then
-      if $use_gh; then
-        version=$(gh release view --repo "$repository" --json tagName --jq .tagName)
-      else
-        curl_public https://api.github.com/repos/rakutenanalytics/t3code/releases/latest -o "$work/release.json"
-        version=$(plutil -extract tag_name raw -o - "$work/release.json")
-      fi
+      version=$(gh release view --repo "$repository" --json tagName --jq .tagName)
     fi
     [[ "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-safe\.[0-9]+$ ]] || fail 'Expected vX.Y.Z-safe.N.'
-    release_url="https://github.com/rakutenanalytics/t3code/releases/download/$version"
     installer="$work/install.sh"
     download_asset() {
       local name=$1
-      if $use_gh; then
-        gh release download --repo "$repository" "$version" --pattern "$name" --output "$work/$name"
-      else
-        curl_public "$release_url/$name" -o "$work/$name"
-      fi
+      gh release download --repo "$repository" "$version" --pattern "$name" --output "$work/$name"
     }
     download_asset SHA256SUMS
     download_asset install.sh

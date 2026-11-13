@@ -58,15 +58,7 @@ describe("[#17] safe release updates", () => {
 
         expect(state.enabled).toBe(true);
         expect(state.channel).toBe("latest");
-        expect(harness.feedUrls()).toEqual([
-          {
-            provider: "github",
-            owner: "rakutenanalytics",
-            repo: "t3code",
-            channel: "latest",
-            private: false,
-          },
-        ]);
+        expect(harness.feedUrls()).toEqual([]);
         expect(harness.updaterChannel()).toBe("latest");
         expect(harness.allowPrerelease()).toBe(false);
         expect(harness.allowDowngrade()).toBe(false);
@@ -118,7 +110,7 @@ describe("private repository bridge updates", () => {
         expect(harness.credentialCount()).toBe(0);
         yield* updates.check("manual");
         yield* updates.check("manual");
-        expect(harness.feedUrls().slice(1)).toEqual([
+        expect(harness.feedUrls()).toEqual([
           {
             provider: "github",
             owner: "rakutenanalytics",
@@ -139,7 +131,7 @@ describe("private repository bridge updates", () => {
         yield* updates.download;
         expect(harness.downloadCount()).toBe(1);
         expect(harness.credentialCount()).toBe(2);
-        expect(harness.feedUrls()).toHaveLength(3);
+        expect(harness.feedUrls()).toHaveLength(2);
         expect(harness.differentialDownloads).toEqual([true, true]);
       }).pipe(Effect.scoped, Effect.provide(harness.layer));
     },
@@ -160,6 +152,36 @@ describe("safe update credential reservation", () => {
       expect(harness.checkCount()).toBe(0);
     }).pipe(Effect.scoped, Effect.provide(harness.layer));
   });
+
+  it.effect(
+    "should publish a check error with login guidance and allow retry when gh has no token",
+    () => {
+      let credential: string | undefined;
+      const harness = makeHarness({ updateCredential: Effect.sync(() => credential) });
+
+      return Effect.gen(function* () {
+        const updates = yield* DesktopUpdates.DesktopUpdates;
+        yield* updates.configure;
+        const failed = yield* updates.check("manual");
+
+        expect(failed.checked).toBe(true);
+        const state = yield* updates.getState;
+        expect(state.status).toBe("error");
+        expect(state.errorContext).toBe("check");
+        expect(state.message).toBe(
+          "GitHub CLI login required to check for updates. Run: gh auth login --hostname github.com",
+        );
+        expect(harness.checkCount()).toBe(0);
+        expect(harness.feedUrls()).toHaveLength(0);
+
+        credential = "FAKE_NEW_LOGIN";
+        yield* updates.check("manual");
+
+        expect(harness.checkCount()).toBe(1);
+        expect((yield* updates.getState).status).not.toBe("error");
+      }).pipe(Effect.scoped, Effect.provide(harness.layer));
+    },
+  );
 
   it.effect("should skip a competing check while the first check obtains its credential", () =>
     Effect.gen(function* () {

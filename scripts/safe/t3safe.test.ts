@@ -9,7 +9,7 @@ import { describe, expect, it } from "vite-plus/test";
 function createUpdateInstallation(options: {
   mode: "combined" | "cli-only" | "app-only";
   customPrefix?: boolean;
-  githubAuth?: "authenticated" | "unauthenticated";
+  githubAuth?: "authenticated" | "unauthenticated" | "unavailable";
   githubDownloadFails?: boolean;
 }) {
   const root = NodeFS.realpathSync(
@@ -39,35 +39,19 @@ function createUpdateInstallation(options: {
   }
   NodeFS.writeFileSync(NodePath.join(root, "install.sh"), installer);
   NodeFS.writeFileSync(NodePath.join(root, "SHA256SUMS"), `${checksum}  install.sh\n`);
-  NodeFS.writeFileSync(NodePath.join(root, "release.json"), '{"tag_name":"v0.1.2-safe.1"}\n');
   NodeFS.writeFileSync(
     NodePath.join(bin, "curl"),
-    `#!/bin/bash
-set -euo pipefail
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    https://*) url=$1; shift ;;
-    -o) output=$2; shift 2 ;;
-    *) shift ;;
-  esac
-done
-case "$url" in
-  https://api.github.com/repos/rakutenanalytics/t3code/releases/latest) fixture=release.json ;;
-  https://github.com/rakutenanalytics/t3code/releases/download/v0.1.2-safe.[12]/SHA256SUMS) fixture=SHA256SUMS ;;
-  https://github.com/rakutenanalytics/t3code/releases/download/v0.1.2-safe.[12]/install.sh) fixture=install.sh ;;
-  *) exit 1 ;;
-esac
-cp "$UPDATE_FIXTURES/$fixture" "$output"
-`,
+    '#!/bin/bash\nprintf "Unexpected public download\\n" >&2\nexit 99\n',
     { mode: 0o755 },
   );
-  if (options.githubAuth) {
+  const githubAuth = options.githubAuth ?? "authenticated";
+  if (githubAuth !== "unavailable") {
     NodeFS.writeFileSync(
       NodePath.join(bin, "gh"),
       `#!/bin/bash
 set -euo pipefail
-if [[ "$*" == 'auth status' ]]; then exit ${options.githubAuth === "authenticated" ? 0 : 1}; fi
-${options.githubAuth === "unauthenticated" ? "exit 1" : ""}
+if [[ "$*" == 'auth status --hostname github.com' ]]; then exit ${githubAuth === "authenticated" ? 0 : 1}; fi
+${githubAuth === "unauthenticated" ? "exit 1" : ""}
 if [[ "$*" == 'release view --repo rakutenanalytics/t3code --json tagName --jq .tagName' ]]; then
   printf '%s\\n' v0.1.2-safe.1
   exit 0
@@ -78,17 +62,7 @@ ${options.githubDownloadFails ? "exit 1" : 'cp "$UPDATE_FIXTURES/$7" "$9"'}
 `,
       { mode: 0o755 },
     );
-    if (options.githubAuth === "authenticated" && !options.githubDownloadFails) {
-      NodeFS.writeFileSync(NodePath.join(bin, "curl"), "#!/bin/bash\nexit 1\n", { mode: 0o755 });
-    }
   }
-  NodeFS.writeFileSync(
-    NodePath.join(bin, "plutil"),
-    '#!/bin/bash\nprintf "%s\\n" v0.1.2-safe.1\n',
-    {
-      mode: 0o755,
-    },
-  );
 
   return {
     prefix,
@@ -194,16 +168,33 @@ describe("t3safe update", () => {
 });
 
 describe("t3safe release access", () => {
-  it.each(["authenticated", "unauthenticated"] as const)(
-    "should run the checksum-verified latest installer when gh is [%s]",
+  it("should run the checksum-verified latest installer when gh is authenticated", () => {
+    using installation = createUpdateInstallation({
+      mode: "combined",
+      githubAuth: "authenticated",
+    });
+
+    const result = installation.run();
+
+    expect(result.status).toBe(0);
+    expect(result.stderr).toBe("");
+    expect(installation.installerArguments()).toEqual(["--version", "v0.1.2-safe.1"]);
+  });
+
+  it.each(["unavailable", "unauthenticated"] as const)(
+    "should fail with login guidance without running the installer when gh is [%s]",
     (githubAuth) => {
       using installation = createUpdateInstallation({ mode: "combined", githubAuth });
 
       const result = installation.run();
 
-      expect(result.status).toBe(0);
-      expect(result.stderr).toBe("");
-      expect(installation.installerArguments()).toEqual(["--version", "v0.1.2-safe.1"]);
+      expect(result.status).toBe(1);
+      const message =
+        githubAuth === "unavailable" ? "GitHub CLI required" : "GitHub CLI login required";
+      expect(result.stderr).toContain(message);
+      expect(result.stderr).toContain("gh auth login --hostname github.com");
+      expect(result.stderr.trim().split("\n")).toHaveLength(1);
+      expect(installation.wasInstallerRun()).toBe(false);
     },
   );
 

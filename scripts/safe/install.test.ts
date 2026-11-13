@@ -119,7 +119,6 @@ function createReleaseInstallation(options: {
     })
     .join("");
   NodeFS.writeFileSync(NodePath.join(assets, "SHA256SUMS"), checksums);
-  NodeFS.writeFileSync(NodePath.join(assets, "release.json"), '{"tag_name":"v0.1.2-safe.1"}');
   if (options.tamperWithVersion)
     NodeFS.appendFileSync(NodePath.join(assets, "VERSION"), "tampered\n");
   const commands = {
@@ -129,24 +128,7 @@ function createReleaseInstallation(options: {
     xattr: "#!/bin/bash\nexit 0\n",
     hdiutil: "#!/bin/bash\nexit 1\n",
     ditto: '#!/bin/bash\ncp -R "$1/." "$2/"\n',
-    curl: `#!/bin/bash
-set -euo pipefail
-${options.githubAuth === "authenticated" ? "exit 1" : ""}
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    https://*) url=$1; shift ;;
-    -o) output=$2; shift 2 ;;
-    *) shift ;;
-  esac
-done
-if [[ "$url" == https://api.github.com/repos/rakutenanalytics/t3code/releases/latest ]]; then
-  name=release.json
-else
-  [[ "$url" == https://github.com/rakutenanalytics/t3code/releases/download/v0.1.2-safe.1/* ]] || exit 1
-  name=\${url##*/}
-fi
-cp "$RELEASE_FIXTURES/$name" "$output"
-`,
+    curl: '#!/bin/bash\nprintf "Unexpected public download\\n" >&2\nexit 99\n',
   };
   for (const [name, script] of Object.entries(commands)) {
     NodeFS.writeFileSync(NodePath.join(bin, name), script, { mode: 0o755 });
@@ -156,7 +138,7 @@ cp "$RELEASE_FIXTURES/$name" "$output"
       NodePath.join(bin, "gh"),
       `#!/bin/bash
 set -euo pipefail
-if [[ "$*" == 'auth status' ]]; then exit ${options.githubAuth === "authenticated" ? 0 : 1}; fi
+if [[ "$*" == 'auth status --hostname github.com' ]]; then exit ${options.githubAuth === "authenticated" ? 0 : 1}; fi
 ${options.githubAuth === "unauthenticated" ? "exit 1" : ""}
 if [[ "$*" == 'release view --repo rakutenanalytics/t3code --json tagName --jq .tagName' ]]; then
   echo v0.1.2-safe.1
@@ -194,19 +176,33 @@ cp "$RELEASE_FIXTURES/$7" "$9"
 }
 
 describe("installer release access", () => {
-  it.each(["unavailable", "unauthenticated", "authenticated"] as const)(
-    "should install the checksum-verified latest CLI when gh is [%s]",
+  it("should install the checksum-verified latest CLI when gh is authenticated", () => {
+    const installation = createReleaseInstallation({ githubAuth: "authenticated" });
+
+    const result = installation.run();
+
+    expect(result.stderr).toBe("");
+    expect(result.status).toBe(0);
+    expect(installation.installedVersion()).toBe("v0.1.2-safe.1\n");
+    expect(installation.installedCertificate()).toBe(
+      NodeFS.readFileSync("security/signing-certificate.sha256", "utf8"),
+    );
+  });
+
+  it.each(["unavailable", "unauthenticated"] as const)(
+    "should fail with login guidance and install nothing when gh is [%s]",
     (githubAuth) => {
       const installation = createReleaseInstallation({ githubAuth });
 
       const result = installation.run();
 
-      expect(result.stderr).toBe("");
-      expect(result.status).toBe(0);
-      expect(installation.installedVersion()).toBe("v0.1.2-safe.1\n");
-      expect(installation.installedCertificate()).toBe(
-        NodeFS.readFileSync("security/signing-certificate.sha256", "utf8"),
-      );
+      expect(result.status).toBe(1);
+      const message =
+        githubAuth === "unavailable" ? "GitHub CLI required" : "GitHub CLI login required";
+      expect(result.stderr).toContain(message);
+      expect(result.stderr).toContain("gh auth login --hostname github.com");
+      expect(result.stderr.trim().split("\n")).toHaveLength(1);
+      expect(installation.wasInstalled()).toBe(false);
     },
   );
 

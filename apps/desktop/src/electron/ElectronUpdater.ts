@@ -62,7 +62,7 @@ export type ElectronUpdaterError = typeof ElectronUpdaterError.Type;
 export class ElectronUpdater extends Context.Service<
   ElectronUpdater,
   {
-    readonly configureSafeGitHubFeed: (token: string | undefined) => Effect.Effect<void>;
+    readonly configureSafeGitHubFeed: (token: string) => Effect.Effect<void>;
     readonly setFeedURL: (options: ElectronUpdaterFeedUrl) => Effect.Effect<void>;
     readonly setAutoDownload: (value: boolean) => Effect.Effect<void>;
     readonly setAutoInstallOnAppQuit: (value: boolean) => Effect.Effect<void>;

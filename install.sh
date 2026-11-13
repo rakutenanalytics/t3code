@@ -33,15 +33,14 @@ if [[ -w /Applications ]]; then app_dir=/Applications; fi
 if [[ -n "$prefix" ]]; then app_dir="$prefix/Applications"; fi
 if $dry_run; then
   printf 'Resolve %s from GitHub: %s\n' "${version:-latest safe release}" "$repository"
-  printf 'Download selected assets and SHA256SUMS with authenticated gh when available, otherwise public curl; verify SHA256 before extraction.\n'
+  printf 'Download selected assets and SHA256SUMS with authenticated gh; verify SHA256 before extraction.\n'
   printf 'Install mode: %s\nManagement command: %s/bin/t3safe\nCLI versions: %s/share/t3safe/versions\nApp directory: %s\n' "$mode" "$install_root" "$install_root" "$app_dir"
   printf 'Refuse downgrades unless --allow-downgrade; strip quarantine; preserve valid signatures.\n'
   printf 'Link only t3safe; remove a legacy t3 symlink only if it points into %s/share/t3safe.\n' "$install_root"
   exit 0
 fi
-use_gh=false
-if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then use_gh=true; fi
-if ! $use_gh; then command -v curl >/dev/null || fail 'Missing command: curl'; fi
+command -v gh >/dev/null 2>&1 || fail 'GitHub CLI required. Install gh, then run: gh auth login --hostname github.com'
+gh auth status --hostname github.com >/dev/null 2>&1 || fail 'GitHub CLI login required. Run: gh auth login --hostname github.com'
 for command in plutil shasum tar ditto hdiutil xattr codesign; do command -v "$command" >/dev/null || fail "Missing command: $command"; done
 work=$(mktemp -d "${TMPDIR:-/tmp}/t3safe-install.XXXXXX")
 mounted=false
@@ -50,14 +49,8 @@ cleanup() {
   rm -rf "$work"
 }
 trap cleanup EXIT
-curl_public() { curl --fail --silent --show-error --location --retry 3 --proto '=https' --proto-redir '=https' "$@"; }
 if [[ -z "$version" ]]; then
-  if $use_gh; then
-    version=$(gh release view --repo "$repository" --json tagName --jq .tagName)
-  else
-    curl_public "https://api.github.com/repos/$repository/releases/latest" -o "$work/release.json"
-    version=$(plutil -extract tag_name raw -o - "$work/release.json")
-  fi
+  version=$(gh release view --repo "$repository" --json tagName --jq .tagName)
   [[ "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-safe\.[0-9]+$ ]] || fail 'Latest release is not a safe release. Select --version explicitly.'
 fi
 installed_receipt="$install_root/bin/t3safe"
@@ -73,14 +66,9 @@ if [[ -e "$installed_receipt" ]]; then
     [[ "$older" != yes ]] || fail "Refusing downgrade from $installed_version to $version; use --allow-downgrade."
   fi
 fi
-release_url="https://github.com/$repository/releases/download/$version"
 download_asset() {
   local name=$1
-  if $use_gh; then
-    gh release download --repo "$repository" "$version" --pattern "$name" --output "$work/$name"
-  else
-    curl_public "$release_url/$name" -o "$work/$name"
-  fi
+  gh release download --repo "$repository" "$version" --pattern "$name" --output "$work/$name"
 }
 download_asset SHA256SUMS
 download_verified() {

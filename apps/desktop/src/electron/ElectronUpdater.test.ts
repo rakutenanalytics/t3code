@@ -63,16 +63,6 @@ describe("safe GitHub updater adapter", () => {
         );
         expect(callback).toHaveBeenCalledWith({ requestHeaders: {} });
         expect(updater.downloadUpdate).toHaveBeenCalledTimes(1);
-
-        yield* make.configureSafeGitHubFeed(undefined);
-        expect(updater.setFeedURL).toHaveBeenLastCalledWith({
-          provider: "github",
-          owner: "rakutenanalytics",
-          repo: "t3code",
-          channel: "latest",
-          token: undefined,
-        });
-        expect(updater.netSession.webRequest.onBeforeSendHeaders).toHaveBeenCalledTimes(1);
       }),
   );
 
