@@ -1,3 +1,4 @@
+import * as SafeGitHubUpdates from "./SafeGitHubUpdates.ts";
 import * as NodeCrypto from "@effect/platform-node/NodeCrypto";
 import * as NodeServices from "@effect/platform-node/NodeServices";
 import type { DesktopUpdateState } from "@t3tools/contracts";
@@ -20,6 +21,7 @@ import * as DesktopUpdates from "./DesktopUpdates.ts";
 export const flushCallbacks = Effect.yieldNow;
 
 export interface UpdatesHarnessOptions {
+  readonly updateCredential?: Effect.Effect<string | undefined>;
   readonly checkForUpdates?: Effect.Effect<
     void,
     ElectronUpdater.ElectronUpdaterCheckForUpdatesError
@@ -50,6 +52,8 @@ export function makeHarness(options: UpdatesHarnessOptions = {}) {
   let quitAndInstallCount = 0;
   let downloadCount = 0;
   let allowDowngrade = false;
+  let credentialCount = 0;
+  const differentialDownloads: boolean[] = [];
   const checkAllowedDowngrade: boolean[] = [];
   let fullChangelog = false;
   let updaterChannel = "";
@@ -77,6 +81,16 @@ export function makeHarness(options: UpdatesHarnessOptions = {}) {
   };
 
   const layerUpdater = Layer.succeed(ElectronUpdater.ElectronUpdater, {
+    configureSafeGitHubFeed: (token) =>
+      Effect.sync(() => {
+        feedUrls.push({
+          provider: "github",
+          owner: "rakutenanalytics",
+          repo: "t3code",
+          channel: "latest",
+          token,
+        });
+      }),
     setFeedURL: (options) =>
       Effect.sync(() => {
         feedUrls.push(options);
@@ -100,7 +114,10 @@ export function makeHarness(options: UpdatesHarnessOptions = {}) {
       Effect.sync(() => {
         fullChangelog = value;
       }),
-    setDisableDifferentialDownload: () => options.setDisableDifferentialDownload ?? Effect.void,
+    setDisableDifferentialDownload: (value) =>
+      Effect.sync(() => {
+        differentialDownloads.push(value);
+      }).pipe(Effect.andThen(options.setDisableDifferentialDownload ?? Effect.void)),
     checkForUpdates: Effect.sync(() => {
       checkCount += 1;
       checkAllowedDowngrade.push(allowDowngrade);
@@ -280,7 +297,23 @@ export function makeHarness(options: UpdatesHarnessOptions = {}) {
       }),
   });
 
+  const layerSafeUpdates = Layer.effect(
+    SafeGitHubUpdates.SafeGitHubUpdates,
+    SafeGitHubUpdates.make,
+  ).pipe(
+    Layer.provide(layerUpdater),
+    Layer.provide(
+      Layer.succeed(SafeGitHubUpdates.GitHubUpdateCredential, {
+        obtain: Effect.gen(function* () {
+          credentialCount += 1;
+          if (options.updateCredential) return yield* options.updateCredential;
+          return undefined;
+        }),
+      }),
+    ),
+  );
   const layer = DesktopUpdates.layer.pipe(
+    Layer.provide(layerSafeUpdates),
     Layer.provide(layerFileSystem),
     Layer.provide(DesktopUpdatePolicy.layerTest(options.policy)),
     Layer.provideMerge(layerUpdater),
@@ -303,6 +336,8 @@ export function makeHarness(options: UpdatesHarnessOptions = {}) {
   return {
     layer,
     checkCount: () => checkCount,
+    credentialCount: () => credentialCount,
+    differentialDownloads,
     quitAndInstalls: () => quitAndInstallCount,
     installSteps,
     updateRestartMarkers,

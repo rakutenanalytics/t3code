@@ -2,6 +2,13 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-11-13 — private repository updater bridge
+
+- baseline-update: security/threat-model.md — Reviews gh-sourced public/private release reads, child-only removal of inherited token overrides, bounded credential lookup, public fallback, fixed API credential destinations and full downloads. Preserves baked/admin denials and certificate-pinned installation; records remaining packaged validation.
+- baseline-update: security/egress-inventory.md — Records stored-login lookup and gh refresh semantics, account-associated metadata, credential-free CDN redirects and local Squirrel delivery. No workspace payload or destination expansion.
+- baseline-update: security/artifact-hosts.json — Updates the public-only updater description to include authenticated private reads with the same API/CDN destinations. Denylist, accepted contexts and seen hosts are unchanged; packaged validation remains in CI.
+- baseline-update: security/network-baseline.json — Reviews the desktop updater, composition, credential lookup, isolated-session guard and focused fake-only tests. The PR policy workflow runs the focused updater suites. Desktop typecheck and fake-only tests cover public fallback, policy denial, reserved lookup, token refresh, static errors and restricted Authorization. No dependency or runtime capability changes.
+
 ## 2026-11-13 — security maintenance tooling
 
 - baseline-update: security/alert-ledger.json — Adds the dated 2026-11-11 inventory and review groups as baseline triage, with all dependency and worker fixes still required. No local remediation evidence or human risk acceptance is recorded in this tooling layer. New, changed and expired findings require a fresh agent audit.

@@ -44,7 +44,7 @@
       "d1d840b6a2dae8762b64f15b480d4c5b7826104b5895dcba3a2ab87cd75d4758": 1
     },
     ".github/workflows/pr-checks.yml": {
-      "73a9766c458484f1f264b78c3027481ae9319a4a68266d564a03708e90e45167": 1
+      "f3f372374d04614845d20f6c6d3ac84fc4cfcdfc6de2da43615c8ed960772ed1": 1
     },
     ".github/workflows/release.yml": {
       "2260ebc9bc75ce856e69a76cc0d9d183f23bacd4f867b7f9850403e548e31982": 1
@@ -253,8 +253,17 @@
     "apps/desktop/src/electron/ElectronShell.ts": {
       "065979d96daef4048aafefa45c27254090052547db745b29e8f2a0078f420db7": 1
     },
+    "apps/desktop/src/electron/ElectronUpdater.test.ts": {
+      "2106515309414d2d6bc2414bdf88da8191340dd147c0d8b97906824ec0c3d6bf": 1
+    },
     "apps/desktop/src/electron/ElectronUpdater.ts": {
-      "503258384ba3592d80099dd22c177712a931fc687a876214d697422e442f4196": 1
+      "578ce35c130940bc8926d6fab3632671eca1570a3c9c56aac91fdba1d0797f58": 1
+    },
+    "apps/desktop/src/electron/SafeGitHubAuthorization.test.ts": {
+      "613beaec66214f06e6e9234f7135aae3e3caaacb8b65bd51884a4107b661576c": 1
+    },
+    "apps/desktop/src/electron/SafeGitHubAuthorization.ts": {
+      "8ff1954dd210f500943ed9db6a3a15c2edca52712e8305220bddc231a996963b": 1
     },
     "apps/desktop/src/electron/WindowsForeground.ts": {
       "17dba4b42d8769914c2cfb8b91907ba5387495afeca54fc5da91a48eddde36ff": 1
@@ -290,7 +299,7 @@
       "9f2bcfe58c7e3cac1dfff17612e33c788a10afd54321dab1080ca647d07cb8f3": 1
     },
     "apps/desktop/src/main.ts": {
-      "9997ccc94f70468723cc6611035e50254998c58df2fc7f78a66b7a14c4bf8329": 1
+      "9d2e5a1777ad1843effb8223ad72da9653ef3afba05816914fe4ddcf32319054": 1
     },
     "apps/desktop/src/permissions/MacPermissionHelper.test.ts": {
       "3196c70f9874901f648ae36a2afdc795df507fef586cf6a550ccb42beab07091": 1
@@ -512,13 +521,19 @@
       "4d0707ba0256177675217218f979d1ce83a72e2bf4f585642b4a686fdc0010c7": 1
     },
     "apps/desktop/src/updates/DesktopUpdates.test.ts": {
-      "2d83f0ab1035db67dca15ab8d73a0149c72947dcf70bbd57764ea1b12b1b76cc": 1
+      "a20e9e11df19203b8a5cd1fbe211a193baeb8cc5060f72f0d3d187e5bb57bbfc": 1
     },
     "apps/desktop/src/updates/DesktopUpdates.ts": {
-      "f6d987148ae084eda4a268cebd7b7ee129704de9fa095c5b87de8afd9319bf49": 1
+      "808f0c039fe22bec91ae55855f55b581fbbd4d669e53d3966b7548bfd423c4cd": 1
     },
     "apps/desktop/src/updates/ManagedUpdates.test.ts": {
-      "9be7bf75472ca27949ed92e885b6f5ebb551e53d892140767390de42400fb600": 1
+      "1b6929eb53ea315e76e9b4514b59d80983ad477675c3ea0e36b3c3279b806128": 1
+    },
+    "apps/desktop/src/updates/SafeGitHubUpdates.test.ts": {
+      "03e0f3848f46e6b57ecadaba163f6a14cac645305856baa178a4d291faa80a9d": 1
+    },
+    "apps/desktop/src/updates/SafeGitHubUpdates.ts": {
+      "22c7740f9dd62462cd028da2c9d5bc8a01d020c24c745e7c460cabca9c6f0028": 1
     },
     "apps/desktop/src/updates/releaseNotes.test.ts": {
       "b020290b1830f7c09cdb7a4e605746f2345a7c4f57ebeb6dd7c0ef2038d9211b": 1
@@ -536,7 +551,7 @@
       "eda047fbb52162c3ec00ef768f8585099d46b447f7b849b47558745fd8786f13": 1
     },
     "apps/desktop/src/updates/updatesTestHarness.ts": {
-      "7d17e09f36d3e24ef5b0043106199db951a73bfff09b65df916ead57409ac1cb": 1
+      "fe33adb8d0a2d22f367f42aadb218e40b90ccddd1d430e5348b178674e6aff42": 1
     },
     "apps/desktop/src/window/ContextMenuImage.test.ts": {
       "a0c5d3a18ffedc9a193dd2e7f88b89a4e9eb9db2512cf0029f79de54bc08f972": 1
@@ -7943,6 +7958,20 @@
       "clerk.t3.codes"
     ],
     "apps/desktop/src/electron/ElectronProtocol.ts": ["127.0.0.1", "challenges.cloudflare.com"],
+    "apps/desktop/src/electron/ElectronUpdater.test.ts": [
+      "example.com",
+      "release-assets.githubusercontent.com"
+    ],
+    "apps/desktop/src/electron/SafeGitHubAuthorization.test.ts": [
+      "api.github.com",
+      "github.com",
+      "objects.githubusercontent.com",
+      "release-assets.githubusercontent.com"
+    ],
+    "apps/desktop/src/electron/SafeGitHubAuthorization.ts": [
+      "api.github.com",
+      "www.electronjs.org"
+    ],
     "apps/desktop/src/ipc/methods/notificationBadge.test.ts": ["example.com"],
     "apps/desktop/src/ipc/methods/sshEnvironment.test.ts": ["remote.example.com"],
     "apps/desktop/src/ipc/methods/window.test.ts": ["127.0.0.1", "example.com"],
@@ -7997,6 +8026,8 @@
     "apps/desktop/src/updates/DesktopUpdates.test.ts": ["updates.example.com"],
     "apps/desktop/src/updates/DesktopUpdates.ts": ["github.com"],
     "apps/desktop/src/updates/ManagedUpdates.test.ts": ["mirror.example.com"],
+    "apps/desktop/src/updates/SafeGitHubUpdates.test.ts": ["github.com"],
+    "apps/desktop/src/updates/SafeGitHubUpdates.ts": ["github.com"],
     "apps/desktop/src/updates/releaseNotes.test.ts": ["example.com", "github.com"],
     "apps/desktop/src/window/ContextMenuImage.test.ts": ["example.com"],
     "apps/desktop/src/window/DesktopWindow.test.ts": ["127.0.0.1", "accounts.microsoft.com"],
@@ -10182,6 +10213,27 @@
       "https://[::1]:*",
       "https://challenges.cloudflare.com",
       "https://localhost:*"
+    ],
+    "apps/desktop/src/electron/ElectronUpdater.test.ts": [
+      "https://example.com/?signature=FAKE_SIGNED_URL",
+      "https://release-assets.githubusercontent.com/file.zip"
+    ],
+    "apps/desktop/src/electron/SafeGitHubAuthorization.test.ts": [
+      "http://api.github.com/repos/rakutenanalytics/t3code/releases/latest",
+      "https://api.github.com/repos/another/repo/releases/latest",
+      "https://api.github.com/repos/rakutenanalytics/t3code/issues",
+      "https://api.github.com/repos/rakutenanalytics/t3code/releases/assets/12345",
+      "https://api.github.com/repos/rakutenanalytics/t3code/releases/assets/12345.blockmap",
+      "https://api.github.com/repos/rakutenanalytics/t3code/releases/latest",
+      "https://api.github.com:444/repos/rakutenanalytics/t3code/releases/latest",
+      "https://github.com/repos/rakutenanalytics/t3code/releases/latest",
+      "https://objects.githubusercontent.com/file.zip",
+      "https://release-assets.githubusercontent.com/file.zip",
+      "https://release-assets.githubusercontent.com/file.zip?signature=FAKE_SIGNATURE"
+    ],
+    "apps/desktop/src/electron/SafeGitHubAuthorization.ts": [
+      "https://api.github.com",
+      "https://www.electronjs.org/docs/latest/api/web-request#webrequestonbeforesendheadersfilter-listener"
     ],
     "apps/desktop/src/ipc/methods/notificationBadge.test.ts": ["https://example.com/icon.png"],
     "apps/desktop/src/ipc/methods/sshEnvironment.test.ts": ["http://remote.example.com:41773/"],

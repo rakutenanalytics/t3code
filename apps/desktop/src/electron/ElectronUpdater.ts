@@ -5,8 +5,12 @@ import * as Schema from "effect/Schema";
 import * as Scope from "effect/Scope";
 
 import { autoUpdater } from "electron-updater";
+import { appIdentity } from "@t3tools/shared/appIdentity";
+import { createSafeGitHubAuthorization } from "./SafeGitHubAuthorization.ts";
 
 type AutoUpdater = typeof autoUpdater;
+
+const safeGitHubAuthorization = createSafeGitHubAuthorization();
 
 export type ElectronUpdaterFeedUrl = Parameters<AutoUpdater["setFeedURL"]>[0];
 
@@ -58,6 +62,7 @@ export type ElectronUpdaterError = typeof ElectronUpdaterError.Type;
 export class ElectronUpdater extends Context.Service<
   ElectronUpdater,
   {
+    readonly configureSafeGitHubFeed: (token: string | undefined) => Effect.Effect<void>;
     readonly setFeedURL: (options: ElectronUpdaterFeedUrl) => Effect.Effect<void>;
     readonly setAutoDownload: (value: boolean) => Effect.Effect<void>;
     readonly setAutoInstallOnAppQuit: (value: boolean) => Effect.Effect<void>;
@@ -82,6 +87,20 @@ export class ElectronUpdater extends Context.Service<
 
 /** @public */
 export const make = ElectronUpdater.of({
+  configureSafeGitHubFeed: Effect.fn("ElectronUpdater.configureSafeGitHubFeed")((token) =>
+    Effect.sync(() => {
+      safeGitHubAuthorization.install(autoUpdater.netSession);
+      // Library errors can contain response bodies, headers or signed download URLs.
+      autoUpdater.logger = null;
+      autoUpdater.setFeedURL({
+        provider: "github",
+        owner: "rakutenanalytics",
+        repo: "t3code",
+        channel: "latest",
+        token,
+      });
+    }),
+  ),
   setFeedURL: Effect.fn("ElectronUpdater.setFeedURL")(function (options) {
     return Effect.suspend(() => {
       autoUpdater.setFeedURL(options);
@@ -137,14 +156,16 @@ export const make = ElectronUpdater.of({
     const channel = autoUpdater.channel;
     return Effect.tryPromise({
       try: () => autoUpdater.checkForUpdates(),
-      catch: (cause) => new ElectronUpdaterCheckForUpdatesError({ channel, cause }),
+      catch: (cause) =>
+        new ElectronUpdaterCheckForUpdatesError({ channel, cause: safeUpdateErrorCause(cause) }),
     }).pipe(Effect.asVoid);
   }),
   downloadUpdate: Effect.suspend(() => {
     const channel = autoUpdater.channel;
     return Effect.tryPromise({
       try: () => autoUpdater.downloadUpdate(),
-      catch: (cause) => new ElectronUpdaterDownloadUpdateError({ channel, cause }),
+      catch: (cause) =>
+        new ElectronUpdaterDownloadUpdateError({ channel, cause: safeUpdateErrorCause(cause) }),
     }).pipe(Effect.asVoid);
   }),
   quitAndInstall: Effect.fn("ElectronUpdater.quitAndInstall")(function ({
@@ -170,7 +191,14 @@ export const make = ElectronUpdater.of({
       on: (eventName: string, listener: (...args: Array<unknown>) => void) => void;
       removeListener: (eventName: string, listener: (...args: Array<unknown>) => void) => void;
     };
-    const untypedListener = listener as unknown as (...args: Array<unknown>) => void;
+    const eventListener = listener as unknown as (...args: Array<unknown>) => void;
+    const untypedListener = (...args: Array<unknown>) => {
+      if (appIdentity.slug === "t3code-safe" && eventName === "error") {
+        eventListener(safeUpdateErrorCause(args[0]));
+        return;
+      }
+      eventListener(...args);
+    };
     return Effect.acquireRelease(
       Effect.sync(() => {
         eventTarget.on(eventName, untypedListener);
@@ -184,3 +212,11 @@ export const make = ElectronUpdater.of({
 });
 
 export const layer = Layer.succeed(ElectronUpdater, make);
+
+function safeUpdateErrorCause(cause: unknown): unknown {
+  if (appIdentity.slug === "t3code-safe")
+    return new Error(
+      "GitHub release request failed. Check GitHub CLI access and check for updates again.",
+    );
+  return cause;
+}

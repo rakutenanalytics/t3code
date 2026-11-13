@@ -1,3 +1,5 @@
+import * as Deferred from "effect/Deferred";
+import * as Fiber from "effect/Fiber";
 import { describe, expect, it } from "@effect/vitest";
 import * as Effect from "effect/Effect";
 import { afterEach, vi } from "vite-plus/test";
@@ -21,12 +23,14 @@ describe("managed gates", () => {
     return Effect.gen(function* () {
       const updates = yield* DesktopUpdates.DesktopUpdates;
       yield* updates.configure;
+      yield* updates.check("manual");
       const state = yield* updates.getState;
 
       expect(state.enabled).toBe(false);
       expect(state.message).toBe("Disabled by managed policy");
       expect(harness.listenerCount()).toBe(0);
       expect(harness.checkCount()).toBe(0);
+      expect(harness.credentialCount()).toBe(0);
       expect(harness.downloadCount()).toBe(0);
     }).pipe(Effect.scoped, Effect.provide(harness.layer));
   });
@@ -87,12 +91,101 @@ describe("[#17] safe release updates", () => {
     return Effect.gen(function* () {
       const updates = yield* DesktopUpdates.DesktopUpdates;
       yield* updates.configure;
+      yield* updates.check("manual");
       const state = yield* updates.getState;
 
       expect(state.enabled).toBe(false);
       expect(state.message).toBe("Updates prohibited");
       expect(harness.checkCount()).toBe(0);
+      expect(harness.credentialCount()).toBe(0);
       expect(harness.listenerCount()).toBe(0);
     }).pipe(Effect.scoped, Effect.provide(harness.layer));
   });
+});
+
+describe("private repository bridge updates", () => {
+  it.effect(
+    "should refresh the credential on every check and retain the feed for a later full download",
+    () => {
+      let lookupCount = 0;
+      const harness = makeHarness({
+        updateCredential: Effect.sync(() => `FAKE_LOGIN_${++lookupCount}`),
+      });
+
+      return Effect.gen(function* () {
+        const updates = yield* DesktopUpdates.DesktopUpdates;
+        yield* updates.configure;
+        expect(harness.credentialCount()).toBe(0);
+        yield* updates.check("manual");
+        yield* updates.check("manual");
+        expect(harness.feedUrls().slice(1)).toEqual([
+          {
+            provider: "github",
+            owner: "rakutenanalytics",
+            repo: "t3code",
+            channel: "latest",
+            token: "FAKE_LOGIN_1",
+          },
+          {
+            provider: "github",
+            owner: "rakutenanalytics",
+            repo: "t3code",
+            channel: "latest",
+            token: "FAKE_LOGIN_2",
+          },
+        ]);
+        harness.emit("update-available", { version: "1.2.4", releaseNotes: "Update" });
+        yield* Effect.yieldNow;
+        yield* updates.download;
+        expect(harness.downloadCount()).toBe(1);
+        expect(harness.credentialCount()).toBe(2);
+        expect(harness.feedUrls()).toHaveLength(3);
+        expect(harness.differentialDownloads).toEqual([true, true]);
+      }).pipe(Effect.scoped, Effect.provide(harness.layer));
+    },
+  );
+});
+
+describe("safe update credential reservation", () => {
+  it.effect("should skip credential lookup when the update setting disables checks", () => {
+    const harness = makeHarness({ env: { T3CODE_DISABLE_AUTO_UPDATE: "true" } });
+
+    return Effect.gen(function* () {
+      const updates = yield* DesktopUpdates.DesktopUpdates;
+      yield* updates.configure;
+      const result = yield* updates.check("manual");
+
+      expect(result.checked).toBe(false);
+      expect(harness.credentialCount()).toBe(0);
+      expect(harness.checkCount()).toBe(0);
+    }).pipe(Effect.scoped, Effect.provide(harness.layer));
+  });
+
+  it.effect("should skip a competing check while the first check obtains its credential", () =>
+    Effect.gen(function* () {
+      const lookupStarted = yield* Deferred.make<void>();
+      const releaseLookup = yield* Deferred.make<string>();
+      const harness = makeHarness({
+        updateCredential: Deferred.succeed(lookupStarted, undefined).pipe(
+          Effect.andThen(Deferred.await(releaseLookup)),
+        ),
+      });
+
+      yield* Effect.gen(function* () {
+        const updates = yield* DesktopUpdates.DesktopUpdates;
+        yield* updates.configure;
+        const firstCheck = yield* updates.check("manual").pipe(Effect.forkScoped);
+        yield* Deferred.await(lookupStarted);
+        const competingCheck = yield* updates.check("manual");
+
+        expect(competingCheck.checked).toBe(false);
+        expect(harness.credentialCount()).toBe(1);
+        expect(harness.checkCount()).toBe(0);
+
+        yield* Deferred.succeed(releaseLookup, "FAKE_LOGIN");
+        yield* Fiber.join(firstCheck);
+        expect(harness.checkCount()).toBe(1);
+      }).pipe(Effect.scoped, Effect.provide(harness.layer));
+    }),
+  );
 });
