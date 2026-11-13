@@ -75,7 +75,7 @@ jobs:
           node scripts/safe/workflow-scan.ts
           node scripts/safe/egress-scan.ts
           node scripts/safe/dependency-scan.ts
-      - uses: voidzero-dev/setup-vp@250f29ce396baf5e8f24498e17c0dfdebabc26eb # v1
+      - uses: voidzero-dev/setup-vp@cab1ab9eaff52d4857875f4f2c016e36af8f2c76 # v1.22.0
         if: steps.plan.outputs.release == 'true'
         with:
           node-version: "26.12.1"
