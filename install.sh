@@ -32,14 +32,16 @@ app_dir="$HOME/Applications"
 if [[ -w /Applications ]]; then app_dir=/Applications; fi
 if [[ -n "$prefix" ]]; then app_dir="$prefix/Applications"; fi
 if $dry_run; then
-  printf 'Resolve %s from public GitHub API: %s\n' "${version:-latest safe release}" "$repository"
-  printf 'Download selected assets and SHA256SUMS with curl; verify SHA256 before extraction.\n'
+  printf 'Resolve %s from GitHub: %s\n' "${version:-latest safe release}" "$repository"
+  printf 'Download selected assets and SHA256SUMS with authenticated gh; verify SHA256 before extraction.\n'
   printf 'Install mode: %s\nManagement command: %s/bin/t3safe\nCLI versions: %s/share/t3safe/versions\nApp directory: %s\n' "$mode" "$install_root" "$install_root" "$app_dir"
   printf 'Refuse downgrades unless --allow-downgrade; strip quarantine; preserve valid signatures.\n'
   printf 'Link only t3safe; remove a legacy t3 symlink only if it points into %s/share/t3safe.\n' "$install_root"
   exit 0
 fi
-for command in curl plutil shasum tar ditto hdiutil xattr codesign; do command -v "$command" >/dev/null || fail "Missing command: $command"; done
+command -v gh >/dev/null 2>&1 || fail 'GitHub CLI required. Install gh, then run: gh auth login --hostname github.com'
+gh auth status --hostname github.com >/dev/null 2>&1 || fail 'GitHub CLI login required. Run: gh auth login --hostname github.com'
+for command in plutil shasum tar ditto hdiutil xattr codesign; do command -v "$command" >/dev/null || fail "Missing command: $command"; done
 work=$(mktemp -d "${TMPDIR:-/tmp}/t3safe-install.XXXXXX")
 mounted=false
 cleanup() {
@@ -47,10 +49,8 @@ cleanup() {
   rm -rf "$work"
 }
 trap cleanup EXIT
-curl_public() { curl --fail --silent --show-error --location --retry 3 --proto '=https' --proto-redir '=https' "$@"; }
 if [[ -z "$version" ]]; then
-  curl_public "https://api.github.com/repos/$repository/releases/latest" -o "$work/release.json"
-  version=$(plutil -extract tag_name raw -o - "$work/release.json")
+  version=$(gh release view --repo "$repository" --json tagName --jq .tagName)
   [[ "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-safe\.[0-9]+$ ]] || fail 'Latest release is not a safe release. Select --version explicitly.'
 fi
 installed_receipt="$install_root/bin/t3safe"
@@ -66,11 +66,14 @@ if [[ -e "$installed_receipt" ]]; then
     [[ "$older" != yes ]] || fail "Refusing downgrade from $installed_version to $version; use --allow-downgrade."
   fi
 fi
-release_url="https://github.com/$repository/releases/download/$version"
-curl_public "$release_url/SHA256SUMS" -o "$work/SHA256SUMS"
+download_asset() {
+  local name=$1
+  gh release download --repo "$repository" "$version" --pattern "$name" --output "$work/$name"
+}
+download_asset SHA256SUMS
 download_verified() {
   local name=$1 expected actual
-  curl_public "$release_url/$name" -o "$work/$name"
+  download_asset "$name"
   expected=$(awk -v name="$name" '$2 == name || $2 == "./" name { print $1 }' "$work/SHA256SUMS")
   [[ "$expected" =~ ^[a-fA-F0-9]{64}$ ]] || fail "Missing or duplicate checksum: $name"
   actual=$(shasum -a 256 "$work/$name")

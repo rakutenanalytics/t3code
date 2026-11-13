@@ -307,7 +307,7 @@ export function makeHarness(options: UpdatesHarnessOptions = {}) {
         obtain: Effect.gen(function* () {
           credentialCount += 1;
           if (options.updateCredential) return yield* options.updateCredential;
-          return undefined;
+          return "FAKE_STORED_LOGIN";
         }),
       }),
     ),

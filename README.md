@@ -5,12 +5,17 @@ Managed fork of [T3 Code](https://github.com/pingdotgg/t3code) for macOS on Appl
 ## Install
 
 ```sh
-curl -fsSL https://github.com/rakutenanalytics/t3code/releases/latest/download/install.sh | bash
+gh auth login --hostname github.com
+gh release download --repo rakutenanalytics/t3code --pattern install.sh --output install.sh
+less install.sh
+bash install.sh
 ```
 
 Installs `T3 Code Safe.app` and the `t3safe` command. Checks every download against the release `SHA256SUMS`.
 
 **Update:** run the same command again (quit the app first). `t3safe update` does the same.
+
+Requires GitHub CLI signed in to an account with repository access. Install, update and in-app update checks require authentication.
 
 Other ways to install (CLI only, pinned version, manual DMG, verification) and troubleshooting: [docs/safe-fork/INSTALL.md](docs/safe-fork/INSTALL.md).
 

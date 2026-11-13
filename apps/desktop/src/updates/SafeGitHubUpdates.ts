@@ -6,6 +6,7 @@ import * as NodePath from "node:path";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
+import * as Schema from "effect/Schema";
 
 import * as DesktopEnvironment from "../app/DesktopEnvironment.ts";
 import * as ElectronUpdater from "../electron/ElectronUpdater.ts";
@@ -13,8 +14,22 @@ import * as DesktopShellEnvironment from "../shell/DesktopShellEnvironment.ts";
 
 export class SafeGitHubUpdates extends Context.Service<
   SafeGitHubUpdates,
-  { readonly check: Effect.Effect<void, ElectronUpdater.ElectronUpdaterCheckForUpdatesError> }
+  {
+    readonly check: Effect.Effect<
+      void,
+      ElectronUpdater.ElectronUpdaterCheckForUpdatesError | GitHubUpdateLoginRequiredError
+    >;
+  }
 >()("@t3tools/desktop/updates/SafeGitHubUpdates") {}
+
+export class GitHubUpdateLoginRequiredError extends Schema.TaggedError<GitHubUpdateLoginRequiredError>()(
+  "GitHubUpdateLoginRequiredError",
+  {},
+) {
+  override get message(): string {
+    return "GitHub CLI login required to check for updates. Run: gh auth login --hostname github.com";
+  }
+}
 
 export class GitHubUpdateCredential extends Context.Service<
   GitHubUpdateCredential,
@@ -30,9 +45,7 @@ export const make = Effect.gen(function* () {
     check: Effect.gen(function* () {
       const token = yield* credential.obtain;
       if (!token) {
-        yield* Effect.logInfo(
-          "GitHub update credential unavailable; using the public release feed.",
-        );
+        return yield* new GitHubUpdateLoginRequiredError({});
       }
       yield* updater.configureSafeGitHubFeed(token);
       yield* updater.checkForUpdates;

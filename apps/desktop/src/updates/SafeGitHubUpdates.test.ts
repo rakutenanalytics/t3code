@@ -94,7 +94,7 @@ describe("safe GitHub credential checks", () => {
   );
 
   it.effect.each(["missing", "not logged in", "timeout", "empty"] as const)(
-    "should check the public feed without logging credentials when gh is [%s]",
+    "should require login without checking a feed or logging credentials when gh is [%s]",
     (failure) => {
       if (failure === "missing") commands.access.mockRejectedValue(new Error("ENOENT"));
       if (failure === "empty") returnCredential(" \n");
@@ -112,19 +112,15 @@ describe("safe GitHub credential checks", () => {
 
       return check.pipe(
         Effect.provide(Logger.layer([logger])),
-        Effect.andThen(
+        Effect.flip,
+        Effect.andThen((error) =>
           Effect.sync(() => {
-            expect(harness.feedUrls()).toEqual([
-              {
-                provider: "github",
-                owner: "rakutenanalytics",
-                repo: "t3code",
-                channel: "latest",
-                token: undefined,
-              },
-            ]);
-            expect(harness.checkCount()).toBe(1);
-            expect(JSON.stringify(messages)).toContain("using the public release feed");
+            expect(error._tag).toBe("GitHubUpdateLoginRequiredError");
+            expect(error.message).toBe(
+              "GitHub CLI login required to check for updates. Run: gh auth login --hostname github.com",
+            );
+            expect(harness.feedUrls()).toEqual([]);
+            expect(harness.checkCount()).toBe(0);
             expect(JSON.stringify(messages)).not.toContain("FAKE_");
             if (failure === "missing") expect(commands.execFile).not.toHaveBeenCalled();
           }),

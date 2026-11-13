@@ -1,6 +1,6 @@
 # Company-safe fork
 
-This public fork builds macOS Apple Silicon desktop and standalone CLI releases with a managed capability policy. It keeps normal provider use and direct LAN/Tailscale access. It disables optional T3-owned cloud and diagnostic paths by default.
+This fork builds macOS Apple Silicon desktop and standalone CLI releases with a managed capability policy. It keeps normal provider use and direct LAN/Tailscale access. It disables optional T3-owned cloud and diagnostic paths by default.
 
 | Disabled by default                                     | Why                                                                        |
 | ------------------------------------------------------- | -------------------------------------------------------------------------- |

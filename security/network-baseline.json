@@ -254,10 +254,10 @@
       "065979d96daef4048aafefa45c27254090052547db745b29e8f2a0078f420db7": 1
     },
     "apps/desktop/src/electron/ElectronUpdater.test.ts": {
-      "2106515309414d2d6bc2414bdf88da8191340dd147c0d8b97906824ec0c3d6bf": 1
+      "880ec46836d27a44f815b7da04d3b5fdbcd428df129996b2a934da046724e2e3": 1
     },
     "apps/desktop/src/electron/ElectronUpdater.ts": {
-      "578ce35c130940bc8926d6fab3632671eca1570a3c9c56aac91fdba1d0797f58": 1
+      "33d20772fd162a3102d1a07287885a08f52d3d2cf0612406b9e7d037f7216c5f": 1
     },
     "apps/desktop/src/electron/SafeGitHubAuthorization.test.ts": {
       "613beaec66214f06e6e9234f7135aae3e3caaacb8b65bd51884a4107b661576c": 1
@@ -524,16 +524,16 @@
       "a20e9e11df19203b8a5cd1fbe211a193baeb8cc5060f72f0d3d187e5bb57bbfc": 1
     },
     "apps/desktop/src/updates/DesktopUpdates.ts": {
-      "808f0c039fe22bec91ae55855f55b581fbbd4d669e53d3966b7548bfd423c4cd": 1
+      "82a48a741d2835c45c1ec3e8a23548ec9e95274d377a3244a0af945cc00c1bdc": 1
     },
     "apps/desktop/src/updates/ManagedUpdates.test.ts": {
-      "1b6929eb53ea315e76e9b4514b59d80983ad477675c3ea0e36b3c3279b806128": 1
+      "d7457df337676d1ff01e73003060bdf58e50419c6d6b855e4fddac81fab9a2fa": 1
     },
     "apps/desktop/src/updates/SafeGitHubUpdates.test.ts": {
-      "03e0f3848f46e6b57ecadaba163f6a14cac645305856baa178a4d291faa80a9d": 1
+      "368cbdbbe1483c0abce46ad6cd5eb829cc464909d30b76deecec6f6280a9353a": 1
     },
     "apps/desktop/src/updates/SafeGitHubUpdates.ts": {
-      "22c7740f9dd62462cd028da2c9d5bc8a01d020c24c745e7c460cabca9c6f0028": 1
+      "7356fe85f2257966003a4f922377b3304d4b988d499f52971cd116d35f0f038f": 1
     },
     "apps/desktop/src/updates/releaseNotes.test.ts": {
       "b020290b1830f7c09cdb7a4e605746f2345a7c4f57ebeb6dd7c0ef2038d9211b": 1
@@ -551,7 +551,7 @@
       "eda047fbb52162c3ec00ef768f8585099d46b447f7b849b47558745fd8786f13": 1
     },
     "apps/desktop/src/updates/updatesTestHarness.ts": {
-      "fe33adb8d0a2d22f367f42aadb218e40b90ccddd1d430e5348b178674e6aff42": 1
+      "7db79b7cf2b32f506dd5ccb087eaf6bbd9f4e7735535ce76cd31b8d1bfc66c1b": 1
     },
     "apps/desktop/src/window/ContextMenuImage.test.ts": {
       "a0c5d3a18ffedc9a193dd2e7f88b89a4e9eb9db2512cf0029f79de54bc08f972": 1
@@ -5627,7 +5627,7 @@
       "24d89fe103057be8357038f59fbcccc48ee1199f37ea5f7ac4e2866cfc5fc22d": 1
     },
     "install.sh": {
-      "1490f3969d3d4867f8f62c3e63ac567fd4554a4f0e406454e268f0037f4e676a": 1
+      "dae31b3a4aaaf0776e91cff72359dd189839d234c3ac68be5f2ee37cd19e496f": 1
     },
     "native/hyprland-snap-shot/src/feedback.rs": {
       "57cc7f6f85ed9a3eca0c4dfc7cdbceaa1bc82dc242942055dcbcdba4c31a604a": 1
@@ -7829,7 +7829,7 @@
       "222a6de08646545371f182dcde4f2d909b7789330f3a4006554aac6cf0e226fa": 1
     },
     "scripts/safe/install.test.ts": {
-      "cf85cab6d68e0f72dbf4f4d3213227e2f7621069a7eb7a820f5609f171063154": 1
+      "f67823613f67d5101c7e1512ae74fce75287c0bff43177f488d567eee979a351": 1
     },
     "scripts/safe/managed-policy.test.ts": {
       "e3a7f370c4f092d5de022ece84cdb748d165c20cec655d3d65c71da61d02fe7c": 1
@@ -7850,10 +7850,10 @@
       "74bc4cbc35d4fb135f3d4ce68e1667e86e091f5148af70d3b11a372348b09f8a": 1
     },
     "scripts/safe/t3safe": {
-      "41afa35457a84f208b6bcd20f98dcf7b83c325a6cdc4e73a67cbe299e66a17aa": 1
+      "67ca1a08eaf9095e424bcf61586d7d070445ee16db3826ea941663661aeb3172": 1
     },
     "scripts/safe/t3safe.test.ts": {
-      "257294e35575942ecb099b3dd233ace8642499131a6caa0df75fd9fd88ff693b": 1
+      "ff985f5dbbcae473e04d5a4d542cafb48f27a197b19bd50c70dc826a925f4128": 1
     },
     "scripts/safe/touched-checks.ts": {
       "3b3ba37c989b601373b95ea7e3ec0436a69ed8aa502b3dad1101a235151d3e16": 1
@@ -9145,7 +9145,6 @@
     "apps/web/src/textDirection.test.ts": ["github.com"],
     "apps/web/test/environmentHttpTest.ts": ["auth.session", "auth.token", "metadata.descriptor"],
     "apps/web/vercel.ts": ["app.t3.codes", "latest.app.t3.codes", "nightly.app.t3.codes"],
-    "install.sh": ["api.github.com", "github.com"],
     "packages/client-runtime/src/authorization/layer.test.ts": [
       "192.168.1.10",
       "environment.example.test",
@@ -10077,8 +10076,7 @@
     ],
     "scripts/safe/dependency-registry.ts": ["registry.npmjs.org"],
     "scripts/safe/sign-macos.cjs": ["github.com"],
-    "scripts/safe/t3safe": ["api.github.com", "github.com", "www.gnu.org"],
-    "scripts/safe/t3safe.test.ts": ["api.github.com", "github.com"],
+    "scripts/safe/t3safe": ["www.gnu.org"],
     "scripts/smoke-cli-archive.ts": ["127.0.0.1"],
     "scripts/sync-reference-repos.test.ts": ["github.com"],
     "t3.json": ["t3.codes"],
@@ -12596,7 +12594,6 @@
     "apps/web/src/textDirection.test.ts": ["https://github.com/pingdotgg/t3code/pull/24050"],
     "apps/web/vercel.ts": ["https://latest.app.t3.codes", "https://nightly.app.t3.codes"],
     "apps/web/vite.config.ts": ["http://localhost:"],
-    "install.sh": ["https://api.github.com/repos/", "https://github.com/"],
     "packages/client-runtime/src/authorization/layer.test.ts": [
       "http://192.168.1.10:3773/",
       "http://192.168.1.10:3773/.well-known/t3/environment",
@@ -14409,15 +14406,7 @@
       "https://github.com/Squirrel/Squirrel.Mac/blob/master/Squirrel/SQRLCodeSignature.m"
     ],
     "scripts/safe/t3safe": [
-      "https://api.github.com/repos/rakutenanalytics/t3code/releases/latest",
-      "https://github.com/rakutenanalytics/t3code/releases/download/",
       "https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html"
-    ],
-    "scripts/safe/t3safe.test.ts": [
-      "https://*",
-      "https://api.github.com/repos/rakutenanalytics/t3code/releases/latest",
-      "https://github.com/rakutenanalytics/t3code/releases/download/v0.1.2-safe.[12]/SHA256SUMS",
-      "https://github.com/rakutenanalytics/t3code/releases/download/v0.1.2-safe.[12]/install.sh"
     ],
     "scripts/smoke-cli-archive.ts": ["http://127.0.0.1:"],
     "scripts/sync-reference-repos.test.ts": ["https://github.com/Effect-TS/effect.git"],

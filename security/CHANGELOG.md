@@ -2,6 +2,19 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-11-13 — authenticated release access required
+
+- baseline-update: security/network-baseline.json — Removes public curl release paths from install.sh and t3safe; requires gh login for github.com. Safe desktop checks fail with login guidance before feed setup or network access when credential lookup fails. Reviews offline fixtures for login failures, error-state recovery and unchanged checksum checks. API-only Authorization, credential-free redirects, full downloads and signature/pin checks remain unchanged.
+- baseline-update: security/egress-inventory.md — Records authenticated-only script and desktop release access; missing credentials stop release requests without adding destinations or payloads.
+- baseline-update: security/threat-model.md — Records fail-closed release authentication and updater error reporting while preserving token isolation and release verification.
+- baseline-update: security/artifact-hosts.json — Corrects the updater description to authenticated-only release reads; denylist, accepted contexts and seen hosts are unchanged.
+
+## 2026-11-13 — private release script downloads
+
+- baseline-update: security/network-baseline.json — Reviews install.sh and t3safe selecting authenticated gh release reads/downloads after gh auth status, plus offline subprocess fixtures covering both transports, explicit tags and checksum rejection. Public curl paths and verification stay unchanged; scripts never extract credentials.
+- baseline-update: security/egress-inventory.md — Records gh-owned authenticated release metadata and asset reads for the fixed fork, public fallback and account-associated metadata without workspace payload.
+- baseline-update: security/threat-model.md — Records script authentication selection, gh-owned credentials and failure behavior while preserving checksum/signature checks and GitHub release trust.
+
 ## 2026-11-13 — private repository updater bridge
 
 - baseline-update: security/threat-model.md — Reviews gh-sourced public/private release reads, child-only removal of inherited token overrides, bounded credential lookup, public fallback, fixed API credential destinations and full downloads. Preserves baked/admin denials and certificate-pinned installation; records remaining packaged validation.

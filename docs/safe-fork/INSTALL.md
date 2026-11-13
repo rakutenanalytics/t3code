@@ -1,14 +1,19 @@
 # Install and update
 
-Requires macOS on Apple Silicon. Releases and downloads are public; no GitHub login, Node or compiler required.
+Requires macOS on Apple Silicon and GitHub CLI (`gh`) signed in to an account with repository access for installation and updates. No Node or compiler required.
 
 ## Install
 
+Install GitHub CLI, sign in once, then download and review the installer:
+
 ```sh
-curl -fsSL https://github.com/rakutenanalytics/t3code/releases/latest/download/install.sh | bash
+gh auth login --hostname github.com
+gh release download --repo rakutenanalytics/t3code --pattern install.sh --output install.sh
+less install.sh
+bash install.sh
 ```
 
-Installs the app and the `t3safe` command from the newest release:
+This installs the app and the `t3safe` command from the newest release:
 
 | What               | Where                                                             |
 | ------------------ | ----------------------------------------------------------------- |
@@ -16,6 +21,8 @@ Installs the app and the `t3safe` command from the newest release:
 | `t3safe` command   | `~/.local/bin` (add it to `PATH` if needed); never creates a `t3` |
 | Release files      | `~/.local/share/t3safe/versions/<tag>`                            |
 | Data               | `~/.t3-safe`                                                      |
+
+The installer and `t3safe update` use `gh release view` and `gh release download` after requiring `gh auth status --hostname github.com` to succeed. Missing gh or authentication stops the operation with login guidance. Download failures stop the operation. Credentials stay under gh's control; the scripts never extract tokens.
 
 The installer checks every asset it downloads against the release `SHA256SUMS` before extraction and removes quarantine metadata. The script itself arrives over HTTPS from GitHub without a separate check, so you trust GitHub and this repository's release. Open the app, then install and sign in to a provider CLI such as Codex or Claude Code.
 
@@ -28,14 +35,14 @@ t3safe update                          # same result, from an installed CLI
 t3safe update --version v0.1.0-safe.3  # a specific release
 ```
 
-`t3safe update` downloads the selected release's installer, verifies it against `SHA256SUMS`, then runs it with your existing app-only or CLI-only selection. After the first signed release is installed, the desktop updater checks only this fork's GitHub releases on the stable channel. Existing unsigned/ad-hoc installs need one manual installation of a signed release before in-app updates can work. Machine policy may turn updates off.
+`t3safe update` downloads the selected release's installer, verifies it against `SHA256SUMS`, then runs it with your existing app-only or CLI-only selection. After the first signed release is installed, the desktop updater checks only this fork's GitHub releases on the stable channel. In-app checks require a stored `github.com` login from `gh auth login --hostname github.com`; missing or expired credentials show an update-check error. Inherited `GH_TOKEN` and `GITHUB_TOKEN` do not supply that login. Existing unsigned/ad-hoc installs need one manual installation of a signed release before in-app updates can work. Machine policy may turn updates off.
 
 ## Options
 
-Pass options after `bash -s --`:
+Pass options directly to the downloaded installer:
 
 ```sh
-curl -fsSL https://github.com/rakutenanalytics/t3code/releases/latest/download/install.sh | bash -s -- --cli-only
+bash install.sh --cli-only
 ```
 
 | Option                      | Effect                                                             |
@@ -49,7 +56,7 @@ curl -fsSL https://github.com/rakutenanalytics/t3code/releases/latest/download/i
 Read the script first:
 
 ```sh
-curl -fsSL https://github.com/rakutenanalytics/t3code/releases/latest/download/install.sh -o install.sh
+gh release download --repo rakutenanalytics/t3code --pattern install.sh --output install.sh
 less install.sh
 bash install.sh
 ```
@@ -78,7 +85,7 @@ The `t3safe doctor` and `t3safe update` commands come from this installer; a DMG
 - **`t3safe: command not found`:** add `~/.local/bin` to `PATH`.
 - **Provider (`codex`, `claude`) not detected:** an app launched from Finder finds provider CLIs by running your login shell (`zsh -ilc`, 5 second limit). If the shell startup is slow or the CLI is elsewhere, set Settings → Providers → the provider → Binary path.
 - **Checksum mismatch:** stop and download the same release again; do not bypass verification.
-- **`403` from the GitHub API:** an anonymous rate limit. Retry later, or pass `--version` to skip the latest-release lookup.
+- **`403` or `404` from GitHub:** check `gh auth status --hostname github.com` and repository access. Sign in with `gh auth login --hostname github.com`, then retry.
 
 ## Coexists with official T3
 

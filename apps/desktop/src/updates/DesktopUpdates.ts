@@ -573,6 +573,16 @@ export const make = Effect.gen(function* () {
         Effect.ensuring(electronUpdater.setAllowDowngrade(restoreDowngrade).pipe(Effect.ignore)),
         Effect.as(true),
         Effect.catchTags({
+          GitHubUpdateLoginRequiredError: Effect.fn("desktop.updates.requireGitHubLogin")(
+            function* (error) {
+              const failedAt = yield* currentIsoTimestamp;
+              yield* updateState((current) =>
+                reduceDesktopUpdateStateOnCheckFailure(current, error.message, failedAt),
+              );
+              yield* logUpdaterError(error.message, { errorTag: error._tag });
+              return true;
+            },
+          ),
           ElectronUpdaterCheckForUpdatesError: Effect.fn(
             "desktop.updates.handleCheckForUpdatesFailure",
           )(function* (error) {
@@ -1141,20 +1151,12 @@ export const make = Effect.gen(function* () {
         });
       }
 
-      if (isSafeBuild) {
-        yield* electronUpdater.setFeedURL({
-          provider: "github",
-          owner: "rakutenanalytics",
-          repo: "t3code",
-          channel: "latest",
-          private: false,
-        });
-      } else if (mockUpdates) {
+      if (!isSafeBuild && mockUpdates) {
         yield* electronUpdater.setFeedURL({
           provider: "generic",
           url: `http://localhost:${config.mockUpdateServerPort}`,
         } as ElectronUpdater.ElectronUpdaterFeedUrl);
-      } else if (policy.feedUrl !== undefined) {
+      } else if (!isSafeBuild && policy.feedUrl !== undefined) {
         // The administrator's mirror replaces the GitHub feed baked into app-update.yml.
         yield* electronUpdater.setFeedURL({
           provider: "generic",
