@@ -207,7 +207,7 @@ export function serveWorker<M extends Methods>(handlers: {
 
       state.current = { id: request.id, controller };
 
-      if (!handler) {
+      if (!Object.hasOwn(handlers, request.method) || !handler) {
         reply({
           id: request.id,
           ok: false,

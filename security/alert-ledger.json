@@ -179,7 +179,7 @@
     },
     "xml-parser-fix": {
       "exposure": "shipped",
-      "disposition": "fix-required",
+      "disposition": "local-fix-pending-verification",
       "justification": "Web extendedDocumentPreview uses XMLParser for ODS/EPUB, reached from the binary preview worker. It does not enable the advisory stopNodes option; locked defaults are empty. Upgrade the affected 5.7.3 to published age-qualified 5.12.0 nonetheless. Local audit and artifact checks must confirm the effective version; main remains affected until merge and fresh verification.",
       "evidencePaths": [
         "apps/web/package.json",
@@ -191,11 +191,19 @@
       "reviewedAt": "2026-11-11",
       "reviewBy": "2026-11-18",
       "humanApproval": null,
-      "remoteAction": "none"
+      "remoteAction": "none",
+      "localRemediation": {
+        "filesSha256": {
+          "apps/web/package.json": "312b5488f14f6bcd91a25419c406912e35a96063e29eb3d6742633ddb269feb1",
+          "pnpm-lock.yaml": "8b231a72d33b351e9e29becc3104ad80fc3133d97522be66baafb863b3005cbe"
+        },
+        "validation": "Frozen install passes; fresh all-severity audit no longer reports GHSA-474x-hrwr-fgx4. Web production closure resolves fast-xml-parser 5.12.0 with no missing edges.",
+        "mainVerification": "pending human merge and fresh main audit/analysis"
+      }
     },
     "node-forge-fix": {
       "exposure": "build-tooling-only",
-      "disposition": "fix-required",
+      "disposition": "local-fix-pending-verification",
       "justification": "node-forge 1.4.1 is outside the audited server/desktop/web production closure, reached by signing/build tools. Update the frozen lock and conditional override to published age-qualified 1.4.3, addressing all four current advisories. No lifecycle grant change. Keep pending until validation and main merge.",
       "evidencePaths": [
         "pnpm-workspace.yaml",
@@ -207,7 +215,15 @@
       "reviewedAt": "2026-11-11",
       "reviewBy": "2026-11-18",
       "humanApproval": null,
-      "remoteAction": "none"
+      "remoteAction": "none",
+      "localRemediation": {
+        "filesSha256": {
+          "pnpm-workspace.yaml": "7365e1f9d04830ca496b3bca3f371e04bdd1068ed81424f3c52e400a23109695",
+          "pnpm-lock.yaml": "8b231a72d33b351e9e29becc3104ad80fc3133d97522be66baafb863b3005cbe"
+        },
+        "validation": "Frozen install passes; fresh all-severity audit no longer reports any of the four node-forge advisories. Server/desktop/web production closures contain no node-forge.",
+        "mainVerification": "pending human merge and fresh main audit/analysis"
+      }
     },
     "polynomial-regex": {
       "exposure": "unknown",
@@ -462,14 +478,40 @@
     },
     "worker-method-dispatch": {
       "exposure": "shipped",
-      "disposition": "fix-required",
+      "disposition": "local-fix-pending-verification",
       "justification": "Office worker dispatch looks up a user-selected property on a plain handler object, accepting inherited Object methods. Dedicated worker callers are local Office components; broader security impact is unproved. Restrict dispatch to own handler keys with protocol-level regressions. Main CodeQL must reanalyze after merge.",
       "evidencePaths": ["apps/web/src/components/files/office/worker-rpc.ts"],
       "reviewer": "agent:gpt-6.1-sol/codex",
       "reviewedAt": "2026-11-11",
       "reviewBy": "2026-11-12",
       "humanApproval": null,
-      "remoteAction": "none"
+      "remoteAction": "none",
+      "localRemediation": {
+        "filesSha256": {
+          "apps/web/src/components/files/office/worker-rpc.ts": "45631292e08e056ec591ff27844cb4da9a2447020c5699c0756339d543a6c503",
+          "apps/web/src/components/files/office/worker-rpc.test.ts": "ae81138eac6c02f002dd32c1b3b89472bbb9dad620954a034779a30b40a8328b"
+        },
+        "validation": "Three inherited-property cases fail before the patch; all five protocol cases pass after Object.hasOwn enforcement. Fresh main CodeQL analysis remains pending.",
+        "mainVerification": "pending human merge and fresh main audit/analysis"
+      }
+    },
+    "new-hono-audit-findings": {
+      "exposure": "unknown",
+      "disposition": "unclassified-needs-triage",
+      "justification": "Fresh 2026-11-13 all-severity audit reports seven additional Hono/@hono/node-server advisories through apps/server > @anthropic-ai/claude-agent-sdk > @modelcontextprotocol/sdk. Dependency paths are verified by the audit; input-to-sink reachability and compatible remediation are not reviewed. These findings are outside the original parser/forge patch batch and remain unresolved, with no risk acceptance. The current audit contains nine advisory records including the existing Zod 3 and deepmerge residuals.",
+      "evidencePaths": ["pnpm-lock.yaml", "apps/server/package.json"],
+      "reviewer": "agent:gpt-6.1-sol/codex",
+      "reviewedAt": "2026-11-13",
+      "reviewBy": "2026-11-13",
+      "humanApproval": null,
+      "remoteAction": "none",
+      "inventoryEvidence": {
+        "command": "pnpm audit --json",
+        "collectedOn": "2026-11-13",
+        "lockfileSha256": "8b231a72d33b351e9e29becc3104ad80fc3133d97522be66baafb863b3005cbe",
+        "auditSha256": "1dc8c4aafbf67c1f206ad20a13aefa1a677646d89ee8dcf6ded42c2e310a3e07",
+        "exitCode": 1
+      }
     }
   },
   "entries": [
@@ -5227,6 +5269,83 @@
       "package": "node-forge",
       "version": "1.4.1",
       "advisory": "GHSA-j8rw-jp99-435v",
+      "severity": "moderate",
+      "observedState": "affected-at-audit"
+    },
+    {
+      "key": "audit:GHSA-qv5m-9pm6-hqp3:@hono/node-server@2.1.3",
+      "group": "new-hono-audit-findings",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "@hono/node-server",
+      "version": "2.1.3",
+      "advisory": "GHSA-qv5m-9pm6-hqp3",
+      "severity": "moderate",
+      "observedState": "affected-at-audit"
+    },
+    {
+      "key": "audit:GHSA-jpvv-r467-5p4w:@hono/node-server@2.1.3",
+      "group": "new-hono-audit-findings",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "@hono/node-server",
+      "version": "2.1.3",
+      "advisory": "GHSA-jpvv-r467-5p4w",
+      "severity": "moderate",
+      "observedState": "affected-at-audit"
+    },
+    {
+      "key": "audit:GHSA-4m76-xfj5-7975:hono@4.13.11",
+      "group": "new-hono-audit-findings",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "hono",
+      "version": "4.13.11",
+      "advisory": "GHSA-4m76-xfj5-7975",
+      "severity": "moderate",
+      "observedState": "affected-at-audit"
+    },
+    {
+      "key": "audit:GHSA-h7mg-cq63-vhpq:hono@4.13.11",
+      "group": "new-hono-audit-findings",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "hono",
+      "version": "4.13.11",
+      "advisory": "GHSA-h7mg-cq63-vhpq",
+      "severity": "moderate",
+      "observedState": "affected-at-audit"
+    },
+    {
+      "key": "audit:GHSA-3gg2-335m-rxc6:hono@4.13.11",
+      "group": "new-hono-audit-findings",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "hono",
+      "version": "4.13.11",
+      "advisory": "GHSA-3gg2-335m-rxc6",
+      "severity": "low",
+      "observedState": "affected-at-audit"
+    },
+    {
+      "key": "audit:GHSA-46wx-v44x-9hh2:hono@4.13.11",
+      "group": "new-hono-audit-findings",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "hono",
+      "version": "4.13.11",
+      "advisory": "GHSA-46wx-v44x-9hh2",
+      "severity": "moderate",
+      "observedState": "affected-at-audit"
+    },
+    {
+      "key": "audit:GHSA-4h7h-rv7c-7m2v:hono@4.13.11",
+      "group": "new-hono-audit-findings",
+      "ownership": "third-party",
+      "manifest": "pnpm-lock.yaml",
+      "package": "hono",
+      "version": "4.13.11",
+      "advisory": "GHSA-4h7h-rv7c-7m2v",
       "severity": "moderate",
       "observedState": "affected-at-audit"
     }
