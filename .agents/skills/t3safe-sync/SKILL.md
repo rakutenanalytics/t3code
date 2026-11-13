@@ -101,6 +101,8 @@ For an intentional reviewed change, first update the host justification/inventor
 
 Update `last-approved-upstream` with target tag, peeled SHA and incremented sync count. Update inventory, threat model and baselines to describe the actual boundaries. Remove stale exceptions. Commit logical changes with conventional titles. Done when findings are resolved, focused local checks pass, and the full diff is ready for a human.
 
+Before PR handoff, run the inventory and ledger comparison stages of [t3safe-security](../t3safe-security/SKILL.md) against the integrated source and fresh all-severity audit. Reuse this sync's source/dependency evidence. Report new, changed or expired findings and residual exposure alongside the sync checks; this adds no authority to dismiss alerts, alter security settings or close unrelated Dependabot PRs.
+
 ## 3. Create the PR and babysit it
 
 Finish the local review and focused checks, then push only `sync/<tag>` to the fork and create its PR without asking again. Reuse an existing PR for that head if present. Write the body to a temporary file: upstream tag/SHA, concrete findings and decisions, validation and remaining CI work. Summarize age eligibility and list only required exceptions with their evidence and approval. Include `Closes #N` when started from that issue. End with model and harness.

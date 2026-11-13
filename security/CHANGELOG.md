@@ -2,6 +2,11 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-11-13 — security maintenance tooling
+
+- baseline-update: security/alert-ledger.json — Adds the dated 2026-11-11 inventory and review groups as baseline triage, with all dependency and worker fixes still required. No local remediation evidence or human risk acceptance is recorded in this tooling layer. New, changed and expired findings require a fresh agent audit.
+- baseline-update: security/network-baseline.json — Reviews weekly Dependabot version-update configuration and enabling the existing secret-free PR checks for the stacked security tooling branch. Actions remain pinned, permissions stay read-only, and dependency versions, runtime code and release/signing workflows are unchanged.
+
 ## 2026-11-13 — signing requirement verification syntax
 
 - baseline-update: security/network-baseline.json — Reviews the release signer verifying the leaf pin with a bare requirement expression, since the previous "designated =>" form is rejected by codesign --test-requirement. Only the sign-macos.cjs source fingerprint changes; the pinned certificate, signing requirement, runner trust policy, triggers and network grants remain unchanged.

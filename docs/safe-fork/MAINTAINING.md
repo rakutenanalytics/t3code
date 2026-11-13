@@ -2,6 +2,12 @@
 
 Start a fresh thread in the fork and run `/t3safe-sync`, or `/t3safe-sync --issue <number>` for an `upstream-sync` issue. The [skill](../../.agents/skills/t3safe-sync/SKILL.md) owns the merge-based update procedure. Invoking it authorizes the sync branch push, PR creation and in-scope babysitting fixes/review operations without another approval prompt. The agent follows CI and review until the current head is ready, then asks the maintainer to review and merge; merging starts no release build. Releases require a separate maintainer dispatch on `main`. Every repository-scoped gh command needs an explicit `--repo`; fork PR creation otherwise targets upstream. Main receives updates through reviewed PRs.
 
+## Security alert maintenance
+
+Run `/t3safe-security` in its own task worktree for a fresh GitHub alert inventory, all-severity package audit and source triage against `security/alert-ledger.json`. The [skill](../../.agents/skills/t3safe-security/SKILL.md) uses `gh` and existing scanners; it flags new, changed and expired reviews and prepares fixes for human merge. It grants no remote-write authority: approve each exact operation separately. Agent classifications are not human risk acceptance.
+
+The skill runs on invocation and at sync handoff. A recurring agent task needs separate approval; no security-posture CI gate is installed. `.github/dependabot.yml` excludes reference snapshots from version updates only; dependency-graph alerts and security PRs still need triage. `.github/codeql-config.yml` takes effect only after an approved attachment to default setup; it excludes reference snapshots, not product, build or test findings. Report fresh main scan SHAs and unresolved exposure before making a compliance claim.
+
 ## Checks and baselines
 
 ```sh

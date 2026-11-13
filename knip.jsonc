@@ -37,6 +37,7 @@
         "resolve-nightly-release.ts",
         "smoke-cli-archive.ts",
         "sign-macos.ts",
+        "safe/sign-macos.cjs",
         "prepare-server-compile-cache.cjs",
         "smoke-desktop-app.ts",
         "verify-windows-desktop-artifact.ts",
@@ -97,9 +98,13 @@
       "ignoreDependencies": ["playwright-core", "electron-builder"],
     },
     "apps/web": {
-      // Worktree setup (scripts/setup-worktree.ts) runs this directly, and evidence
-      // fixtures run under node.
-      "entry": ["scripts/warm-dep-cache.ts", "test/fixtures/**/*.mjs"],
+      // Worktree setup and evidence fixtures run under node. The production-boot
+      // command remains available after the fork removed its upstream CI caller.
+      "entry": [
+        "scripts/warm-dep-cache.ts",
+        "scripts/verify-built-boot.ts",
+        "test/fixtures/**/*.mjs",
+      ],
       // UI component modules are copied and adapted as cohesive sets. Keep their
       // named subcomponents even before they have callers; the file audit still
       // reports an entire component module when nothing imports it.
@@ -116,6 +121,8 @@
         "fingerprint.config.js",
         "plugins/*.cjs",
         "scripts/generate-device-stream.mts",
+        // Standalone command retained after removal of upstream publishing workflows.
+        "scripts/upload-sourcemaps.mts",
         "src/features/devices/device-stream.browser.ts!",
         "src/features/browser/preview-stream.browser.ts!",
       ],
