@@ -12,6 +12,8 @@ Installs `T3 Code Safe.app` and the `t3safe` command. Checks every download agai
 
 **Update:** run the same command again (quit the app first). `t3safe update` does the same.
 
+Private repository: [install with authenticated GitHub CLI](docs/safe-fork/INSTALL.md#install).
+
 Other ways to install (CLI only, pinned version, manual DMG, verification) and troubleshooting: [docs/safe-fork/INSTALL.md](docs/safe-fork/INSTALL.md).
 
 Check an install with `t3safe doctor`. If macOS blocks the app: `xattr -dr com.apple.quarantine "/Applications/T3 Code Safe.app"` (adjust the path). Uninstall: [INSTALL.md](docs/safe-fork/INSTALL.md#uninstall).

@@ -9,6 +9,8 @@ import { describe, expect, it } from "vite-plus/test";
 function createUpdateInstallation(options: {
   mode: "combined" | "cli-only" | "app-only";
   customPrefix?: boolean;
+  githubAuth?: "authenticated" | "unauthenticated";
+  githubDownloadFails?: boolean;
 }) {
   const root = NodeFS.realpathSync(
     NodeFS.mkdtempSync(NodePath.join(NodeOS.tmpdir(), "t3safe-update-")),
@@ -59,6 +61,27 @@ cp "$UPDATE_FIXTURES/$fixture" "$output"
 `,
     { mode: 0o755 },
   );
+  if (options.githubAuth) {
+    NodeFS.writeFileSync(
+      NodePath.join(bin, "gh"),
+      `#!/bin/bash
+set -euo pipefail
+if [[ "$*" == 'auth status' ]]; then exit ${options.githubAuth === "authenticated" ? 0 : 1}; fi
+${options.githubAuth === "unauthenticated" ? "exit 1" : ""}
+if [[ "$*" == 'release view --repo rakutenanalytics/t3code --json tagName --jq .tagName' ]]; then
+  printf '%s\\n' v0.1.2-safe.1
+  exit 0
+fi
+[[ "$1 $2 $3 $4" == 'release download --repo rakutenanalytics/t3code' ]] || exit 1
+[[ "$5" == v0.1.2-safe.[12] && "$6" == --pattern && "$8" == --output ]] || exit 1
+${options.githubDownloadFails ? "exit 1" : 'cp "$UPDATE_FIXTURES/$7" "$9"'}
+`,
+      { mode: 0o755 },
+    );
+    if (options.githubAuth === "authenticated" && !options.githubDownloadFails) {
+      NodeFS.writeFileSync(NodePath.join(bin, "curl"), "#!/bin/bash\nexit 1\n", { mode: 0o755 });
+    }
+  }
   NodeFS.writeFileSync(
     NodePath.join(bin, "plutil"),
     '#!/bin/bash\nprintf "%s\\n" v0.1.2-safe.1\n',
@@ -166,6 +189,60 @@ describe("t3safe update", () => {
 
     expect(result.status).toBe(1);
     expect(result.stderr).toBe("t3safe: Installer checksum mismatch.\n");
+    expect(installation.wasInstallerRun()).toBe(false);
+  });
+});
+
+describe("t3safe release access", () => {
+  it.each(["authenticated", "unauthenticated"] as const)(
+    "should run the checksum-verified latest installer when gh is [%s]",
+    (githubAuth) => {
+      using installation = createUpdateInstallation({ mode: "combined", githubAuth });
+
+      const result = installation.run();
+
+      expect(result.status).toBe(0);
+      expect(result.stderr).toBe("");
+      expect(installation.installerArguments()).toEqual(["--version", "v0.1.2-safe.1"]);
+    },
+  );
+
+  it("should use the explicit private tag without looking up the latest release", () => {
+    using installation = createUpdateInstallation({
+      mode: "combined",
+      githubAuth: "authenticated",
+    });
+
+    const result = installation.run("--version", "v0.1.2-safe.2");
+
+    expect(result.status).toBe(0);
+    expect(installation.installerArguments()).toEqual(["--version", "v0.1.2-safe.2"]);
+  });
+
+  it("should reject a private installer checksum mismatch without executing it", () => {
+    using installation = createUpdateInstallation({
+      mode: "combined",
+      githubAuth: "authenticated",
+    });
+    installation.tamperWithInstaller();
+
+    const result = installation.run();
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toBe("t3safe: Installer checksum mismatch.\n");
+    expect(installation.wasInstallerRun()).toBe(false);
+  });
+
+  it("should stop without executing the installer when an authenticated gh download fails", () => {
+    using installation = createUpdateInstallation({
+      mode: "combined",
+      githubAuth: "authenticated",
+      githubDownloadFails: true,
+    });
+
+    const result = installation.run();
+
+    expect(result.status).toBe(1);
     expect(installation.wasInstallerRun()).toBe(false);
   });
 });

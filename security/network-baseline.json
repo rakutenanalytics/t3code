@@ -5627,7 +5627,7 @@
       "24d89fe103057be8357038f59fbcccc48ee1199f37ea5f7ac4e2866cfc5fc22d": 1
     },
     "install.sh": {
-      "1490f3969d3d4867f8f62c3e63ac567fd4554a4f0e406454e268f0037f4e676a": 1
+      "120acfdc3f269732e2be4d772ff69529f1337f4f985891a827da1dcd40622b6a": 1
     },
     "native/hyprland-snap-shot/src/feedback.rs": {
       "57cc7f6f85ed9a3eca0c4dfc7cdbceaa1bc82dc242942055dcbcdba4c31a604a": 1
@@ -7829,7 +7829,7 @@
       "222a6de08646545371f182dcde4f2d909b7789330f3a4006554aac6cf0e226fa": 1
     },
     "scripts/safe/install.test.ts": {
-      "cf85cab6d68e0f72dbf4f4d3213227e2f7621069a7eb7a820f5609f171063154": 1
+      "c9c8f7586272ca6fd2a58a0aa06b83e7c3ab0e490b38fca8a743df08335ff67a": 1
     },
     "scripts/safe/managed-policy.test.ts": {
       "e3a7f370c4f092d5de022ece84cdb748d165c20cec655d3d65c71da61d02fe7c": 1
@@ -7850,10 +7850,10 @@
       "74bc4cbc35d4fb135f3d4ce68e1667e86e091f5148af70d3b11a372348b09f8a": 1
     },
     "scripts/safe/t3safe": {
-      "41afa35457a84f208b6bcd20f98dcf7b83c325a6cdc4e73a67cbe299e66a17aa": 1
+      "f1837e6a59b34923b62185def98e996689be4f2f50cda4a4adee41f67250e31a": 1
     },
     "scripts/safe/t3safe.test.ts": {
-      "257294e35575942ecb099b3dd233ace8642499131a6caa0df75fd9fd88ff693b": 1
+      "8d2a51acacd013103f9e2b1f7bd85aa40d70e3288c7c7d0c4dc0fb1b3ff925e3": 1
     },
     "scripts/safe/touched-checks.ts": {
       "3b3ba37c989b601373b95ea7e3ec0436a69ed8aa502b3dad1101a235151d3e16": 1
@@ -10076,6 +10076,7 @@
       "www.w3.org"
     ],
     "scripts/safe/dependency-registry.ts": ["registry.npmjs.org"],
+    "scripts/safe/install.test.ts": ["api.github.com", "github.com"],
     "scripts/safe/sign-macos.cjs": ["github.com"],
     "scripts/safe/t3safe": ["api.github.com", "github.com", "www.gnu.org"],
     "scripts/safe/t3safe.test.ts": ["api.github.com", "github.com"],
@@ -14405,6 +14406,11 @@
       "https://www.w3.org/TR/SVG2/"
     ],
     "scripts/safe/dependency-registry.ts": ["https://registry.npmjs.org/"],
+    "scripts/safe/install.test.ts": [
+      "https://*",
+      "https://api.github.com/repos/rakutenanalytics/t3code/releases/latest",
+      "https://github.com/rakutenanalytics/t3code/releases/download/v0.1.2-safe.1/*"
+    ],
     "scripts/safe/sign-macos.cjs": [
       "https://github.com/Squirrel/Squirrel.Mac/blob/master/Squirrel/SQRLCodeSignature.m"
     ],

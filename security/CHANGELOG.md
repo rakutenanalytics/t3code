@@ -2,6 +2,12 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-11-13 — private release script downloads
+
+- baseline-update: security/network-baseline.json — Reviews install.sh and t3safe selecting authenticated gh release reads/downloads after gh auth status, plus offline subprocess fixtures covering both transports, explicit tags and checksum rejection. Public curl paths and verification stay unchanged; scripts never extract credentials.
+- baseline-update: security/egress-inventory.md — Records gh-owned authenticated release metadata and asset reads for the fixed fork, public fallback and account-associated metadata without workspace payload.
+- baseline-update: security/threat-model.md — Records script authentication selection, gh-owned credentials and failure behavior while preserving checksum/signature checks and GitHub release trust.
+
 ## 2026-11-13 — private repository updater bridge
 
 - baseline-update: security/threat-model.md — Reviews gh-sourced public/private release reads, child-only removal of inherited token overrides, bounded credential lookup, public fallback, fixed API credential destinations and full downloads. Preserves baked/admin denials and certificate-pinned installation; records remaining packaged validation.
