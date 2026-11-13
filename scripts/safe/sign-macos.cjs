@@ -25,7 +25,8 @@ module.exports = async function signSafeApp(options) {
     }),
   });
   execFileSync("codesign", ["--verify", "--deep", "--strict", options.app], { stdio: "inherit" });
-  execFileSync("codesign", ["--verify", "--test-requirement", `=${requirement}`, options.app], {
+  // --test-requirement takes a bare expression; the "designated =>" prefix only belongs in signing requirement sets.
+  execFileSync("codesign", ["--verify", "--test-requirement", `=certificate leaf = H"${identity}"`, options.app], {
     stdio: "inherit",
   });
 };

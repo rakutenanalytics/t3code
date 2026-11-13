@@ -2,6 +2,10 @@
 
 Each change to a security file requires a new entry naming that exact path and the reason/evidence. CI compares added entries against the PR base. Keep source-line review in the PR; this log does not authorize widened capabilities.
 
+## 2026-11-13 — signing requirement verification syntax
+
+- baseline-update: security/network-baseline.json — Reviews the release signer verifying the leaf pin with a bare requirement expression, since the previous "designated =>" form is rejected by codesign --test-requirement. Only the sign-macos.cjs source fingerprint changes; the pinned certificate, signing requirement, runner trust policy, triggers and network grants remain unchanged.
+
 ## 2026-11-12 — maintainer-dispatched releases
 
 - baseline-update: security/egress-inventory.md — Records explicit maintainer dispatch on main as the only release trigger. Merges and tag pushes start no release build; publication destinations and payloads are unchanged.
